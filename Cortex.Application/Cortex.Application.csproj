@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Cortex.Domain\Cortex.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

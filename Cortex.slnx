@@ -1,1 +1,6 @@
-<Solution />
+<Solution>
+  <Project Path="Cortex.Api/Cortex.Api.csproj" />
+  <Project Path="Cortex.Application/Cortex.Application.csproj" />
+  <Project Path="Cortex.Domain/Cortex.Domain.csproj" />
+  <Project Path="Cortex.Infrastructure/Cortex.Infrastructure.csproj" />
+</Solution>
