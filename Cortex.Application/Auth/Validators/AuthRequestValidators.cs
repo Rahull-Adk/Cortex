@@ -22,18 +22,9 @@ public sealed class LoginRequestValidator : AbstractValidator<LoginRequest>
     }
 }
 
-public sealed class OAuthSessionRequestValidator : AbstractValidator<OAuthSessionRequest>
+public sealed class GoogleSessionRequestValidator : AbstractValidator<GoogleSessionRequest>
 {
-    public OAuthSessionRequestValidator()
-    {
-        RuleFor(x => x.Provider).NotEmpty().MaximumLength(50);
-        RuleFor(x => x.ProviderAccountId).NotEmpty().MaximumLength(256);
-        RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength(254);
-        RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
-        RuleFor(x => x.AvatarUrl).Must(BeAnAbsoluteUrl).When(x => !string.IsNullOrWhiteSpace(x.AvatarUrl));
-    }
-
-    private static bool BeAnAbsoluteUrl(string? value) => Uri.TryCreate(value, UriKind.Absolute, out _);
+    public GoogleSessionRequestValidator() => RuleFor(x => x.IdToken).NotEmpty();
 }
 
 public sealed class RefreshRequestValidator : AbstractValidator<RefreshRequest>

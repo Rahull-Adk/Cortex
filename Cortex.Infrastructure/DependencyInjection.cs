@@ -18,6 +18,7 @@ public static class DependencyInjection
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
+        services.Configure<GoogleAuthSettings>(configuration.GetSection("GoogleAuth"));
         services.Configure<BrevoSettings>(configuration.GetSection("Brevo"));
         services.Configure<FrontendSettings>(configuration.GetSection("Frontend"));
 
@@ -26,6 +27,7 @@ public static class DependencyInjection
         services.AddScoped<IEmailVerificationTokenRepository, EmailVerificationTokenRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ITokenService, JwtTokenService>();
+        services.AddScoped<IExternalIdentityTokenValidator, GoogleIdentityTokenValidator>();
         services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
         services.AddScoped<IEmailService, BrevoEmailService>();
 

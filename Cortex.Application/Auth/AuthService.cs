@@ -15,6 +15,7 @@ public class AuthService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordHasher _passwordHasher;
     private readonly ITokenService _tokenService;
+    private readonly IExternalIdentityTokenValidator _externalIdentityTokenValidator;
     private readonly IEmailService _emailService;
 
     public AuthService(
@@ -24,6 +25,7 @@ public class AuthService
         IUnitOfWork unitOfWork,
         IPasswordHasher passwordHasher,
         ITokenService tokenService,
+        IExternalIdentityTokenValidator externalIdentityTokenValidator,
         IEmailService emailService)
     {
         _users = users;
@@ -32,6 +34,7 @@ public class AuthService
         _unitOfWork = unitOfWork;
         _passwordHasher = passwordHasher;
         _tokenService = tokenService;
+        _externalIdentityTokenValidator = externalIdentityTokenValidator;
         _emailService = emailService;
     }
 
@@ -78,11 +81,14 @@ public class AuthService
         return Result.Success(BuildTokens(user));
     }
 
-    public async Task<Result<AuthTokensDto>> OAuthSessionAsync(OAuthSessionRequest request, CancellationToken ct = default)
+    public async Task<Result<AuthTokensDto>> GoogleSessionAsync(GoogleSessionRequest request, CancellationToken ct = default)
     {
-        var providerNormalized = request.Provider.ToLowerInvariant();
+        var identity = await _externalIdentityTokenValidator.ValidateGoogleIdTokenAsync(request.IdToken, ct);
+        if (identity is null)
+            return Result.Failure<AuthTokensDto>(AuthErrors.InvalidToken, "The Google identity token is invalid or expired.");
 
-        var account = await _accounts.FindByProviderAsync(providerNormalized, request.ProviderAccountId, ct);
+        const string provider = "google";
+        var account = await _accounts.FindByProviderAsync(provider, identity.ProviderAccountId, ct);
         if (account is not null)
         {
             var existingUser = await _users.FindByIdAsync(account.UserId, ct)
@@ -90,19 +96,19 @@ public class AuthService
             return Result.Success(BuildTokens(existingUser));
         }
 
-        var emailNormalized = request.Email.Trim().ToLowerInvariant();
+        var emailNormalized = identity.Email.Trim().ToLowerInvariant();
         var user = await _users.FindByEmailAsync(emailNormalized, ct);
 
         if (user is null)
         {
-            user = User.Create(request.Name, request.Email);
+            user = User.Create(identity.Name, identity.Email);
             _users.Add(user);
         }
 
         user.MarkEmailVerified();
-        user.UpdateProfile(request.Name, request.AvatarUrl);
+        user.UpdateProfile(identity.Name, identity.AvatarUrl);
 
-        _accounts.Add(UserAccount.CreateOAuth(user.Id, providerNormalized, request.ProviderAccountId));
+        _accounts.Add(UserAccount.CreateOAuth(user.Id, provider, identity.ProviderAccountId));
 
         await _unitOfWork.SaveChangesAsync(ct);
 

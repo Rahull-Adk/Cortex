@@ -38,10 +38,10 @@ public class AuthController : ControllerBase
         return Ok(result.Value);
     }
 
-    [HttpPost("oauth-session")]
-    public async Task<IActionResult> OAuthSession([FromBody] OAuthSessionRequest request, CancellationToken ct)
+    [HttpPost("google-session")]
+    public async Task<IActionResult> GoogleSession([FromBody] GoogleSessionRequest request, CancellationToken ct)
     {
-        var result = await _authService.OAuthSessionAsync(request, ct);
+        var result = await _authService.GoogleSessionAsync(request, ct);
         if (result.IsFailure) return MapError(result);
         SetTokenCookies(result.Value);
         return Ok(result.Value);
