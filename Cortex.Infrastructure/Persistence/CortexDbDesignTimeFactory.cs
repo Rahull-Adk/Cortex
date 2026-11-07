@@ -10,6 +10,7 @@ namespace Cortex.Infrastructure.Persistence
         {
             var configuration = new ConfigurationBuilder()
                 .AddUserSecrets<CortexDbDesignTimeFactory>()
+                .AddEnvironmentVariables()
                 .Build();
 
             var connectionString = configuration.GetConnectionString("DefaultConnection")

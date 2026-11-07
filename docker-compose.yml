@@ -1,0 +1,21 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection:?Set ConnectionStrings__DefaultConnection in .env}
+      Jwt__Secret: ${Jwt__Secret:?Set Jwt__Secret in .env}
+      Jwt__Issuer: cortex-api
+      Jwt__Audience: cortex-frontend
+      Jwt__AccessTokenExpiryMinutes: 15
+      Jwt__RefreshTokenExpiryDays: 7
+      GoogleAuth__ClientId: ${GoogleAuth__ClientId:?Set GoogleAuth__ClientId in .env}
+      Frontend__BaseUrl: ${Frontend__BaseUrl:-http://localhost:3000}
+      Brevo__ApiKey: ${Brevo__ApiKey:?Set Brevo__ApiKey in .env}
+      Brevo__SenderEmail: ${Brevo__SenderEmail:?Set Brevo__SenderEmail in .env}
+      Brevo__SenderName: ${Brevo__SenderName:-Cortex}
+    ports:
+      - "5203:8080"

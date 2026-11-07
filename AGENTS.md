@@ -238,9 +238,10 @@ The following represents the intended technology direction. Do not introduce alt
 |---|---|
 | Backend | ASP.NET Core (.NET 10) |
 | Language | C# |
-| Frontend | React + TypeScript |
+| Frontend | Next.js (App Router) + TypeScript |
 | Styling | Tailwind CSS |
-| Authentication | Clerk |
+| Authentication | NextAuth v5 (Auth.js) — Google OAuth + Email/Password credentials |
+| Token Strategy | Short-lived JWT access token + long-lived JWT refresh token, both issued by ASP.NET Core |
 | Database | PostgreSQL |
 | Vector Search | pgvector |
 | ORM | Entity Framework Core |
@@ -248,7 +249,7 @@ The following represents the intended technology direction. Do not introduce alt
 | Cache | Redis (optional, depending on requirements) |
 | AI / RAG | LLM integrations and LlamaIndex where appropriate |
 | Payments | Stripe (planned) |
-| Email | Brevo (planned) |
+| Email | Brevo — required for email verification flow |
 | Observability | OpenTelemetry |
 
 Technologies marked as planned or optional must not be treated as mandatory implementation decisions.
