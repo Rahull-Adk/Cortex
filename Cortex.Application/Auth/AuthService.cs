@@ -35,12 +35,12 @@ public class AuthService
         _emailService = emailService;
     }
 
-    public async Task<Result<AuthTokensDto>> RegisterAsync(RegisterRequest request, CancellationToken ct = default)
+    public async Task<Result<UserDto>> RegisterAsync(RegisterRequest request, CancellationToken ct = default)
     {
         var emailNormalized = request.Email.Trim().ToLowerInvariant();
 
         if (await _users.ExistsByEmailAsync(emailNormalized, ct))
-            return Result.Failure<AuthTokensDto>(AuthErrors.EmailAlreadyRegistered, "This email is already registered.");
+            return Result.Failure<UserDto>(AuthErrors.EmailAlreadyRegistered, "This email is already registered.");
 
         var user = User.Create(request.Name, request.Email);
         var account = UserAccount.CreateCredentials(user.Id, _passwordHasher.Hash(request.Password));
@@ -55,7 +55,7 @@ public class AuthService
 
         await _emailService.SendVerificationEmailAsync(user.Email, user.Name, rawToken, ct);
 
-        return Result.Success(BuildTokens(user));
+        return Result.Success(MapToDto(user));
     }
 
     public async Task<Result<AuthTokensDto>> LoginAsync(LoginRequest request, CancellationToken ct = default)
@@ -67,8 +67,13 @@ public class AuthService
             return Result.Failure<AuthTokensDto>(AuthErrors.InvalidCredentials, "Invalid email or password.");
 
         var account = await _accounts.FindCredentialsByUserIdAsync(user.Id, ct);
-        if (account?.PasswordHash is null || !_passwordHasher.Verify(request.Password, account.PasswordHash))
-            return Result.Failure<AuthTokensDto>(AuthErrors.InvalidCredentials, "Invalid email or password.");
+                if (account?.PasswordHash is null || !_passwordHasher.Verify(request.Password, account.PasswordHash))
+                    return Result.Failure<AuthTokensDto>(AuthErrors.InvalidCredentials, "Invalid email or password.");
+
+        if (!user.EmailVerifiedAt.HasValue)
+            return Result.Failure<AuthTokensDto>(AuthErrors.EmailNotVerified, "Verify your email address before signing in.");
+
+        
 
         return Result.Success(BuildTokens(user));
     }
@@ -149,7 +154,7 @@ public class AuthService
             return Result.Failure<AuthTokensDto>(AuthErrors.InvalidToken, "Invalid or expired refresh token.");
 
         var user = await _users.FindByIdAsync(userId.Value, ct);
-        if (user is null || !user.IsActive)
+        if (user is null || !user.IsActive || !user.EmailVerifiedAt.HasValue)
             return Result.Failure<AuthTokensDto>(AuthErrors.InvalidToken, "Invalid or expired refresh token.");
 
         return Result.Success(BuildTokens(user));

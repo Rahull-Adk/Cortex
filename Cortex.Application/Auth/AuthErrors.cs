@@ -4,5 +4,6 @@ public static class AuthErrors
 {
     public const string EmailAlreadyRegistered = "EMAIL_ALREADY_REGISTERED";
     public const string InvalidCredentials = "INVALID_CREDENTIALS";
+    public const string EmailNotVerified = "EMAIL_NOT_VERIFIED";
     public const string InvalidToken = "INVALID_TOKEN";
 }

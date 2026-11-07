@@ -4,6 +4,8 @@ using Cortex.Application.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using Cortex.Infrastructure.Auth.Settings;
+using Microsoft.Extensions.Options;
 
 namespace Cortex.Api.Controllers;
 
@@ -12,35 +14,46 @@ namespace Cortex.Api.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly AuthService _authService;
+    private readonly JwtSettings _jwtSettings;
 
-    public AuthController(AuthService authService) => _authService = authService;
+    public AuthController(AuthService authService, IOptions<JwtSettings> jwtSettings)
+    {
+        _authService = authService;
+        _jwtSettings = jwtSettings.Value;
+    }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request, CancellationToken ct)
     {
         var result = await _authService.RegisterAsync(request, ct);
-        return result.IsFailure ? MapError(result) : Ok(result.Value);
+        return result.IsFailure ? MapError(result) : Ok(new { message = "Registration successful. Verify your email to sign in.", user = result.Value });
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken ct)
     {
         var result = await _authService.LoginAsync(request, ct);
-        return result.IsFailure ? MapError(result) : Ok(result.Value);
+        if (result.IsFailure) return MapError(result);
+        SetTokenCookies(result.Value);
+        return Ok(result.Value);
     }
 
     [HttpPost("oauth-session")]
     public async Task<IActionResult> OAuthSession([FromBody] OAuthSessionRequest request, CancellationToken ct)
     {
         var result = await _authService.OAuthSessionAsync(request, ct);
-        return result.IsFailure ? MapError(result) : Ok(result.Value);
+        if (result.IsFailure) return MapError(result);
+        SetTokenCookies(result.Value);
+        return Ok(result.Value);
     }
 
     [HttpGet("verify-email")]
     public async Task<IActionResult> VerifyEmail([FromQuery] VerifyEmailRequest request, CancellationToken ct)
     {
         var result = await _authService.VerifyEmailAsync(request.Token, ct);
-        return result.IsFailure ? MapError(result) : Ok(result.Value);
+        if (result.IsFailure) return MapError(result);
+        SetTokenCookies(result.Value);
+        return Ok(result.Value);
     }
 
     [HttpPost("resend-verification")]
@@ -54,12 +67,19 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Refresh([FromBody] RefreshRequest request, CancellationToken ct)
     {
         var result = await _authService.RefreshAsync(request, ct);
-        return result.IsFailure ? MapError(result) : Ok(result.Value);
+        if (result.IsFailure) return MapError(result);
+        SetTokenCookies(result.Value);
+        return Ok(result.Value);
     }
 
     [Authorize]
     [HttpPost("logout")]
-    public IActionResult Logout() => Ok(new { message = "Logged out." });
+    public IActionResult Logout()
+    {
+        Response.Cookies.Delete("cortex_access_token", new CookieOptions { Path = "/", Secure = Request.IsHttps, SameSite = SameSiteMode.Lax });
+        Response.Cookies.Delete("cortex_refresh_token", new CookieOptions { Path = "/", Secure = Request.IsHttps, SameSite = SameSiteMode.Lax });
+        return Ok(new { message = "Logged out." });
+    }
 
     [Authorize]
     [HttpGet("me")]
@@ -78,8 +98,32 @@ public class AuthController : ControllerBase
     {
         AuthErrors.EmailAlreadyRegistered => Conflict(new { code = result.ErrorCode, message = result.ErrorMessage }),
         AuthErrors.InvalidCredentials => Unauthorized(new { code = result.ErrorCode, message = result.ErrorMessage }),
+        AuthErrors.EmailNotVerified => StatusCode(StatusCodes.Status403Forbidden, new { code = result.ErrorCode, message = result.ErrorMessage }),
         AuthErrors.InvalidToken => BadRequest(new { code = result.ErrorCode, message = result.ErrorMessage }),
         _ => StatusCode(500, new { message = "An unexpected error occurred." }),
     };
+
+    private void SetTokenCookies(AuthTokensDto tokens)
+    {
+        var accessCookie = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = Request.IsHttps,
+            SameSite = SameSiteMode.Lax,
+            Path = "/",
+            Expires = DateTimeOffset.UtcNow.AddMinutes(_jwtSettings.AccessTokenExpiryMinutes),
+        };
+        var refreshCookie = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = Request.IsHttps,
+            SameSite = SameSiteMode.Lax,
+            Path = "/",
+            Expires = DateTimeOffset.UtcNow.AddDays(_jwtSettings.RefreshTokenExpiryDays),
+        };
+
+        Response.Cookies.Append("cortex_access_token", tokens.AccessToken, accessCookie);
+        Response.Cookies.Append("cortex_refresh_token", tokens.RefreshToken, refreshCookie);
+    }
 }
 
