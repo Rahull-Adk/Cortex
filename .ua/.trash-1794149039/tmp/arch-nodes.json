@@ -1,0 +1,1091 @@
+[
+ {
+  "id": "file:Cortex.Application/Auth/Dtos/ExternalIdentity.cs",
+  "type": "file",
+  "name": "ExternalIdentity.cs",
+  "filePath": "Cortex.Application/Auth/Dtos/ExternalIdentity.cs",
+  "summary": "Defines the ExternalIdentity record carrying a verified third-party (Google) identity: provider account ID, email, name and optional avatar URL.",
+  "tags": [
+   "data-model",
+   "dto",
+   "authentication",
+   "type-definition"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/DependencyInjection.cs",
+  "type": "file",
+  "name": "DependencyInjection.cs",
+  "filePath": "Cortex.Application/DependencyInjection.cs",
+  "summary": "Application-layer composition extension that registers AuthService and all FluentValidation validators from the Application assembly.",
+  "tags": [
+   "dependency-injection",
+   "config",
+   "extension-method",
+   "entry-point"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Interfaces/IEmailService.cs",
+  "type": "file",
+  "name": "IEmailService.cs",
+  "filePath": "Cortex.Application/Interfaces/IEmailService.cs",
+  "summary": "Application abstraction for sending transactional email, currently limited to email-verification messages.",
+  "tags": [
+   "interface",
+   "abstraction",
+   "email",
+   "type-definition"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs",
+  "type": "file",
+  "name": "IExternalIdentityTokenValidator.cs",
+  "filePath": "Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs",
+  "summary": "Application abstraction for validating external identity provider tokens (Google ID tokens) and returning an ExternalIdentity.",
+  "tags": [
+   "interface",
+   "abstraction",
+   "authentication",
+   "oauth",
+   "type-definition"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Interfaces/IPasswordHasher.cs",
+  "type": "file",
+  "name": "IPasswordHasher.cs",
+  "filePath": "Cortex.Application/Interfaces/IPasswordHasher.cs",
+  "summary": "Application abstraction for hashing and verifying user passwords, keeping the hashing algorithm out of the Application layer.",
+  "tags": [
+   "interface",
+   "abstraction",
+   "security",
+   "type-definition"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Interfaces/IUnitOfWork.cs",
+  "type": "file",
+  "name": "IUnitOfWork.cs",
+  "filePath": "Cortex.Application/Interfaces/IUnitOfWork.cs",
+  "summary": "Application abstraction for committing pending persistence changes as a single unit of work.",
+  "tags": [
+   "interface",
+   "abstraction",
+   "persistence",
+   "type-definition"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Auth/BcryptPasswordHasher.cs",
+  "type": "file",
+  "name": "BcryptPasswordHasher.cs",
+  "filePath": "Cortex.Infrastructure/Auth/BcryptPasswordHasher.cs",
+  "summary": "Infrastructure implementation of IPasswordHasher using BCrypt.Net with a work factor of 12.",
+  "tags": [
+   "service",
+   "security",
+   "password",
+   "adapter"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+  "type": "file",
+  "name": "BrevoEmailService.cs",
+  "filePath": "Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+  "summary": "Infrastructure implementation of IEmailService that sends branded verification emails through the Brevo transactional SMTP API using a named HttpClient.",
+  "tags": [
+   "service",
+   "email",
+   "external-api",
+   "adapter",
+   "authentication"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+  "type": "file",
+  "name": "GoogleIdentityTokenValidator.cs",
+  "filePath": "Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+  "summary": "Infrastructure implementation of IExternalIdentityTokenValidator that verifies Google ID tokens with Google.Apis.Auth against the configured client ID.",
+  "tags": [
+   "service",
+   "authentication",
+   "oauth",
+   "validation",
+   "adapter"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Auth/Settings/BrevoSettings.cs",
+  "type": "file",
+  "name": "BrevoSettings.cs",
+  "filePath": "Cortex.Infrastructure/Auth/Settings/BrevoSettings.cs",
+  "summary": "Options class binding the Brevo configuration section: API key, sender email and sender name.",
+  "tags": [
+   "config",
+   "options-pattern",
+   "settings",
+   "data-model"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Auth/Settings/FrontendSettings.cs",
+  "type": "file",
+  "name": "FrontendSettings.cs",
+  "filePath": "Cortex.Infrastructure/Auth/Settings/FrontendSettings.cs",
+  "summary": "Options class binding the Frontend configuration section, holding the frontend base URL used to build email links.",
+  "tags": [
+   "config",
+   "options-pattern",
+   "settings",
+   "data-model"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Auth/Settings/GoogleAuthSettings.cs",
+  "type": "file",
+  "name": "GoogleAuthSettings.cs",
+  "filePath": "Cortex.Infrastructure/Auth/Settings/GoogleAuthSettings.cs",
+  "summary": "Options class binding the GoogleAuth configuration section, holding the Google OAuth client ID used as token audience.",
+  "tags": [
+   "config",
+   "options-pattern",
+   "settings",
+   "data-model"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/DependencyInjection.cs",
+  "type": "file",
+  "name": "DependencyInjection.cs",
+  "filePath": "Cortex.Infrastructure/DependencyInjection.cs",
+  "summary": "Infrastructure composition extension that registers the Npgsql EF Core DbContext, binds settings sections, maps Application interfaces to repository/auth/email implementations, and configures the Brevo HttpClient.",
+  "tags": [
+   "dependency-injection",
+   "config",
+   "composition-root",
+   "extension-method"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Repositories/UnitOfWork.cs",
+  "type": "file",
+  "name": "UnitOfWork.cs",
+  "filePath": "Cortex.Infrastructure/Repositories/UnitOfWork.cs",
+  "summary": "Infrastructure implementation of IUnitOfWork that delegates SaveChangesAsync to the EF Core CortexDbContext.",
+  "tags": [
+   "persistence",
+   "unit-of-work",
+   "adapter",
+   "service"
+  ]
+ },
+ {
+  "id": "file:Cortex.Api/Controllers/AuthController.cs",
+  "type": "file",
+  "name": "AuthController.cs",
+  "filePath": "Cortex.Api/Controllers/AuthController.cs",
+  "summary": "Thin ASP.NET Core API controller under /api/auth exposing register, login, Google session, email verification, refresh, logout and current-user endpoints; it delegates to AuthService, maps Result error codes to HTTP status codes, and sets HttpOnly JWT access/refresh cookies.",
+  "tags": [
+   "api-handler",
+   "authentication",
+   "controller",
+   "entry-point",
+   "cookies"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Auth/AuthErrors.cs",
+  "type": "file",
+  "name": "AuthErrors.cs",
+  "filePath": "Cortex.Application/Auth/AuthErrors.cs",
+  "summary": "Defines the string error-code constants (email already registered, invalid credentials, email not verified, invalid token) shared between AuthService and the API error mapping.",
+  "tags": [
+   "constants",
+   "authentication",
+   "error-handling"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Auth/AuthService.cs",
+  "type": "file",
+  "name": "AuthService.cs",
+  "filePath": "Cortex.Application/Auth/AuthService.cs",
+  "summary": "Core application service orchestrating the authentication use cases: credential registration and login, Google OAuth sign-in/account linking, email verification tokens, resending verification emails, refresh-token exchange and current-user lookup, all via injected repository and infrastructure abstractions.",
+  "tags": [
+   "service",
+   "authentication",
+   "use-case",
+   "email-verification",
+   "oauth"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Auth/Dtos/AuthTokensDto.cs",
+  "type": "file",
+  "name": "AuthTokensDto.cs",
+  "filePath": "Cortex.Application/Auth/Dtos/AuthTokensDto.cs",
+  "summary": "Response DTO record bundling the issued JWT access token, refresh token and the authenticated UserDto.",
+  "tags": [
+   "data-model",
+   "dto",
+   "authentication",
+   "tokens"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Auth/Dtos/GoogleSessionRequest.cs",
+  "type": "file",
+  "name": "GoogleSessionRequest.cs",
+  "filePath": "Cortex.Application/Auth/Dtos/GoogleSessionRequest.cs",
+  "summary": "Request DTO record carrying the Google ID token submitted to exchange for a Cortex session.",
+  "tags": [
+   "data-model",
+   "dto",
+   "oauth",
+   "request"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Auth/Dtos/LoginRequest.cs",
+  "type": "file",
+  "name": "LoginRequest.cs",
+  "filePath": "Cortex.Application/Auth/Dtos/LoginRequest.cs",
+  "summary": "Request DTO record with email and password for credential-based login.",
+  "tags": [
+   "data-model",
+   "dto",
+   "authentication",
+   "request"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Auth/Dtos/RefreshRequest.cs",
+  "type": "file",
+  "name": "RefreshRequest.cs",
+  "filePath": "Cortex.Application/Auth/Dtos/RefreshRequest.cs",
+  "summary": "Request DTO record carrying the refresh token used to obtain new access/refresh tokens.",
+  "tags": [
+   "data-model",
+   "dto",
+   "tokens",
+   "request"
+  ]
+ },
+ {
+  "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/register",
+  "type": "endpoint",
+  "name": "POST /api/auth/register",
+  "filePath": "Cortex.Api/Controllers/AuthController.cs",
+  "summary": "POST /api/auth/register action delegating to AuthService.RegisterAsync and returning the new user with a verify-your-email message. Public (anonymous) endpoint.",
+  "tags": [
+   "endpoint",
+   "authentication",
+   "rest-api"
+  ]
+ },
+ {
+  "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/login",
+  "type": "endpoint",
+  "name": "POST /api/auth/login",
+  "filePath": "Cortex.Api/Controllers/AuthController.cs",
+  "summary": "POST /api/auth/login action that calls AuthService.LoginAsync and sets token cookies on success. Public (anonymous) endpoint.",
+  "tags": [
+   "endpoint",
+   "authentication",
+   "rest-api"
+  ]
+ },
+ {
+  "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/google-session",
+  "type": "endpoint",
+  "name": "POST /api/auth/google-session",
+  "filePath": "Cortex.Api/Controllers/AuthController.cs",
+  "summary": "POST /api/auth/google-session action exchanging a Google ID token via AuthService.GoogleSessionAsync and setting token cookies. Public (anonymous) endpoint.",
+  "tags": [
+   "endpoint",
+   "authentication",
+   "rest-api"
+  ]
+ },
+ {
+  "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:GET /api/auth/verify-email",
+  "type": "endpoint",
+  "name": "GET /api/auth/verify-email",
+  "filePath": "Cortex.Api/Controllers/AuthController.cs",
+  "summary": "GET /api/auth/verify-email action verifying the query token via AuthService.VerifyEmailAsync and signing the user in. Public (anonymous) endpoint.",
+  "tags": [
+   "endpoint",
+   "authentication",
+   "rest-api"
+  ]
+ },
+ {
+  "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/resend-verification",
+  "type": "endpoint",
+  "name": "POST /api/auth/resend-verification",
+  "filePath": "Cortex.Api/Controllers/AuthController.cs",
+  "summary": "POST /api/auth/resend-verification action calling AuthService.ResendVerificationAsync and always returning a neutral message. Public (anonymous) endpoint.",
+  "tags": [
+   "endpoint",
+   "authentication",
+   "rest-api"
+  ]
+ },
+ {
+  "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/refresh",
+  "type": "endpoint",
+  "name": "POST /api/auth/refresh",
+  "filePath": "Cortex.Api/Controllers/AuthController.cs",
+  "summary": "POST /api/auth/refresh action rotating tokens via AuthService.RefreshAsync and resetting cookies. Public (anonymous) endpoint.",
+  "tags": [
+   "endpoint",
+   "authentication",
+   "rest-api"
+  ]
+ },
+ {
+  "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/logout",
+  "type": "endpoint",
+  "name": "POST /api/auth/logout",
+  "filePath": "Cortex.Api/Controllers/AuthController.cs",
+  "summary": "Authorized POST /api/auth/logout action that deletes the access and refresh token cookies. Requires authorization.",
+  "tags": [
+   "endpoint",
+   "authentication",
+   "rest-api"
+  ]
+ },
+ {
+  "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:GET /api/auth/me",
+  "type": "endpoint",
+  "name": "GET /api/auth/me",
+  "filePath": "Cortex.Api/Controllers/AuthController.cs",
+  "summary": "Authorized GET /api/auth/me action that parses the JWT sub claim and returns the current user via AuthService.GetCurrentUserAsync. Requires authorization.",
+  "tags": [
+   "endpoint",
+   "authentication",
+   "rest-api"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Auth/Dtos/RegisterRequest.cs",
+  "type": "file",
+  "name": "RegisterRequest.cs",
+  "filePath": "Cortex.Application/Auth/Dtos/RegisterRequest.cs",
+  "summary": "Request DTO record with name, email and password for new account registration.",
+  "tags": [
+   "data-model",
+   "dto",
+   "registration",
+   "request"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Auth/Dtos/ResendVerificationRequest.cs",
+  "type": "file",
+  "name": "ResendVerificationRequest.cs",
+  "filePath": "Cortex.Application/Auth/Dtos/ResendVerificationRequest.cs",
+  "summary": "Request DTO record containing the email address for which a new verification email should be sent.",
+  "tags": [
+   "data-model",
+   "dto",
+   "email-verification",
+   "request"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Auth/Dtos/UserDto.cs",
+  "type": "file",
+  "name": "UserDto.cs",
+  "filePath": "Cortex.Application/Auth/Dtos/UserDto.cs",
+  "summary": "Public-facing user projection record (id, name, email, email-verified flag, avatar URL) returned by auth endpoints instead of the User entity.",
+  "tags": [
+   "data-model",
+   "dto",
+   "user",
+   "response"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Auth/Dtos/VerifyEmailRequest.cs",
+  "type": "file",
+  "name": "VerifyEmailRequest.cs",
+  "filePath": "Cortex.Application/Auth/Dtos/VerifyEmailRequest.cs",
+  "summary": "Query-bound request DTO record carrying the raw email verification token.",
+  "tags": [
+   "data-model",
+   "dto",
+   "email-verification",
+   "request"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Auth/Validators/AuthRequestValidators.cs",
+  "type": "file",
+  "name": "AuthRequestValidators.cs",
+  "filePath": "Cortex.Application/Auth/Validators/AuthRequestValidators.cs",
+  "summary": "FluentValidation validators for every auth request DTO, enforcing required fields, email format and length limits (e.g. password 8-128 characters) before requests reach AuthService.",
+  "tags": [
+   "validation",
+   "authentication",
+   "fluent-validation",
+   "request"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Common/Result.cs",
+  "type": "file",
+  "name": "Result.cs",
+  "filePath": "Cortex.Application/Common/Result.cs",
+  "summary": "Generic Result and Result<T> types used across the Application layer to represent success or failure with an error code and message, avoiding exceptions for expected business failures.",
+  "tags": [
+   "utility",
+   "result-pattern",
+   "error-handling",
+   "type-definition"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Interfaces/IUserAccountRepository.cs",
+  "type": "file",
+  "name": "IUserAccountRepository.cs",
+  "filePath": "Cortex.Application/Interfaces/IUserAccountRepository.cs",
+  "summary": "Application-layer repository abstraction for UserAccount persistence, exposing lookups by OAuth provider identity and by credentials account, plus adding new accounts.",
+  "tags": [
+   "interface",
+   "repository",
+   "authentication",
+   "application-layer"
+  ]
+ },
+ {
+  "id": "file:Cortex.Domain/Entities/Organization.cs",
+  "type": "file",
+  "name": "Organization.cs",
+  "filePath": "Cortex.Domain/Entities/Organization.cs",
+  "summary": "Domain entity representing a business tenant (organization) with name, unique lowercase slug, logo, activation state, and a read-only collection of memberships.",
+  "tags": [
+   "data-model",
+   "domain-entity",
+   "multi-tenancy",
+   "factory"
+  ]
+ },
+ {
+  "id": "file:Cortex.Domain/Entities/OrganizationMembership.cs",
+  "type": "file",
+  "name": "OrganizationMembership.cs",
+  "filePath": "Cortex.Domain/Entities/OrganizationMembership.cs",
+  "summary": "Domain entity linking a User to an Organization with an OrganizationRole, forming the tenant membership join record.",
+  "tags": [
+   "data-model",
+   "domain-entity",
+   "multi-tenancy",
+   "authorization"
+  ]
+ },
+ {
+  "id": "file:Cortex.Domain/Entities/UserAccount.cs",
+  "type": "file",
+  "name": "UserAccount.cs",
+  "filePath": "Cortex.Domain/Entities/UserAccount.cs",
+  "summary": "Domain entity for a user login account, modeling either an OAuth provider identity (e.g. Google) or a local credentials account with a password hash.",
+  "tags": [
+   "data-model",
+   "domain-entity",
+   "authentication",
+   "factory"
+  ]
+ },
+ {
+  "id": "file:Cortex.Domain/Enums/OrganizationRole.cs",
+  "type": "file",
+  "name": "OrganizationRole.cs",
+  "filePath": "Cortex.Domain/Enums/OrganizationRole.cs",
+  "summary": "Enum of organization membership roles: None, Owner, Admin, and Member.",
+  "tags": [
+   "enum",
+   "authorization",
+   "multi-tenancy",
+   "type-definition"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Persistence/Configurations/OrganizationConfiguration.cs",
+  "type": "file",
+  "name": "OrganizationConfiguration.cs",
+  "filePath": "Cortex.Infrastructure/Persistence/Configurations/OrganizationConfiguration.cs",
+  "summary": "EF Core entity type configuration mapping Organization to the organizations table with snake_case columns, a unique slug index, and cascade-delete memberships relationship.",
+  "tags": [
+   "configuration",
+   "ef-core",
+   "database",
+   "schema-definition",
+   "multi-tenancy"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Persistence/Configurations/OrganizationMembershipConfiguration.cs",
+  "type": "file",
+  "name": "OrganizationMembershipConfiguration.cs",
+  "filePath": "Cortex.Infrastructure/Persistence/Configurations/OrganizationMembershipConfiguration.cs",
+  "summary": "EF Core entity type configuration mapping OrganizationMembership to organization_memberships with a unique (organization_id, user_id) index and role stored as a string.",
+  "tags": [
+   "configuration",
+   "ef-core",
+   "database",
+   "schema-definition",
+   "multi-tenancy"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Persistence/Configurations/UserAccountConfiguration.cs",
+  "type": "file",
+  "name": "UserAccountConfiguration.cs",
+  "filePath": "Cortex.Infrastructure/Persistence/Configurations/UserAccountConfiguration.cs",
+  "summary": "EF Core entity type configuration mapping UserAccount to the user_accounts table with a unique (provider, provider_account_id) index and optional password hash.",
+  "tags": [
+   "configuration",
+   "ef-core",
+   "database",
+   "schema-definition",
+   "authentication"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Persistence/CortexDbContext.cs",
+  "type": "file",
+  "name": "CortexDbContext.cs",
+  "filePath": "Cortex.Infrastructure/Persistence/CortexDbContext.cs",
+  "summary": "EF Core DbContext for Cortex exposing DbSets for users, user accounts, organizations, memberships, and email verification tokens, and auto-applying all entity configurations from the assembly.",
+  "tags": [
+   "ef-core",
+   "database",
+   "persistence",
+   "data-access"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Persistence/CortexDbDesignTimeFactory.cs",
+  "type": "file",
+  "name": "CortexDbDesignTimeFactory.cs",
+  "filePath": "Cortex.Infrastructure/Persistence/CortexDbDesignTimeFactory.cs",
+  "summary": "Design-time DbContext factory used by EF Core tooling (migrations) to build CortexDbContext with Npgsql from user secrets or environment variables.",
+  "tags": [
+   "ef-core",
+   "migration",
+   "configuration",
+   "factory",
+   "database"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Repositories/UserAccountRepository.cs",
+  "type": "file",
+  "name": "UserAccountRepository.cs",
+  "filePath": "Cortex.Infrastructure/Repositories/UserAccountRepository.cs",
+  "summary": "Infrastructure EF Core implementation of IUserAccountRepository querying UserAccounts by provider identity or credentials provider for a user.",
+  "tags": [
+   "repository",
+   "ef-core",
+   "data-access",
+   "authentication",
+   "service"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs",
+  "type": "file",
+  "name": "IEmailVerificationTokenRepository.cs",
+  "filePath": "Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs",
+  "summary": "Application-layer repository contract for persisting and querying email verification tokens (lookup by token hash, bulk delete by user, add/remove).",
+  "tags": [
+   "type-definition",
+   "repository",
+   "interface",
+   "email-verification"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Interfaces/IUserRepository.cs",
+  "type": "file",
+  "name": "IUserRepository.cs",
+  "filePath": "Cortex.Application/Interfaces/IUserRepository.cs",
+  "summary": "Application-layer repository contract for User lookups by id/email, email existence checks, and adding new users.",
+  "tags": [
+   "type-definition",
+   "repository",
+   "interface",
+   "user"
+  ]
+ },
+ {
+  "id": "file:Cortex.Domain/Entities/EmailVerificationToken.cs",
+  "type": "file",
+  "name": "EmailVerificationToken.cs",
+  "filePath": "Cortex.Domain/Entities/EmailVerificationToken.cs",
+  "summary": "Domain entity representing a hashed, expiring email verification token tied to a User, with a factory that sets expiry from a validity window.",
+  "tags": [
+   "data-model",
+   "entity",
+   "domain",
+   "email-verification",
+   "security"
+  ]
+ },
+ {
+  "id": "file:Cortex.Domain/Entities/User.cs",
+  "type": "file",
+  "name": "User.cs",
+  "filePath": "Cortex.Domain/Entities/User.cs",
+  "summary": "Core domain User aggregate holding identity/profile data, email verification state, active flag, and read-only collections of linked accounts and organization memberships.",
+  "tags": [
+   "data-model",
+   "entity",
+   "domain",
+   "aggregate",
+   "user"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs",
+  "type": "file",
+  "name": "EmailVerificationTokenConfiguration.cs",
+  "filePath": "Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs",
+  "summary": "EF Core Fluent API mapping of EmailVerificationToken to the email_verification_tokens table with snake_case columns, unique token-hash index, and cascading FK to users.",
+  "tags": [
+   "configuration",
+   "database",
+   "ef-core",
+   "schema-definition",
+   "email-verification"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs",
+  "type": "file",
+  "name": "UserConfiguration.cs",
+  "filePath": "Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs",
+  "summary": "EF Core Fluent API mapping of User to the users table with snake_case columns, unique email index, and cascade-delete one-to-many relationships to accounts and memberships.",
+  "tags": [
+   "configuration",
+   "database",
+   "ef-core",
+   "schema-definition",
+   "user"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs",
+  "type": "file",
+  "name": "EmailVerificationTokenRepository.cs",
+  "filePath": "Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs",
+  "summary": "EF Core implementation of IEmailVerificationTokenRepository backed by CortexDbContext, supporting token lookup by hash and removal of all tokens for a user.",
+  "tags": [
+   "repository",
+   "ef-core",
+   "data-access",
+   "email-verification"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Repositories/UserRepository.cs",
+  "type": "file",
+  "name": "UserRepository.cs",
+  "filePath": "Cortex.Infrastructure/Repositories/UserRepository.cs",
+  "summary": "EF Core implementation of IUserRepository backed by CortexDbContext, providing async user lookups by id/email and existence checks.",
+  "tags": [
+   "repository",
+   "ef-core",
+   "data-access",
+   "user"
+  ]
+ },
+ {
+  "id": "file:Cortex.Api/Program.cs",
+  "type": "file",
+  "name": "Program.cs",
+  "filePath": "Cortex.Api/Program.cs",
+  "summary": "ASP.NET Core API entry point and composition root: registers controllers with the global ValidationFilter, Application and Infrastructure services, JWT bearer auth (reading tokens from the cortex_access_token cookie), CORS for the frontend, and OpenAPI/Scalar in development.",
+  "tags": [
+   "entry-point",
+   "composition-root",
+   "authentication",
+   "configuration",
+   "middleware"
+  ]
+ },
+ {
+  "id": "file:Cortex.Api/ValidationFilter.cs",
+  "type": "file",
+  "name": "ValidationFilter.cs",
+  "filePath": "Cortex.Api/ValidationFilter.cs",
+  "summary": "Global MVC action filter that resolves FluentValidation validators for each action argument and short-circuits with a 400 ValidationProblemDetails response on failures.",
+  "tags": [
+   "middleware",
+   "validation",
+   "api-handler",
+   "filter"
+  ]
+ },
+ {
+  "id": "file:Cortex.Application/Interfaces/ITokenService.cs",
+  "type": "file",
+  "name": "ITokenService.cs",
+  "filePath": "Cortex.Application/Interfaces/ITokenService.cs",
+  "summary": "Application-layer abstraction for issuing JWT access/refresh tokens for a User and validating refresh tokens.",
+  "tags": [
+   "type-definition",
+   "interface",
+   "authentication",
+   "security"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Auth/JwtTokenService.cs",
+  "type": "file",
+  "name": "JwtTokenService.cs",
+  "filePath": "Cortex.Infrastructure/Auth/JwtTokenService.cs",
+  "summary": "Infrastructure implementation of ITokenService that issues HMAC-SHA256 signed JWT access and refresh tokens from JwtSettings and validates refresh tokens.",
+  "tags": [
+   "service",
+   "authentication",
+   "jwt",
+   "security"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Auth/Settings/JwtSettings.cs",
+  "type": "file",
+  "name": "JwtSettings.cs",
+  "filePath": "Cortex.Infrastructure/Auth/Settings/JwtSettings.cs",
+  "summary": "Strongly-typed options class for JWT configuration bound from the Jwt section: secret, issuer, audience, and access/refresh token lifetimes.",
+  "tags": [
+   "configuration",
+   "settings",
+   "jwt",
+   "data-model"
+  ]
+ },
+ {
+  "id": "service:.dockerignore",
+  "type": "service",
+  "name": ".dockerignore",
+  "filePath": ".dockerignore",
+  "summary": "Docker build-context exclusion list that keeps bin/obj build output, IDE folders, the git directory, the real .env secrets file and local appsettings overrides out of the API image.",
+  "tags": [
+   "containerization",
+   "infrastructure",
+   "security",
+   "build-system"
+  ]
+ },
+ {
+  "id": "service:Dockerfile",
+  "type": "service",
+  "name": "Dockerfile",
+  "filePath": "Dockerfile",
+  "summary": "Multi-stage Docker build that restores and publishes the Cortex.Api project with the .NET 10 SDK, then runs Cortex.Api.dll on the ASP.NET 10 runtime image exposing port 8080.",
+  "tags": [
+   "containerization",
+   "infrastructure",
+   "deployment",
+   "dotnet"
+  ]
+ },
+ {
+  "id": "service:Dockerfile:build",
+  "type": "service",
+  "name": "build",
+  "filePath": "Dockerfile",
+  "summary": "Build stage based on the .NET 10 SDK image that restores Cortex.Api dependencies and publishes a Release build to /app/publish.",
+  "tags": [
+   "containerization",
+   "build-system",
+   "build-stage"
+  ]
+ },
+ {
+  "id": "service:Dockerfile:runtime",
+  "type": "service",
+  "name": "runtime",
+  "filePath": "Dockerfile",
+  "summary": "Runtime stage based on the ASP.NET 10 image that copies the published output, exposes port 8080 and starts Cortex.Api.dll.",
+  "tags": [
+   "containerization",
+   "deployment",
+   "runtime-stage"
+  ]
+ },
+ {
+  "id": "service:docker-compose.yml",
+  "type": "service",
+  "name": "docker-compose.yml",
+  "filePath": "docker-compose.yml",
+  "summary": "Docker Compose definition for local development that builds the API from the Dockerfile, injects database, JWT, Google OAuth, frontend URL and Brevo settings from .env (failing fast when required ones are missing), and maps host port 5203 to container port 8080.",
+  "tags": [
+   "orchestration",
+   "infrastructure",
+   "local-development",
+   "configuration"
+  ]
+ },
+ {
+  "id": "service:docker-compose.yml:api",
+  "type": "service",
+  "name": "api",
+  "filePath": "docker-compose.yml",
+  "summary": "The single compose service running the Cortex ASP.NET Core API in Development mode; PostgreSQL is intentionally not included and must be provided by each developer.",
+  "tags": [
+   "orchestration",
+   "api-service",
+   "local-development"
+  ]
+ },
+ {
+  "id": "config:.env.example",
+  "type": "config",
+  "name": ".env.example",
+  "filePath": ".env.example",
+  "summary": "Template for the local .env file consumed by Docker Compose, listing required settings for the database connection string, JWT secret/issuer/audience, Google OAuth client ID, Brevo API key and sender identity, and the frontend base URL (placeholder values only).",
+  "tags": [
+   "configuration",
+   "environment",
+   "secrets-template",
+   "local-development"
+  ]
+ },
+ {
+  "id": "document:AGENTS.md",
+  "type": "document",
+  "name": "AGENTS.md",
+  "filePath": "AGENTS.md",
+  "summary": "Authoritative project charter for contributors and AI coding agents describing Cortex as a multi-tenant AI support and conversational commerce SaaS, its core features (assistants, RAG, catalogs, widget, billing), intended tech stack, Clean Architecture layering, and mandatory rules such as no MediatR, strict tenant isolation and no unrequested implementation.",
+  "tags": [
+   "documentation",
+   "entry-point",
+   "architecture",
+   "guidelines",
+   "multi-tenancy"
+  ]
+ },
+ {
+  "id": "document:FRONTEND_INTEGRATION.md",
+  "type": "document",
+  "name": "FRONTEND_INTEGRATION.md",
+  "filePath": "FRONTEND_INTEGRATION.md",
+  "summary": "Developer guide for running the backend locally with Docker Compose and an external PostgreSQL instance, applying EF Core migrations, and integrating the NextAuth frontend via the Google ID-token exchange at /api/auth/google-session, HttpOnly auth cookies, CORS with credentials, and the other auth endpoints.",
+  "tags": [
+   "documentation",
+   "authentication",
+   "local-development",
+   "api-reference",
+   "integration"
+  ]
+ },
+ {
+  "id": "config:Cortex.Api/Cortex.Api.csproj",
+  "type": "config",
+  "name": "Cortex.Api.csproj",
+  "filePath": "Cortex.Api/Cortex.Api.csproj",
+  "summary": "Web SDK project file for the API layer targeting net10.0 with nullable and implicit usings, referencing OpenAPI, Scalar API docs and EF Core packages plus the Application and Infrastructure projects as the composition root.",
+  "tags": [
+   "configuration",
+   "build-system",
+   "dotnet",
+   "composition-root"
+  ]
+ },
+ {
+  "id": "config:Cortex.Api/appsettings.Development.json",
+  "type": "config",
+  "name": "appsettings.Development.json",
+  "filePath": "Cortex.Api/appsettings.Development.json",
+  "summary": "Development-environment overrides for the API that set default and ASP.NET Core log levels.",
+  "tags": [
+   "configuration",
+   "logging",
+   "development"
+  ]
+ },
+ {
+  "id": "config:Cortex.Api/appsettings.json",
+  "type": "config",
+  "name": "appsettings.json",
+  "filePath": "Cortex.Api/appsettings.json",
+  "summary": "Base API configuration defining log levels and allowed hosts; JWT, database and Brevo settings are supplied via environment variables or user secrets instead.",
+  "tags": [
+   "configuration",
+   "logging",
+   "dotnet"
+  ]
+ },
+ {
+  "id": "file:Cortex.Api/Cortex.Api.http",
+  "type": "file",
+  "name": "Cortex.Api.http",
+  "filePath": "Cortex.Api/Cortex.Api.http",
+  "summary": "HTTP client scratch file for manually calling the API at localhost:5203; it still contains the template GET /weatherforecast request rather than the real auth endpoints.",
+  "tags": [
+   "http-client",
+   "manual-testing",
+   "scaffolding"
+  ]
+ },
+ {
+  "id": "config:Cortex.Api/Properties/launchSettings.json",
+  "type": "config",
+  "name": "launchSettings.json",
+  "filePath": "Cortex.Api/Properties/launchSettings.json",
+  "summary": "Local launch profiles running the API in the Development environment over HTTP on port 5203 and HTTPS on port 7187, without auto-launching a browser.",
+  "tags": [
+   "configuration",
+   "local-development",
+   "launch-profile"
+  ]
+ },
+ {
+  "id": "config:Cortex.Application/Cortex.Application.csproj",
+  "type": "config",
+  "name": "Cortex.Application.csproj",
+  "filePath": "Cortex.Application/Cortex.Application.csproj",
+  "summary": "Project file for the Application layer targeting net10.0, referencing only the Domain project plus FluentValidation and DI abstractions, consistent with Clean Architecture dependency rules.",
+  "tags": [
+   "configuration",
+   "build-system",
+   "dotnet",
+   "clean-architecture"
+  ]
+ },
+ {
+  "id": "config:Cortex.Domain/Cortex.Domain.csproj",
+  "type": "config",
+  "name": "Cortex.Domain.csproj",
+  "filePath": "Cortex.Domain/Cortex.Domain.csproj",
+  "summary": "Minimal project file for the Domain layer targeting net10.0 with no project or package references, keeping the core model framework-independent.",
+  "tags": [
+   "configuration",
+   "build-system",
+   "dotnet",
+   "clean-architecture"
+  ]
+ },
+ {
+  "id": "config:Cortex.Infrastructure/Cortex.Infrastructure.csproj",
+  "type": "config",
+  "name": "Cortex.Infrastructure.csproj",
+  "filePath": "Cortex.Infrastructure/Cortex.Infrastructure.csproj",
+  "summary": "Project file for the Infrastructure layer referencing Application and Domain, and pulling in EF Core with the Npgsql PostgreSQL provider and design tools, BCrypt hashing, Google ID-token validation, JWT bearer/token libraries and user secrets.",
+  "tags": [
+   "configuration",
+   "build-system",
+   "dotnet",
+   "persistence",
+   "authentication"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Migrations/20261106150322_InitialCreate.cs",
+  "type": "file",
+  "name": "20261106150322_InitialCreate.cs",
+  "filePath": "Cortex.Infrastructure/Migrations/20261106150322_InitialCreate.cs",
+  "summary": "Initial EF Core migration creating the identity and tenancy schema: organizations, users, organization_memberships and user_accounts tables with foreign keys and unique indexes on slug, email, provider account and membership pairs.",
+  "tags": [
+   "migration",
+   "database",
+   "persistence",
+   "multi-tenancy"
+  ]
+ },
+ {
+  "id": "table:Cortex.Infrastructure/Migrations/20261106150322_InitialCreate.cs:organizations",
+  "type": "table",
+  "name": "organizations",
+  "filePath": "Cortex.Infrastructure/Migrations/20261106150322_InitialCreate.cs",
+  "summary": "Tenant table for business organizations, with a unique slug index.",
+  "tags": [
+   "database",
+   "multi-tenancy",
+   "tenant"
+  ]
+ },
+ {
+  "id": "table:Cortex.Infrastructure/Migrations/20261106150322_InitialCreate.cs:users",
+  "type": "table",
+  "name": "users",
+  "filePath": "Cortex.Infrastructure/Migrations/20261106150322_InitialCreate.cs",
+  "summary": "Business-owner user table with a unique email index; parent of memberships, external accounts and verification tokens.",
+  "tags": [
+   "database",
+   "identity",
+   "user"
+  ]
+ },
+ {
+  "id": "table:Cortex.Infrastructure/Migrations/20261106150322_InitialCreate.cs:organization_memberships",
+  "type": "table",
+  "name": "organization_memberships",
+  "filePath": "Cortex.Infrastructure/Migrations/20261106150322_InitialCreate.cs",
+  "summary": "Join table linking users to organizations, unique per organization/user pair and cascading on delete.",
+  "tags": [
+   "database",
+   "multi-tenancy",
+   "membership"
+  ]
+ },
+ {
+  "id": "table:Cortex.Infrastructure/Migrations/20261106150322_InitialCreate.cs:user_accounts",
+  "type": "table",
+  "name": "user_accounts",
+  "filePath": "Cortex.Infrastructure/Migrations/20261106150322_InitialCreate.cs",
+  "summary": "Login accounts per user (credential or external provider), unique on provider and provider account ID.",
+  "tags": [
+   "database",
+   "authentication",
+   "oauth"
+  ]
+ },
+ {
+  "id": "file:Cortex.Infrastructure/Migrations/20261107123852_AddEmailVerificationTokens.cs",
+  "type": "file",
+  "name": "20261107123852_AddEmailVerificationTokens.cs",
+  "filePath": "Cortex.Infrastructure/Migrations/20261107123852_AddEmailVerificationTokens.cs",
+  "summary": "EF Core migration adding the email_verification_tokens table, linked to users with a unique token-hash index, to support the email verification flow.",
+  "tags": [
+   "migration",
+   "database",
+   "authentication",
+   "email-verification"
+  ]
+ },
+ {
+  "id": "table:Cortex.Infrastructure/Migrations/20261107123852_AddEmailVerificationTokens.cs:email_verification_tokens",
+  "type": "table",
+  "name": "email_verification_tokens",
+  "filePath": "Cortex.Infrastructure/Migrations/20261107123852_AddEmailVerificationTokens.cs",
+  "summary": "Stores hashed, expiring email verification tokens for users, unique on token hash.",
+  "tags": [
+   "database",
+   "authentication",
+   "email-verification"
+  ]
+ },
+ {
+  "id": "file:Cortex.slnx",
+  "type": "file",
+  "name": "Cortex.slnx",
+  "filePath": "Cortex.slnx",
+  "summary": "XML solution file grouping the four Clean Architecture projects: Api, Application, Domain and Infrastructure.",
+  "tags": [
+   "build-system",
+   "solution",
+   "dotnet",
+   "entry-point"
+  ]
+ }
+]

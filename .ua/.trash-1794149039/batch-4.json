@@ -1,0 +1,658 @@
+{
+ "nodes": [
+  {
+   "id": "file:Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs",
+   "type": "file",
+   "name": "IEmailVerificationTokenRepository.cs",
+   "filePath": "Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs",
+   "summary": "Application-layer repository contract for persisting and querying email verification tokens (lookup by token hash, bulk delete by user, add/remove).",
+   "tags": [
+    "type-definition",
+    "repository",
+    "interface",
+    "email-verification"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs:IEmailVerificationTokenRepository",
+   "type": "class",
+   "name": "IEmailVerificationTokenRepository",
+   "filePath": "Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs",
+   "lineRange": [
+    5,
+    11
+   ],
+   "summary": "Abstraction over storage of EmailVerificationToken entities used by the auth flow to find, add, remove, and purge tokens.",
+   "tags": [
+    "interface",
+    "repository",
+    "email-verification"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Application/Interfaces/IUserRepository.cs",
+   "type": "file",
+   "name": "IUserRepository.cs",
+   "filePath": "Cortex.Application/Interfaces/IUserRepository.cs",
+   "summary": "Application-layer repository contract for User lookups by id/email, email existence checks, and adding new users.",
+   "tags": [
+    "type-definition",
+    "repository",
+    "interface",
+    "user"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Application/Interfaces/IUserRepository.cs:IUserRepository",
+   "type": "class",
+   "name": "IUserRepository",
+   "filePath": "Cortex.Application/Interfaces/IUserRepository.cs",
+   "lineRange": [
+    5,
+    11
+   ],
+   "summary": "Abstraction for User persistence used by AuthService; exposes async lookup by id or email and existence checks.",
+   "tags": [
+    "interface",
+    "repository",
+    "user"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Domain/Entities/EmailVerificationToken.cs",
+   "type": "file",
+   "name": "EmailVerificationToken.cs",
+   "filePath": "Cortex.Domain/Entities/EmailVerificationToken.cs",
+   "summary": "Domain entity representing a hashed, expiring email verification token tied to a User, with a factory that sets expiry from a validity window.",
+   "tags": [
+    "data-model",
+    "entity",
+    "domain",
+    "email-verification",
+    "security"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Domain/Entities/EmailVerificationToken.cs:EmailVerificationToken",
+   "type": "class",
+   "name": "EmailVerificationToken",
+   "filePath": "Cortex.Domain/Entities/EmailVerificationToken.cs",
+   "lineRange": [
+    3,
+    36
+   ],
+   "summary": "Encapsulated entity with private setters storing user id, token hash, expiry and creation time, plus an IsExpired computed property and Create factory.",
+   "tags": [
+    "data-model",
+    "entity",
+    "factory",
+    "email-verification"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:Cortex.Domain/Entities/EmailVerificationToken.cs:Create",
+   "type": "function",
+   "name": "Create",
+   "filePath": "Cortex.Domain/Entities/EmailVerificationToken.cs",
+   "lineRange": [
+    25,
+    35
+   ],
+   "summary": "Static factory validating the token hash and creating a token with a new Guid and an expiry computed from the given validity TimeSpan.",
+   "tags": [
+    "factory",
+    "validation",
+    "email-verification"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Domain/Entities/User.cs",
+   "type": "file",
+   "name": "User.cs",
+   "filePath": "Cortex.Domain/Entities/User.cs",
+   "summary": "Core domain User aggregate holding identity/profile data, email verification state, active flag, and read-only collections of linked accounts and organization memberships.",
+   "tags": [
+    "data-model",
+    "entity",
+    "domain",
+    "aggregate",
+    "user"
+   ],
+   "complexity": "moderate",
+   "languageNotes": "Uses private backing lists exposed as IReadOnlyCollection and private setters to enforce invariants, a common DDD pattern that EF Core supports via field mapping."
+  },
+  {
+   "id": "class:Cortex.Domain/Entities/User.cs:User",
+   "type": "class",
+   "name": "User",
+   "filePath": "Cortex.Domain/Entities/User.cs",
+   "lineRange": [
+    3,
+    69
+   ],
+   "summary": "User aggregate root with factory creation (normalized lowercase email), profile updates, idempotent email verification, and activation/deactivation behavior.",
+   "tags": [
+    "data-model",
+    "entity",
+    "aggregate",
+    "user"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:Cortex.Domain/Entities/User.cs:Create",
+   "type": "function",
+   "name": "Create",
+   "filePath": "Cortex.Domain/Entities/User.cs",
+   "lineRange": [
+    29,
+    41
+   ],
+   "summary": "Static factory that validates name/email, trims and lowercases the email, and stamps creation/update timestamps on a new User.",
+   "tags": [
+    "factory",
+    "validation",
+    "user"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs",
+   "type": "file",
+   "name": "EmailVerificationTokenConfiguration.cs",
+   "filePath": "Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs",
+   "summary": "EF Core Fluent API mapping of EmailVerificationToken to the email_verification_tokens table with snake_case columns, unique token-hash index, and cascading FK to users.",
+   "tags": [
+    "configuration",
+    "database",
+    "ef-core",
+    "schema-definition",
+    "email-verification"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs:EmailVerificationTokenConfiguration",
+   "type": "class",
+   "name": "EmailVerificationTokenConfiguration",
+   "filePath": "Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs",
+   "lineRange": [
+    7,
+    44
+   ],
+   "summary": "IEntityTypeConfiguration<EmailVerificationToken> implementation defining table, keys, columns, index, and User relationship.",
+   "tags": [
+    "ef-core",
+    "configuration",
+    "database"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs:Configure",
+   "type": "function",
+   "name": "Configure",
+   "filePath": "Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs",
+   "lineRange": [
+    9,
+    43
+   ],
+   "summary": "Configures table name, primary key, column names/lengths, unique TokenHash index, and cascade-delete relationship to User.",
+   "tags": [
+    "ef-core",
+    "configuration",
+    "schema-definition"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs",
+   "type": "file",
+   "name": "UserConfiguration.cs",
+   "filePath": "Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs",
+   "summary": "EF Core Fluent API mapping of User to the users table with snake_case columns, unique email index, and cascade-delete one-to-many relationships to accounts and memberships.",
+   "tags": [
+    "configuration",
+    "database",
+    "ef-core",
+    "schema-definition",
+    "user"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs:UserConfiguration",
+   "type": "class",
+   "name": "UserConfiguration",
+   "filePath": "Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs",
+   "lineRange": [
+    7,
+    62
+   ],
+   "summary": "IEntityTypeConfiguration<User> implementation defining the users table schema and its navigation relationships.",
+   "tags": [
+    "ef-core",
+    "configuration",
+    "database"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs:Configure",
+   "type": "function",
+   "name": "Configure",
+   "filePath": "Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs",
+   "lineRange": [
+    9,
+    61
+   ],
+   "summary": "Maps User properties to columns with lengths and defaults, adds a unique Email index, and configures cascading Accounts and Memberships relationships.",
+   "tags": [
+    "ef-core",
+    "configuration",
+    "schema-definition"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs",
+   "type": "file",
+   "name": "EmailVerificationTokenRepository.cs",
+   "filePath": "Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs",
+   "summary": "EF Core implementation of IEmailVerificationTokenRepository backed by CortexDbContext, supporting token lookup by hash and removal of all tokens for a user.",
+   "tags": [
+    "repository",
+    "ef-core",
+    "data-access",
+    "email-verification"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs:EmailVerificationTokenRepository",
+   "type": "class",
+   "name": "EmailVerificationTokenRepository",
+   "filePath": "Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs",
+   "lineRange": [
+    8,
+    29
+   ],
+   "summary": "Infrastructure repository querying the EmailVerificationTokens DbSet asynchronously; changes are committed separately via the unit of work.",
+   "tags": [
+    "repository",
+    "ef-core",
+    "data-access"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Infrastructure/Repositories/UserRepository.cs",
+   "type": "file",
+   "name": "UserRepository.cs",
+   "filePath": "Cortex.Infrastructure/Repositories/UserRepository.cs",
+   "summary": "EF Core implementation of IUserRepository backed by CortexDbContext, providing async user lookups by id/email and existence checks.",
+   "tags": [
+    "repository",
+    "ef-core",
+    "data-access",
+    "user"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Infrastructure/Repositories/UserRepository.cs:UserRepository",
+   "type": "class",
+   "name": "UserRepository",
+   "filePath": "Cortex.Infrastructure/Repositories/UserRepository.cs",
+   "lineRange": [
+    8,
+    24
+   ],
+   "summary": "Infrastructure repository wrapping the Users DbSet with FirstOrDefaultAsync/AnyAsync queries and Add.",
+   "tags": [
+    "repository",
+    "ef-core",
+    "data-access"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs",
+   "target": "file:Cortex.Domain/Entities/EmailVerificationToken.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Interfaces/IUserRepository.cs",
+   "target": "file:Cortex.Domain/Entities/User.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Domain/Entities/EmailVerificationToken.cs",
+   "target": "file:Cortex.Domain/Entities/User.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Domain/Entities/User.cs",
+   "target": "file:Cortex.Domain/Entities/OrganizationMembership.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Domain/Entities/User.cs",
+   "target": "file:Cortex.Domain/Entities/UserAccount.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs",
+   "target": "file:Cortex.Domain/Entities/EmailVerificationToken.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs",
+   "target": "file:Cortex.Domain/Entities/User.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs",
+   "target": "file:Cortex.Domain/Entities/User.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs",
+   "target": "file:Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs",
+   "target": "file:Cortex.Domain/Entities/EmailVerificationToken.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs",
+   "target": "file:Cortex.Infrastructure/Persistence/CortexDbContext.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Repositories/UserRepository.cs",
+   "target": "file:Cortex.Application/Interfaces/IUserRepository.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Repositories/UserRepository.cs",
+   "target": "file:Cortex.Domain/Entities/User.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Repositories/UserRepository.cs",
+   "target": "file:Cortex.Infrastructure/Persistence/CortexDbContext.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs",
+   "target": "class:Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs:IEmailVerificationTokenRepository",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs",
+   "target": "class:Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs:IEmailVerificationTokenRepository",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Application/Interfaces/IUserRepository.cs",
+   "target": "class:Cortex.Application/Interfaces/IUserRepository.cs:IUserRepository",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Application/Interfaces/IUserRepository.cs",
+   "target": "class:Cortex.Application/Interfaces/IUserRepository.cs:IUserRepository",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Domain/Entities/EmailVerificationToken.cs",
+   "target": "class:Cortex.Domain/Entities/EmailVerificationToken.cs:EmailVerificationToken",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Domain/Entities/EmailVerificationToken.cs",
+   "target": "class:Cortex.Domain/Entities/EmailVerificationToken.cs:EmailVerificationToken",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Domain/Entities/EmailVerificationToken.cs",
+   "target": "function:Cortex.Domain/Entities/EmailVerificationToken.cs:Create",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Domain/Entities/EmailVerificationToken.cs",
+   "target": "function:Cortex.Domain/Entities/EmailVerificationToken.cs:Create",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Domain/Entities/User.cs",
+   "target": "class:Cortex.Domain/Entities/User.cs:User",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Domain/Entities/User.cs",
+   "target": "class:Cortex.Domain/Entities/User.cs:User",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Domain/Entities/User.cs",
+   "target": "function:Cortex.Domain/Entities/User.cs:Create",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Domain/Entities/User.cs",
+   "target": "function:Cortex.Domain/Entities/User.cs:Create",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs",
+   "target": "class:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs:EmailVerificationTokenConfiguration",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs",
+   "target": "class:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs:EmailVerificationTokenConfiguration",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs",
+   "target": "function:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs:Configure",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs",
+   "target": "function:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs:Configure",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs",
+   "target": "class:Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs:UserConfiguration",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs",
+   "target": "class:Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs:UserConfiguration",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs",
+   "target": "function:Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs:Configure",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs",
+   "target": "function:Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs:Configure",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs",
+   "target": "class:Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs:EmailVerificationTokenRepository",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs",
+   "target": "class:Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs:EmailVerificationTokenRepository",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Repositories/UserRepository.cs",
+   "target": "class:Cortex.Infrastructure/Repositories/UserRepository.cs:UserRepository",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Repositories/UserRepository.cs",
+   "target": "class:Cortex.Infrastructure/Repositories/UserRepository.cs:UserRepository",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "class:Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs:EmailVerificationTokenRepository",
+   "target": "class:Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs:IEmailVerificationTokenRepository",
+   "type": "implements",
+   "direction": "forward",
+   "weight": 0.9
+  },
+  {
+   "source": "class:Cortex.Infrastructure/Repositories/UserRepository.cs:UserRepository",
+   "target": "class:Cortex.Application/Interfaces/IUserRepository.cs:IUserRepository",
+   "type": "implements",
+   "direction": "forward",
+   "weight": 0.9
+  },
+  {
+   "source": "class:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs:EmailVerificationTokenConfiguration",
+   "target": "class:Cortex.Domain/Entities/EmailVerificationToken.cs:EmailVerificationToken",
+   "type": "defines_schema",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "class:Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs:UserConfiguration",
+   "target": "class:Cortex.Domain/Entities/User.cs:User",
+   "type": "defines_schema",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs",
+   "target": "file:Cortex.Domain/Entities/EmailVerificationToken.cs",
+   "type": "configures",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs",
+   "target": "file:Cortex.Domain/Entities/User.cs",
+   "type": "configures",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "class:Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs:EmailVerificationTokenRepository",
+   "target": "class:Cortex.Infrastructure/Persistence/CortexDbContext.cs:CortexDbContext",
+   "type": "depends_on",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "class:Cortex.Infrastructure/Repositories/UserRepository.cs:UserRepository",
+   "target": "class:Cortex.Infrastructure/Persistence/CortexDbContext.cs:CortexDbContext",
+   "type": "depends_on",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "class:Cortex.Domain/Entities/EmailVerificationToken.cs:EmailVerificationToken",
+   "target": "class:Cortex.Domain/Entities/User.cs:User",
+   "type": "related",
+   "direction": "forward",
+   "weight": 0.5
+  }
+ ]
+}

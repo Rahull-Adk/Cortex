@@ -1,0 +1,1844 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 13,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 13,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 13,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "Cortex.Api/Controllers/AuthController.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 129,
+      "nonEmptyLines": 112,
+      "functions": [
+        {
+          "name": "AuthController",
+          "startLine": 19,
+          "endLine": 23,
+          "params": [
+            "authService",
+            "jwtSettings"
+          ]
+        },
+        {
+          "name": "Register",
+          "startLine": 25,
+          "endLine": 30,
+          "params": [
+            "request",
+            "ct"
+          ]
+        },
+        {
+          "name": "Login",
+          "startLine": 32,
+          "endLine": 39,
+          "params": [
+            "request",
+            "ct"
+          ]
+        },
+        {
+          "name": "GoogleSession",
+          "startLine": 41,
+          "endLine": 48,
+          "params": [
+            "request",
+            "ct"
+          ]
+        },
+        {
+          "name": "VerifyEmail",
+          "startLine": 50,
+          "endLine": 57,
+          "params": [
+            "request",
+            "ct"
+          ]
+        },
+        {
+          "name": "ResendVerification",
+          "startLine": 59,
+          "endLine": 64,
+          "params": [
+            "request",
+            "ct"
+          ]
+        },
+        {
+          "name": "Refresh",
+          "startLine": 66,
+          "endLine": 73,
+          "params": [
+            "request",
+            "ct"
+          ]
+        },
+        {
+          "name": "Logout",
+          "startLine": 75,
+          "endLine": 82,
+          "params": []
+        },
+        {
+          "name": "Me",
+          "startLine": 84,
+          "endLine": 95,
+          "params": [
+            "ct"
+          ]
+        },
+        {
+          "name": "MapError",
+          "startLine": 97,
+          "endLine": 104,
+          "params": [
+            "result"
+          ]
+        },
+        {
+          "name": "SetTokenCookies",
+          "startLine": 106,
+          "endLine": 127,
+          "params": [
+            "tokens"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "AuthController",
+          "startLine": 12,
+          "endLine": 128,
+          "methods": [
+            "AuthController",
+            "Register",
+            "Login",
+            "GoogleSession",
+            "VerifyEmail",
+            "ResendVerification",
+            "Refresh",
+            "Logout",
+            "Me",
+            "MapError",
+            "SetTokenCookies"
+          ],
+          "properties": [
+            "_authService",
+            "_jwtSettings"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AuthController",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "Register",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "Login",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "GoogleSession",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "VerifyEmail",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "ResendVerification",
+          "line": 59,
+          "isDefault": false
+        },
+        {
+          "name": "Refresh",
+          "line": 66,
+          "isDefault": false
+        },
+        {
+          "name": "Logout",
+          "line": 75,
+          "isDefault": false
+        },
+        {
+          "name": "Me",
+          "line": 84,
+          "isDefault": false
+        },
+        {
+          "name": "AuthController",
+          "line": 12,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Register",
+          "callee": "_authService.RegisterAsync",
+          "lineNumber": 28
+        },
+        {
+          "caller": "Register",
+          "callee": "MapError",
+          "lineNumber": 29
+        },
+        {
+          "caller": "Register",
+          "callee": "Ok",
+          "lineNumber": 29
+        },
+        {
+          "caller": "Login",
+          "callee": "_authService.LoginAsync",
+          "lineNumber": 35
+        },
+        {
+          "caller": "Login",
+          "callee": "MapError",
+          "lineNumber": 36
+        },
+        {
+          "caller": "Login",
+          "callee": "SetTokenCookies",
+          "lineNumber": 37
+        },
+        {
+          "caller": "Login",
+          "callee": "Ok",
+          "lineNumber": 38
+        },
+        {
+          "caller": "GoogleSession",
+          "callee": "_authService.GoogleSessionAsync",
+          "lineNumber": 44
+        },
+        {
+          "caller": "GoogleSession",
+          "callee": "MapError",
+          "lineNumber": 45
+        },
+        {
+          "caller": "GoogleSession",
+          "callee": "SetTokenCookies",
+          "lineNumber": 46
+        },
+        {
+          "caller": "GoogleSession",
+          "callee": "Ok",
+          "lineNumber": 47
+        },
+        {
+          "caller": "VerifyEmail",
+          "callee": "_authService.VerifyEmailAsync",
+          "lineNumber": 53
+        },
+        {
+          "caller": "VerifyEmail",
+          "callee": "MapError",
+          "lineNumber": 54
+        },
+        {
+          "caller": "VerifyEmail",
+          "callee": "SetTokenCookies",
+          "lineNumber": 55
+        },
+        {
+          "caller": "VerifyEmail",
+          "callee": "Ok",
+          "lineNumber": 56
+        },
+        {
+          "caller": "ResendVerification",
+          "callee": "_authService.ResendVerificationAsync",
+          "lineNumber": 62
+        },
+        {
+          "caller": "ResendVerification",
+          "callee": "Ok",
+          "lineNumber": 63
+        },
+        {
+          "caller": "Refresh",
+          "callee": "_authService.RefreshAsync",
+          "lineNumber": 69
+        },
+        {
+          "caller": "Refresh",
+          "callee": "MapError",
+          "lineNumber": 70
+        },
+        {
+          "caller": "Refresh",
+          "callee": "SetTokenCookies",
+          "lineNumber": 71
+        },
+        {
+          "caller": "Refresh",
+          "callee": "Ok",
+          "lineNumber": 72
+        },
+        {
+          "caller": "Logout",
+          "callee": "Response.Cookies.Delete",
+          "lineNumber": 79
+        },
+        {
+          "caller": "Logout",
+          "callee": "new CookieOptions",
+          "lineNumber": 79
+        },
+        {
+          "caller": "Logout",
+          "callee": "Response.Cookies.Delete",
+          "lineNumber": 80
+        },
+        {
+          "caller": "Logout",
+          "callee": "new CookieOptions",
+          "lineNumber": 80
+        },
+        {
+          "caller": "Logout",
+          "callee": "Ok",
+          "lineNumber": 81
+        },
+        {
+          "caller": "Me",
+          "callee": "User.FindFirst",
+          "lineNumber": 88
+        },
+        {
+          "caller": "Me",
+          "callee": "Guid.TryParse",
+          "lineNumber": 90
+        },
+        {
+          "caller": "Me",
+          "callee": "Unauthorized",
+          "lineNumber": 91
+        },
+        {
+          "caller": "Me",
+          "callee": "_authService.GetCurrentUserAsync",
+          "lineNumber": 93
+        },
+        {
+          "caller": "Me",
+          "callee": "Unauthorized",
+          "lineNumber": 94
+        },
+        {
+          "caller": "Me",
+          "callee": "Ok",
+          "lineNumber": 94
+        },
+        {
+          "caller": "MapError",
+          "callee": "Conflict",
+          "lineNumber": 99
+        },
+        {
+          "caller": "MapError",
+          "callee": "Unauthorized",
+          "lineNumber": 100
+        },
+        {
+          "caller": "MapError",
+          "callee": "StatusCode",
+          "lineNumber": 101
+        },
+        {
+          "caller": "MapError",
+          "callee": "BadRequest",
+          "lineNumber": 102
+        },
+        {
+          "caller": "MapError",
+          "callee": "StatusCode",
+          "lineNumber": 103
+        },
+        {
+          "caller": "SetTokenCookies",
+          "callee": "new CookieOptions",
+          "lineNumber": 108
+        },
+        {
+          "caller": "SetTokenCookies",
+          "callee": "DateTimeOffset.UtcNow.AddMinutes",
+          "lineNumber": 114
+        },
+        {
+          "caller": "SetTokenCookies",
+          "callee": "new CookieOptions",
+          "lineNumber": 116
+        },
+        {
+          "caller": "SetTokenCookies",
+          "callee": "DateTimeOffset.UtcNow.AddDays",
+          "lineNumber": 122
+        },
+        {
+          "caller": "SetTokenCookies",
+          "callee": "Response.Cookies.Append",
+          "lineNumber": 125
+        },
+        {
+          "caller": "SetTokenCookies",
+          "callee": "Response.Cookies.Append",
+          "lineNumber": 126
+        }
+      ],
+      "metrics": {
+        "importCount": 12,
+        "exportCount": 10,
+        "functionCount": 11,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Auth/AuthErrors.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 9,
+      "nonEmptyLines": 8,
+      "classes": [
+        {
+          "name": "AuthErrors",
+          "startLine": 3,
+          "endLine": 9,
+          "methods": [],
+          "properties": [
+            "EmailAlreadyRegistered",
+            "InvalidCredentials",
+            "EmailNotVerified",
+            "InvalidToken"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "EmailAlreadyRegistered",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "InvalidCredentials",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "EmailNotVerified",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "InvalidToken",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "AuthErrors",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Auth/AuthService.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 194,
+      "nonEmptyLines": 148,
+      "functions": [
+        {
+          "name": "AuthService",
+          "startLine": 21,
+          "endLine": 39,
+          "params": [
+            "users",
+            "accounts",
+            "verificationTokens",
+            "unitOfWork",
+            "passwordHasher",
+            "tokenService",
+            "externalIdentityTokenValidator",
+            "emailService"
+          ]
+        },
+        {
+          "name": "RegisterAsync",
+          "startLine": 41,
+          "endLine": 62,
+          "params": [
+            "request",
+            "ct"
+          ]
+        },
+        {
+          "name": "LoginAsync",
+          "startLine": 64,
+          "endLine": 82,
+          "params": [
+            "request",
+            "ct"
+          ]
+        },
+        {
+          "name": "GoogleSessionAsync",
+          "startLine": 84,
+          "endLine": 116,
+          "params": [
+            "request",
+            "ct"
+          ]
+        },
+        {
+          "name": "VerifyEmailAsync",
+          "startLine": 118,
+          "endLine": 134,
+          "params": [
+            "rawToken",
+            "ct"
+          ]
+        },
+        {
+          "name": "ResendVerificationAsync",
+          "startLine": 136,
+          "endLine": 154,
+          "params": [
+            "request",
+            "ct"
+          ]
+        },
+        {
+          "name": "RefreshAsync",
+          "startLine": 156,
+          "endLine": 167,
+          "params": [
+            "request",
+            "ct"
+          ]
+        },
+        {
+          "name": "GetCurrentUserAsync",
+          "startLine": 169,
+          "endLine": 175,
+          "params": [
+            "userId",
+            "ct"
+          ]
+        },
+        {
+          "name": "BuildTokens",
+          "startLine": 177,
+          "endLine": 178,
+          "params": [
+            "user"
+          ]
+        },
+        {
+          "name": "MapToDto",
+          "startLine": 180,
+          "endLine": 181,
+          "params": [
+            "user"
+          ]
+        },
+        {
+          "name": "GenerateRawToken",
+          "startLine": 183,
+          "endLine": 187,
+          "params": []
+        },
+        {
+          "name": "HashToken",
+          "startLine": 189,
+          "endLine": 193,
+          "params": [
+            "rawToken"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "AuthService",
+          "startLine": 10,
+          "endLine": 194,
+          "methods": [
+            "AuthService",
+            "RegisterAsync",
+            "LoginAsync",
+            "GoogleSessionAsync",
+            "VerifyEmailAsync",
+            "ResendVerificationAsync",
+            "RefreshAsync",
+            "GetCurrentUserAsync",
+            "BuildTokens",
+            "MapToDto",
+            "GenerateRawToken",
+            "HashToken"
+          ],
+          "properties": [
+            "_users",
+            "_accounts",
+            "_verificationTokens",
+            "_unitOfWork",
+            "_passwordHasher",
+            "_tokenService",
+            "_externalIdentityTokenValidator",
+            "_emailService"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "AuthService",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "RegisterAsync",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "LoginAsync",
+          "line": 64,
+          "isDefault": false
+        },
+        {
+          "name": "GoogleSessionAsync",
+          "line": 84,
+          "isDefault": false
+        },
+        {
+          "name": "VerifyEmailAsync",
+          "line": 118,
+          "isDefault": false
+        },
+        {
+          "name": "ResendVerificationAsync",
+          "line": 136,
+          "isDefault": false
+        },
+        {
+          "name": "RefreshAsync",
+          "line": 156,
+          "isDefault": false
+        },
+        {
+          "name": "GetCurrentUserAsync",
+          "line": 169,
+          "isDefault": false
+        },
+        {
+          "name": "AuthService",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "RegisterAsync",
+          "callee": "request.Email.Trim().ToLowerInvariant",
+          "lineNumber": 43
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "request.Email.Trim",
+          "lineNumber": 43
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "_users.ExistsByEmailAsync",
+          "lineNumber": 45
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "Result.Failure<UserDto>",
+          "lineNumber": 46
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "User.Create",
+          "lineNumber": 48
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "UserAccount.CreateCredentials",
+          "lineNumber": 49
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "_passwordHasher.Hash",
+          "lineNumber": 49
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "GenerateRawToken",
+          "lineNumber": 50
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "EmailVerificationToken.Create",
+          "lineNumber": 51
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "HashToken",
+          "lineNumber": 51
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "TimeSpan.FromHours",
+          "lineNumber": 51
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "_users.Add",
+          "lineNumber": 53
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "_accounts.Add",
+          "lineNumber": 54
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "_verificationTokens.Add",
+          "lineNumber": 55
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "_unitOfWork.SaveChangesAsync",
+          "lineNumber": 57
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "_emailService.SendVerificationEmailAsync",
+          "lineNumber": 59
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "Result.Success",
+          "lineNumber": 61
+        },
+        {
+          "caller": "RegisterAsync",
+          "callee": "MapToDto",
+          "lineNumber": 61
+        },
+        {
+          "caller": "LoginAsync",
+          "callee": "request.Email.Trim().ToLowerInvariant",
+          "lineNumber": 66
+        },
+        {
+          "caller": "LoginAsync",
+          "callee": "request.Email.Trim",
+          "lineNumber": 66
+        },
+        {
+          "caller": "LoginAsync",
+          "callee": "_users.FindByEmailAsync",
+          "lineNumber": 68
+        },
+        {
+          "caller": "LoginAsync",
+          "callee": "Result.Failure<AuthTokensDto>",
+          "lineNumber": 70
+        },
+        {
+          "caller": "LoginAsync",
+          "callee": "_accounts.FindCredentialsByUserIdAsync",
+          "lineNumber": 72
+        },
+        {
+          "caller": "LoginAsync",
+          "callee": "_passwordHasher.Verify",
+          "lineNumber": 73
+        },
+        {
+          "caller": "LoginAsync",
+          "callee": "Result.Failure<AuthTokensDto>",
+          "lineNumber": 74
+        },
+        {
+          "caller": "LoginAsync",
+          "callee": "Result.Failure<AuthTokensDto>",
+          "lineNumber": 77
+        },
+        {
+          "caller": "LoginAsync",
+          "callee": "Result.Success",
+          "lineNumber": 81
+        },
+        {
+          "caller": "LoginAsync",
+          "callee": "BuildTokens",
+          "lineNumber": 81
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "_externalIdentityTokenValidator.ValidateGoogleIdTokenAsync",
+          "lineNumber": 86
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "Result.Failure<AuthTokensDto>",
+          "lineNumber": 88
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "_accounts.FindByProviderAsync",
+          "lineNumber": 91
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "_users.FindByIdAsync",
+          "lineNumber": 94
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "new InvalidOperationException",
+          "lineNumber": 95
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "Result.Success",
+          "lineNumber": 96
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "BuildTokens",
+          "lineNumber": 96
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "identity.Email.Trim().ToLowerInvariant",
+          "lineNumber": 99
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "identity.Email.Trim",
+          "lineNumber": 99
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "_users.FindByEmailAsync",
+          "lineNumber": 100
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "User.Create",
+          "lineNumber": 104
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "_users.Add",
+          "lineNumber": 105
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "user.MarkEmailVerified",
+          "lineNumber": 108
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "user.UpdateProfile",
+          "lineNumber": 109
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "_accounts.Add",
+          "lineNumber": 111
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "UserAccount.CreateOAuth",
+          "lineNumber": 111
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "_unitOfWork.SaveChangesAsync",
+          "lineNumber": 113
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "Result.Success",
+          "lineNumber": 115
+        },
+        {
+          "caller": "GoogleSessionAsync",
+          "callee": "BuildTokens",
+          "lineNumber": 115
+        },
+        {
+          "caller": "VerifyEmailAsync",
+          "callee": "_verificationTokens.FindByTokenHashAsync",
+          "lineNumber": 120
+        },
+        {
+          "caller": "VerifyEmailAsync",
+          "callee": "HashToken",
+          "lineNumber": 120
+        },
+        {
+          "caller": "VerifyEmailAsync",
+          "callee": "Result.Failure<AuthTokensDto>",
+          "lineNumber": 123
+        },
+        {
+          "caller": "VerifyEmailAsync",
+          "callee": "_users.FindByIdAsync",
+          "lineNumber": 125
+        },
+        {
+          "caller": "VerifyEmailAsync",
+          "callee": "new InvalidOperationException",
+          "lineNumber": 126
+        },
+        {
+          "caller": "VerifyEmailAsync",
+          "callee": "user.MarkEmailVerified",
+          "lineNumber": 128
+        },
+        {
+          "caller": "VerifyEmailAsync",
+          "callee": "_verificationTokens.Remove",
+          "lineNumber": 129
+        },
+        {
+          "caller": "VerifyEmailAsync",
+          "callee": "_unitOfWork.SaveChangesAsync",
+          "lineNumber": 131
+        },
+        {
+          "caller": "VerifyEmailAsync",
+          "callee": "Result.Success",
+          "lineNumber": 133
+        },
+        {
+          "caller": "VerifyEmailAsync",
+          "callee": "BuildTokens",
+          "lineNumber": 133
+        },
+        {
+          "caller": "ResendVerificationAsync",
+          "callee": "request.Email.Trim().ToLowerInvariant",
+          "lineNumber": 138
+        },
+        {
+          "caller": "ResendVerificationAsync",
+          "callee": "request.Email.Trim",
+          "lineNumber": 138
+        },
+        {
+          "caller": "ResendVerificationAsync",
+          "callee": "_users.FindByEmailAsync",
+          "lineNumber": 139
+        },
+        {
+          "caller": "ResendVerificationAsync",
+          "callee": "Result.Success",
+          "lineNumber": 142
+        },
+        {
+          "caller": "ResendVerificationAsync",
+          "callee": "_verificationTokens.DeleteByUserIdAsync",
+          "lineNumber": 144
+        },
+        {
+          "caller": "ResendVerificationAsync",
+          "callee": "GenerateRawToken",
+          "lineNumber": 146
+        },
+        {
+          "caller": "ResendVerificationAsync",
+          "callee": "_verificationTokens.Add",
+          "lineNumber": 147
+        },
+        {
+          "caller": "ResendVerificationAsync",
+          "callee": "EmailVerificationToken.Create",
+          "lineNumber": 147
+        },
+        {
+          "caller": "ResendVerificationAsync",
+          "callee": "HashToken",
+          "lineNumber": 147
+        },
+        {
+          "caller": "ResendVerificationAsync",
+          "callee": "TimeSpan.FromHours",
+          "lineNumber": 147
+        },
+        {
+          "caller": "ResendVerificationAsync",
+          "callee": "_unitOfWork.SaveChangesAsync",
+          "lineNumber": 149
+        },
+        {
+          "caller": "ResendVerificationAsync",
+          "callee": "_emailService.SendVerificationEmailAsync",
+          "lineNumber": 151
+        },
+        {
+          "caller": "ResendVerificationAsync",
+          "callee": "Result.Success",
+          "lineNumber": 153
+        },
+        {
+          "caller": "RefreshAsync",
+          "callee": "_tokenService.ValidateRefreshToken",
+          "lineNumber": 158
+        },
+        {
+          "caller": "RefreshAsync",
+          "callee": "Result.Failure<AuthTokensDto>",
+          "lineNumber": 160
+        },
+        {
+          "caller": "RefreshAsync",
+          "callee": "_users.FindByIdAsync",
+          "lineNumber": 162
+        },
+        {
+          "caller": "RefreshAsync",
+          "callee": "Result.Failure<AuthTokensDto>",
+          "lineNumber": 164
+        },
+        {
+          "caller": "RefreshAsync",
+          "callee": "Result.Success",
+          "lineNumber": 166
+        },
+        {
+          "caller": "RefreshAsync",
+          "callee": "BuildTokens",
+          "lineNumber": 166
+        },
+        {
+          "caller": "GetCurrentUserAsync",
+          "callee": "_users.FindByIdAsync",
+          "lineNumber": 171
+        },
+        {
+          "caller": "GetCurrentUserAsync",
+          "callee": "Result.Failure<UserDto>",
+          "lineNumber": 173
+        },
+        {
+          "caller": "GetCurrentUserAsync",
+          "callee": "Result.Success",
+          "lineNumber": 174
+        },
+        {
+          "caller": "GetCurrentUserAsync",
+          "callee": "MapToDto",
+          "lineNumber": 174
+        },
+        {
+          "caller": "BuildTokens",
+          "callee": "_tokenService.GenerateAccessToken",
+          "lineNumber": 178
+        },
+        {
+          "caller": "BuildTokens",
+          "callee": "_tokenService.GenerateRefreshToken",
+          "lineNumber": 178
+        },
+        {
+          "caller": "BuildTokens",
+          "callee": "MapToDto",
+          "lineNumber": 178
+        },
+        {
+          "caller": "GenerateRawToken",
+          "callee": "RandomNumberGenerator.GetBytes",
+          "lineNumber": 185
+        },
+        {
+          "caller": "GenerateRawToken",
+          "callee": "Convert.ToBase64String(bytes).Replace(\"+\", \"-\").Replace(\"/\", \"_\").TrimEnd",
+          "lineNumber": 186
+        },
+        {
+          "caller": "GenerateRawToken",
+          "callee": "Convert.ToBase64String(bytes).Replace(\"+\", \"-\").Replace",
+          "lineNumber": 186
+        },
+        {
+          "caller": "GenerateRawToken",
+          "callee": "Convert.ToBase64String(bytes).Replace",
+          "lineNumber": 186
+        },
+        {
+          "caller": "GenerateRawToken",
+          "callee": "Convert.ToBase64String",
+          "lineNumber": 186
+        },
+        {
+          "caller": "HashToken",
+          "callee": "SHA256.HashData",
+          "lineNumber": 191
+        },
+        {
+          "caller": "HashToken",
+          "callee": "Encoding.UTF8.GetBytes",
+          "lineNumber": 191
+        },
+        {
+          "caller": "HashToken",
+          "callee": "Convert.ToHexString(bytes).ToLowerInvariant",
+          "lineNumber": 192
+        },
+        {
+          "caller": "HashToken",
+          "callee": "Convert.ToHexString",
+          "lineNumber": 192
+        }
+      ],
+      "metrics": {
+        "importCount": 20,
+        "exportCount": 9,
+        "functionCount": 12,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/AuthTokensDto.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 3,
+      "nonEmptyLines": 2,
+      "classes": [
+        {
+          "name": "AuthTokensDto",
+          "startLine": 3,
+          "endLine": 3,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "AuthTokensDto",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/GoogleSessionRequest.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 3,
+      "nonEmptyLines": 2,
+      "classes": [
+        {
+          "name": "GoogleSessionRequest",
+          "startLine": 3,
+          "endLine": 3,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "GoogleSessionRequest",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/LoginRequest.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 3,
+      "nonEmptyLines": 2,
+      "classes": [
+        {
+          "name": "LoginRequest",
+          "startLine": 3,
+          "endLine": 3,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "LoginRequest",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/RefreshRequest.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 3,
+      "nonEmptyLines": 2,
+      "classes": [
+        {
+          "name": "RefreshRequest",
+          "startLine": 3,
+          "endLine": 3,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "RefreshRequest",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/RegisterRequest.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 3,
+      "nonEmptyLines": 2,
+      "classes": [
+        {
+          "name": "RegisterRequest",
+          "startLine": 3,
+          "endLine": 3,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "RegisterRequest",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/ResendVerificationRequest.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 3,
+      "nonEmptyLines": 2,
+      "classes": [
+        {
+          "name": "ResendVerificationRequest",
+          "startLine": 3,
+          "endLine": 3,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ResendVerificationRequest",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/UserDto.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 3,
+      "nonEmptyLines": 2,
+      "classes": [
+        {
+          "name": "UserDto",
+          "startLine": 3,
+          "endLine": 3,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "UserDto",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/VerifyEmailRequest.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 3,
+      "nonEmptyLines": 2,
+      "classes": [
+        {
+          "name": "VerifyEmailRequest",
+          "startLine": 3,
+          "endLine": 3,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "VerifyEmailRequest",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Auth/Validators/AuthRequestValidators.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 43,
+      "nonEmptyLines": 36,
+      "functions": [
+        {
+          "name": "RegisterRequestValidator",
+          "startLine": 8,
+          "endLine": 13,
+          "params": []
+        },
+        {
+          "name": "LoginRequestValidator",
+          "startLine": 18,
+          "endLine": 22,
+          "params": []
+        },
+        {
+          "name": "GoogleSessionRequestValidator",
+          "startLine": 27,
+          "endLine": 27,
+          "params": []
+        },
+        {
+          "name": "RefreshRequestValidator",
+          "startLine": 32,
+          "endLine": 32,
+          "params": []
+        },
+        {
+          "name": "ResendVerificationRequestValidator",
+          "startLine": 37,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "VerifyEmailRequestValidator",
+          "startLine": 42,
+          "endLine": 42,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "RegisterRequestValidator",
+          "startLine": 6,
+          "endLine": 14,
+          "methods": [
+            "RegisterRequestValidator"
+          ],
+          "properties": []
+        },
+        {
+          "name": "LoginRequestValidator",
+          "startLine": 16,
+          "endLine": 23,
+          "methods": [
+            "LoginRequestValidator"
+          ],
+          "properties": []
+        },
+        {
+          "name": "GoogleSessionRequestValidator",
+          "startLine": 25,
+          "endLine": 28,
+          "methods": [
+            "GoogleSessionRequestValidator"
+          ],
+          "properties": []
+        },
+        {
+          "name": "RefreshRequestValidator",
+          "startLine": 30,
+          "endLine": 33,
+          "methods": [
+            "RefreshRequestValidator"
+          ],
+          "properties": []
+        },
+        {
+          "name": "ResendVerificationRequestValidator",
+          "startLine": 35,
+          "endLine": 38,
+          "methods": [
+            "ResendVerificationRequestValidator"
+          ],
+          "properties": []
+        },
+        {
+          "name": "VerifyEmailRequestValidator",
+          "startLine": 40,
+          "endLine": 43,
+          "methods": [
+            "VerifyEmailRequestValidator"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "RegisterRequestValidator",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "RegisterRequestValidator",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "LoginRequestValidator",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "LoginRequestValidator",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "GoogleSessionRequestValidator",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "GoogleSessionRequestValidator",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "RefreshRequestValidator",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "RefreshRequestValidator",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "ResendVerificationRequestValidator",
+          "line": 37,
+          "isDefault": false
+        },
+        {
+          "name": "ResendVerificationRequestValidator",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "VerifyEmailRequestValidator",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "VerifyEmailRequestValidator",
+          "line": 40,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "RegisterRequestValidator",
+          "callee": "RuleFor(x => x.Name).NotEmpty().MaximumLength",
+          "lineNumber": 10
+        },
+        {
+          "caller": "RegisterRequestValidator",
+          "callee": "RuleFor(x => x.Name).NotEmpty",
+          "lineNumber": 10
+        },
+        {
+          "caller": "RegisterRequestValidator",
+          "callee": "RuleFor",
+          "lineNumber": 10
+        },
+        {
+          "caller": "RegisterRequestValidator",
+          "callee": "RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength",
+          "lineNumber": 11
+        },
+        {
+          "caller": "RegisterRequestValidator",
+          "callee": "RuleFor(x => x.Email).NotEmpty().EmailAddress",
+          "lineNumber": 11
+        },
+        {
+          "caller": "RegisterRequestValidator",
+          "callee": "RuleFor(x => x.Email).NotEmpty",
+          "lineNumber": 11
+        },
+        {
+          "caller": "RegisterRequestValidator",
+          "callee": "RuleFor",
+          "lineNumber": 11
+        },
+        {
+          "caller": "RegisterRequestValidator",
+          "callee": "RuleFor(x => x.Password).NotEmpty().MinimumLength(8).MaximumLength",
+          "lineNumber": 12
+        },
+        {
+          "caller": "RegisterRequestValidator",
+          "callee": "RuleFor(x => x.Password).NotEmpty().MinimumLength",
+          "lineNumber": 12
+        },
+        {
+          "caller": "RegisterRequestValidator",
+          "callee": "RuleFor(x => x.Password).NotEmpty",
+          "lineNumber": 12
+        },
+        {
+          "caller": "RegisterRequestValidator",
+          "callee": "RuleFor",
+          "lineNumber": 12
+        },
+        {
+          "caller": "LoginRequestValidator",
+          "callee": "RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength",
+          "lineNumber": 20
+        },
+        {
+          "caller": "LoginRequestValidator",
+          "callee": "RuleFor(x => x.Email).NotEmpty().EmailAddress",
+          "lineNumber": 20
+        },
+        {
+          "caller": "LoginRequestValidator",
+          "callee": "RuleFor(x => x.Email).NotEmpty",
+          "lineNumber": 20
+        },
+        {
+          "caller": "LoginRequestValidator",
+          "callee": "RuleFor",
+          "lineNumber": 20
+        },
+        {
+          "caller": "LoginRequestValidator",
+          "callee": "RuleFor(x => x.Password).NotEmpty().MaximumLength",
+          "lineNumber": 21
+        },
+        {
+          "caller": "LoginRequestValidator",
+          "callee": "RuleFor(x => x.Password).NotEmpty",
+          "lineNumber": 21
+        },
+        {
+          "caller": "LoginRequestValidator",
+          "callee": "RuleFor",
+          "lineNumber": 21
+        },
+        {
+          "caller": "GoogleSessionRequestValidator",
+          "callee": "RuleFor(x => x.IdToken).NotEmpty",
+          "lineNumber": 27
+        },
+        {
+          "caller": "GoogleSessionRequestValidator",
+          "callee": "RuleFor",
+          "lineNumber": 27
+        },
+        {
+          "caller": "RefreshRequestValidator",
+          "callee": "RuleFor(x => x.RefreshToken).NotEmpty",
+          "lineNumber": 32
+        },
+        {
+          "caller": "RefreshRequestValidator",
+          "callee": "RuleFor",
+          "lineNumber": 32
+        },
+        {
+          "caller": "ResendVerificationRequestValidator",
+          "callee": "RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength",
+          "lineNumber": 37
+        },
+        {
+          "caller": "ResendVerificationRequestValidator",
+          "callee": "RuleFor(x => x.Email).NotEmpty().EmailAddress",
+          "lineNumber": 37
+        },
+        {
+          "caller": "ResendVerificationRequestValidator",
+          "callee": "RuleFor(x => x.Email).NotEmpty",
+          "lineNumber": 37
+        },
+        {
+          "caller": "ResendVerificationRequestValidator",
+          "callee": "RuleFor",
+          "lineNumber": 37
+        },
+        {
+          "caller": "VerifyEmailRequestValidator",
+          "callee": "RuleFor(x => x.Token).NotEmpty",
+          "lineNumber": 42
+        },
+        {
+          "caller": "VerifyEmailRequestValidator",
+          "callee": "RuleFor",
+          "lineNumber": 42
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 12,
+        "functionCount": 6,
+        "classCount": 6
+      }
+    },
+    {
+      "path": "Cortex.Application/Common/Result.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 34,
+      "nonEmptyLines": 27,
+      "functions": [
+        {
+          "name": "Result",
+          "startLine": 5,
+          "endLine": 10,
+          "params": [
+            "isSuccess",
+            "errorCode",
+            "errorMessage"
+          ]
+        },
+        {
+          "name": "Success",
+          "startLine": 17,
+          "endLine": 17,
+          "params": []
+        },
+        {
+          "name": "Failure",
+          "startLine": 18,
+          "endLine": 18,
+          "params": [
+            "errorCode",
+            "errorMessage"
+          ]
+        },
+        {
+          "name": "Success",
+          "startLine": 20,
+          "endLine": 20,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "Failure",
+          "startLine": 21,
+          "endLine": 21,
+          "params": [
+            "errorCode",
+            "errorMessage"
+          ]
+        },
+        {
+          "name": "Result",
+          "startLine": 28,
+          "endLine": 28,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "Result",
+          "startLine": 29,
+          "endLine": 29,
+          "params": [
+            "errorCode",
+            "errorMessage"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "Result",
+          "startLine": 3,
+          "endLine": 22,
+          "methods": [
+            "Result",
+            "Success",
+            "Failure",
+            "Success",
+            "Failure"
+          ],
+          "properties": [
+            "IsSuccess",
+            "IsFailure",
+            "ErrorCode",
+            "ErrorMessage"
+          ]
+        },
+        {
+          "name": "Result",
+          "startLine": 24,
+          "endLine": 34,
+          "methods": [
+            "Result",
+            "Result"
+          ],
+          "properties": [
+            "_value",
+            "Value"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "IsSuccess",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "IsFailure",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "ErrorCode",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "ErrorMessage",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "Success",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "Failure",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "Success",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "Failure",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "Result",
+          "line": 3,
+          "isDefault": false
+        },
+        {
+          "name": "Value",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "Result",
+          "line": 24,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 11,
+        "functionCount": 7,
+        "classCount": 2
+      }
+    }
+  ]
+}

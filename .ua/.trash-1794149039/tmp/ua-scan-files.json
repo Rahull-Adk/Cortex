@@ -1,0 +1,445 @@
+{
+  "scriptCompleted": true,
+  "contentDigest": "7bda5d8caf73a7b361d9d4e149266c7f36ed70664acbbf912e428517e88b6928",
+  "files": [
+    {
+      "path": ".dockerignore",
+      "language": "unknown",
+      "sizeLines": 6,
+      "fileCategory": "infra"
+    },
+    {
+      "path": ".env.example",
+      "language": "config",
+      "sizeLines": 12,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".ua/config.json",
+      "language": "json",
+      "sizeLines": 1,
+      "fileCategory": "config"
+    },
+    {
+      "path": "AGENTS.md",
+      "language": "markdown",
+      "sizeLines": 651,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "Cortex.Api/Controllers/AuthController.cs",
+      "language": "csharp",
+      "sizeLines": 129,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Api/Cortex.Api.csproj",
+      "language": "csproj",
+      "sizeLines": 26,
+      "fileCategory": "config"
+    },
+    {
+      "path": "Cortex.Api/Cortex.Api.http",
+      "language": "http",
+      "sizeLines": 6,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Api/Program.cs",
+      "language": "csharp",
+      "sizeLines": 75,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Api/Properties/launchSettings.json",
+      "language": "json",
+      "sizeLines": 23,
+      "fileCategory": "config"
+    },
+    {
+      "path": "Cortex.Api/ValidationFilter.cs",
+      "language": "csharp",
+      "sizeLines": 39,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Api/appsettings.Development.json",
+      "language": "json",
+      "sizeLines": 8,
+      "fileCategory": "config"
+    },
+    {
+      "path": "Cortex.Api/appsettings.json",
+      "language": "json",
+      "sizeLines": 9,
+      "fileCategory": "config"
+    },
+    {
+      "path": "Cortex.Application/Auth/AuthErrors.cs",
+      "language": "csharp",
+      "sizeLines": 9,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Auth/AuthService.cs",
+      "language": "csharp",
+      "sizeLines": 194,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/AuthTokensDto.cs",
+      "language": "csharp",
+      "sizeLines": 3,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/ExternalIdentity.cs",
+      "language": "csharp",
+      "sizeLines": 3,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/GoogleSessionRequest.cs",
+      "language": "csharp",
+      "sizeLines": 3,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/LoginRequest.cs",
+      "language": "csharp",
+      "sizeLines": 3,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/RefreshRequest.cs",
+      "language": "csharp",
+      "sizeLines": 3,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/RegisterRequest.cs",
+      "language": "csharp",
+      "sizeLines": 3,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/ResendVerificationRequest.cs",
+      "language": "csharp",
+      "sizeLines": 3,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/UserDto.cs",
+      "language": "csharp",
+      "sizeLines": 3,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Auth/Dtos/VerifyEmailRequest.cs",
+      "language": "csharp",
+      "sizeLines": 3,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Auth/Validators/AuthRequestValidators.cs",
+      "language": "csharp",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Common/Result.cs",
+      "language": "csharp",
+      "sizeLines": 34,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Cortex.Application.csproj",
+      "language": "csproj",
+      "sizeLines": 18,
+      "fileCategory": "config"
+    },
+    {
+      "path": "Cortex.Application/DependencyInjection.cs",
+      "language": "csharp",
+      "sizeLines": 15,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Interfaces/IEmailService.cs",
+      "language": "csharp",
+      "sizeLines": 6,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs",
+      "language": "csharp",
+      "sizeLines": 11,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs",
+      "language": "csharp",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Interfaces/IPasswordHasher.cs",
+      "language": "csharp",
+      "sizeLines": 7,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Interfaces/ITokenService.cs",
+      "language": "csharp",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Interfaces/IUnitOfWork.cs",
+      "language": "csharp",
+      "sizeLines": 6,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Interfaces/IUserAccountRepository.cs",
+      "language": "csharp",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Application/Interfaces/IUserRepository.cs",
+      "language": "csharp",
+      "sizeLines": 11,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Domain/Cortex.Domain.csproj",
+      "language": "csproj",
+      "sizeLines": 9,
+      "fileCategory": "config"
+    },
+    {
+      "path": "Cortex.Domain/Entities/EmailVerificationToken.cs",
+      "language": "csharp",
+      "sizeLines": 36,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Domain/Entities/Organization.cs",
+      "language": "csharp",
+      "sizeLines": 53,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Domain/Entities/OrganizationMembership.cs",
+      "language": "csharp",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Domain/Entities/User.cs",
+      "language": "csharp",
+      "sizeLines": 69,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Domain/Entities/UserAccount.cs",
+      "language": "csharp",
+      "sizeLines": 51,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Domain/Enums/OrganizationRole.cs",
+      "language": "csharp",
+      "sizeLines": 9,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Auth/BcryptPasswordHasher.cs",
+      "language": "csharp",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+      "language": "csharp",
+      "sizeLines": 77,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+      "language": "csharp",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Auth/JwtTokenService.cs",
+      "language": "csharp",
+      "sizeLines": 86,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Auth/Settings/BrevoSettings.cs",
+      "language": "csharp",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Auth/Settings/FrontendSettings.cs",
+      "language": "csharp",
+      "sizeLines": 6,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Auth/Settings/GoogleAuthSettings.cs",
+      "language": "csharp",
+      "sizeLines": 6,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Auth/Settings/JwtSettings.cs",
+      "language": "csharp",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Cortex.Infrastructure.csproj",
+      "language": "csproj",
+      "sizeLines": 33,
+      "fileCategory": "config"
+    },
+    {
+      "path": "Cortex.Infrastructure/DependencyInjection.cs",
+      "language": "csharp",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Migrations/20261106150322_InitialCreate.cs",
+      "language": "csharp",
+      "sizeLines": 149,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Migrations/20261107123852_AddEmailVerificationTokens.cs",
+      "language": "csharp",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs",
+      "language": "csharp",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Persistence/Configurations/OrganizationConfiguration.cs",
+      "language": "csharp",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Persistence/Configurations/OrganizationMembershipConfiguration.cs",
+      "language": "csharp",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Persistence/Configurations/UserAccountConfiguration.cs",
+      "language": "csharp",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs",
+      "language": "csharp",
+      "sizeLines": 62,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Persistence/CortexDbContext.cs",
+      "language": "csharp",
+      "sizeLines": 21,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Persistence/CortexDbDesignTimeFactory.cs",
+      "language": "csharp",
+      "sizeLines": 27,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs",
+      "language": "csharp",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Repositories/UnitOfWork.cs",
+      "language": "csharp",
+      "sizeLines": 13,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Repositories/UserAccountRepository.cs",
+      "language": "csharp",
+      "sizeLines": 21,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.Infrastructure/Repositories/UserRepository.cs",
+      "language": "csharp",
+      "sizeLines": 24,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Cortex.slnx",
+      "language": "slnx",
+      "sizeLines": 6,
+      "fileCategory": "code"
+    },
+    {
+      "path": "Dockerfile",
+      "language": "dockerfile",
+      "sizeLines": 17,
+      "fileCategory": "infra"
+    },
+    {
+      "path": "FRONTEND_INTEGRATION.md",
+      "language": "markdown",
+      "sizeLines": 58,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docker-compose.yml",
+      "language": "yaml",
+      "sizeLines": 21,
+      "fileCategory": "infra"
+    }
+  ],
+  "totalFiles": 69,
+  "filteredByIgnore": 4,
+  "estimatedComplexity": "moderate",
+  "failures": [],
+  "stats": {
+    "filesScanned": 69,
+    "byCategory": {
+      "infra": 3,
+      "config": 9,
+      "docs": 2,
+      "code": 55
+    },
+    "byLanguage": {
+      "unknown": 1,
+      "config": 1,
+      "json": 4,
+      "markdown": 2,
+      "csharp": 53,
+      "csproj": 4,
+      "http": 1,
+      "slnx": 1,
+      "dockerfile": 1,
+      "yaml": 1
+    }
+  }
+}

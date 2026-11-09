@@ -12,6 +12,7 @@ public class AuthService
     private readonly IUserRepository _users;
     private readonly IUserAccountRepository _accounts;
     private readonly IEmailVerificationTokenRepository _verificationTokens;
+    private readonly IRefreshTokenRepository _refreshTokens;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPasswordHasher _passwordHasher;
     private readonly ITokenService _tokenService;
@@ -22,6 +23,7 @@ public class AuthService
         IUserRepository users,
         IUserAccountRepository accounts,
         IEmailVerificationTokenRepository verificationTokens,
+        IRefreshTokenRepository refreshTokens,
         IUnitOfWork unitOfWork,
         IPasswordHasher passwordHasher,
         ITokenService tokenService,
@@ -31,6 +33,7 @@ public class AuthService
         _users = users;
         _accounts = accounts;
         _verificationTokens = verificationTokens;
+        _refreshTokens = refreshTokens;
         _unitOfWork = unitOfWork;
         _passwordHasher = passwordHasher;
         _tokenService = tokenService;
@@ -43,7 +46,7 @@ public class AuthService
         var emailNormalized = request.Email.Trim().ToLowerInvariant();
 
         if (await _users.ExistsByEmailAsync(emailNormalized, ct))
-            return Result.Failure<UserDto>(AuthErrors.EmailAlreadyRegistered, "This email is already registered.");
+            return AuthErrors.EmailAlreadyRegistered;
 
         var user = User.Create(request.Name, request.Email);
         var account = UserAccount.CreateCredentials(user.Id, _passwordHasher.Hash(request.Password));
@@ -58,7 +61,7 @@ public class AuthService
 
         await _emailService.SendVerificationEmailAsync(user.Email, user.Name, rawToken, ct);
 
-        return Result.Success(MapToDto(user));
+        return MapToDto(user);
     }
 
     public async Task<Result<AuthTokensDto>> LoginAsync(LoginRequest request, CancellationToken ct = default)
@@ -67,25 +70,23 @@ public class AuthService
 
         var user = await _users.FindByEmailAsync(emailNormalized, ct);
         if (user is null || !user.IsActive)
-            return Result.Failure<AuthTokensDto>(AuthErrors.InvalidCredentials, "Invalid email or password.");
+            return AuthErrors.InvalidCredentials;
 
         var account = await _accounts.FindCredentialsByUserIdAsync(user.Id, ct);
-                if (account?.PasswordHash is null || !_passwordHasher.Verify(request.Password, account.PasswordHash))
-                    return Result.Failure<AuthTokensDto>(AuthErrors.InvalidCredentials, "Invalid email or password.");
+        if (account?.PasswordHash is null || !_passwordHasher.Verify(request.Password, account.PasswordHash))
+            return AuthErrors.InvalidCredentials;
 
         if (!user.EmailVerifiedAt.HasValue)
-            return Result.Failure<AuthTokensDto>(AuthErrors.EmailNotVerified, "Verify your email address before signing in.");
+            return AuthErrors.EmailNotVerified;
 
-        
-
-        return Result.Success(BuildTokens(user));
+        return await IssueTokensAsync(user, ct);
     }
 
     public async Task<Result<AuthTokensDto>> GoogleSessionAsync(GoogleSessionRequest request, CancellationToken ct = default)
     {
         var identity = await _externalIdentityTokenValidator.ValidateGoogleIdTokenAsync(request.IdToken, ct);
         if (identity is null)
-            return Result.Failure<AuthTokensDto>(AuthErrors.InvalidToken, "The Google identity token is invalid or expired.");
+            return AuthErrors.InvalidGoogleToken;
 
         const string provider = "google";
         var account = await _accounts.FindByProviderAsync(provider, identity.ProviderAccountId, ct);
@@ -93,7 +94,7 @@ public class AuthService
         {
             var existingUser = await _users.FindByIdAsync(account.UserId, ct)
                 ?? throw new InvalidOperationException("User linked to account not found.");
-            return Result.Success(BuildTokens(existingUser));
+            return await IssueTokensAsync(existingUser, ct);
         }
 
         var emailNormalized = identity.Email.Trim().ToLowerInvariant();
@@ -110,9 +111,7 @@ public class AuthService
 
         _accounts.Add(UserAccount.CreateOAuth(user.Id, provider, identity.ProviderAccountId));
 
-        await _unitOfWork.SaveChangesAsync(ct);
-
-        return Result.Success(BuildTokens(user));
+        return await IssueTokensAsync(user, ct);
     }
 
     public async Task<Result<AuthTokensDto>> VerifyEmailAsync(string rawToken, CancellationToken ct = default)
@@ -120,7 +119,7 @@ public class AuthService
         var token = await _verificationTokens.FindByTokenHashAsync(HashToken(rawToken), ct);
 
         if (token is null || token.IsExpired)
-            return Result.Failure<AuthTokensDto>(AuthErrors.InvalidToken, "Invalid or expired verification token.");
+            return AuthErrors.InvalidVerificationToken;
 
         var user = await _users.FindByIdAsync(token.UserId, ct)
             ?? throw new InvalidOperationException("User linked to verification token not found.");
@@ -128,9 +127,7 @@ public class AuthService
         user.MarkEmailVerified();
         _verificationTokens.Remove(token);
 
-        await _unitOfWork.SaveChangesAsync(ct);
-
-        return Result.Success(BuildTokens(user));
+        return await IssueTokensAsync(user, ct);
     }
 
     public async Task<Result> ResendVerificationAsync(ResendVerificationRequest request, CancellationToken ct = default)
@@ -138,8 +135,11 @@ public class AuthService
         var emailNormalized = request.Email.Trim().ToLowerInvariant();
         var user = await _users.FindByEmailAsync(emailNormalized, ct);
 
-        if (user is null || user.EmailVerifiedAt.HasValue)
-            return Result.Success();
+        if (user is null)
+            return AuthErrors.EmailNotRegistered;
+
+        if (user.EmailVerifiedAt.HasValue)
+            return AuthErrors.EmailAlreadyVerified;
 
         await _verificationTokens.DeleteByUserIdAsync(user.Id, ct);
 
@@ -149,33 +149,89 @@ public class AuthService
         await _unitOfWork.SaveChangesAsync(ct);
 
         await _emailService.SendVerificationEmailAsync(user.Email, user.Name, rawToken, ct);
-
         return Result.Success();
     }
 
-    public async Task<Result<AuthTokensDto>> RefreshAsync(RefreshRequest request, CancellationToken ct = default)
+    public async Task<Result<AuthTokensDto>> RefreshAsync(string? rawRefreshToken, CancellationToken ct = default)
     {
-        var userId = _tokenService.ValidateRefreshToken(request.RefreshToken);
-        if (userId is null)
-            return Result.Failure<AuthTokensDto>(AuthErrors.InvalidToken, "Invalid or expired refresh token.");
+        if (string.IsNullOrWhiteSpace(rawRefreshToken))
+            return AuthErrors.InvalidRefreshToken;
 
-        var user = await _users.FindByIdAsync(userId.Value, ct);
+        var token = await _refreshTokens.FindByTokenHashAsync(HashToken(rawRefreshToken), ct);
+        if (token is null)
+            return AuthErrors.InvalidRefreshToken;
+
+        // A rotated token being replayed means it may have been stolen.
+        if (token.IsRevoked)
+        {
+            await RevokeFamilyAsync(token.FamilyId, ct);
+            return AuthErrors.InvalidRefreshToken;
+        }
+
+        if (token.IsExpired)
+            return AuthErrors.InvalidRefreshToken;
+
+        var user = await _users.FindByIdAsync(token.UserId, ct);
         if (user is null || !user.IsActive || !user.EmailVerifiedAt.HasValue)
-            return Result.Failure<AuthTokensDto>(AuthErrors.InvalidToken, "Invalid or expired refresh token.");
+        {
+            await RevokeFamilyAsync(token.FamilyId, ct);
+            return AuthErrors.InvalidRefreshToken;
+        }
 
-        return Result.Success(BuildTokens(user));
+        try
+        {
+            return await IssueTokensAsync(user, token.FamilyId, token, ct);
+        }
+        catch (ConcurrencyConflictException)
+        {
+            _unitOfWork.DiscardChanges();
+            await RevokeFamilyAsync(token.FamilyId, ct);
+            return AuthErrors.InvalidRefreshToken;
+        }
+    }
+
+    public async Task LogoutAsync(string? rawRefreshToken, CancellationToken ct = default)
+    {
+        if (string.IsNullOrWhiteSpace(rawRefreshToken))
+            return;
+
+        var token = await _refreshTokens.FindByTokenHashAsync(HashToken(rawRefreshToken), ct);
+        if (token is not null)
+            await RevokeFamilyAsync(token.FamilyId, ct);
     }
 
     public async Task<Result<UserDto>> GetCurrentUserAsync(Guid userId, CancellationToken ct = default)
     {
         var user = await _users.FindByIdAsync(userId, ct);
-        return user is null
-            ? Result.Failure<UserDto>(AuthErrors.InvalidToken, "User not found.")
-            : Result.Success(MapToDto(user));
+        if (user is null)
+            return AuthErrors.UserNotFound;
+
+        return MapToDto(user);
     }
 
-    private AuthTokensDto BuildTokens(User user) =>
-        new(_tokenService.GenerateAccessToken(user), _tokenService.GenerateRefreshToken(user), MapToDto(user));
+    private Task<AuthTokensDto> IssueTokensAsync(User user, CancellationToken ct) =>
+        IssueTokensAsync(user, Guid.NewGuid(), null, ct);
+
+    private async Task<AuthTokensDto> IssueTokensAsync(User user, Guid familyId, RefreshToken? replacedToken, CancellationToken ct)
+    {
+        var rawRefreshToken = GenerateRawToken();
+        var refreshToken = RefreshToken.Create(user.Id, familyId, HashToken(rawRefreshToken), _tokenService.RefreshTokenLifetime);
+
+        _refreshTokens.Add(refreshToken);
+        replacedToken?.Revoke(refreshToken.Id);
+
+        await _unitOfWork.SaveChangesAsync(ct);
+
+        var accessToken = _tokenService.GenerateAccessToken(user);
+
+        return new AuthTokensDto(accessToken.Token, accessToken.ExpiresAt, rawRefreshToken, refreshToken.ExpiresAt, MapToDto(user));
+    }
+
+    private async Task RevokeFamilyAsync(Guid familyId, CancellationToken ct)
+    {
+        await _refreshTokens.RevokeFamilyAsync(familyId, ct);
+        await _unitOfWork.SaveChangesAsync(ct);
+    }
 
     private static UserDto MapToDto(User user) =>
         new(user.Id, user.Name, user.Email, user.EmailVerifiedAt.HasValue, user.AvatarUrl);

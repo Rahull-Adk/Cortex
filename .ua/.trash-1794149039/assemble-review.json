@@ -1,0 +1,15 @@
+{
+  "fixedSectionOk": true,
+  "nodesRecovered": 0,
+  "edgesRestored": 0,
+  "crossBatchEdgesAdded": 0,
+  "typesRemapped": 0,
+  "complexityRemapped": 0,
+  "notes": [
+    "Merge report had no Fixed or Could-not-fix items; input and output counts match (181 nodes, 432 edges).",
+    "Verified: no nodes missing id, no dangling edges, all node types valid, all ID prefixes match node type, all complexity values valid (152 simple, 28 moderate, 1 complex), and all nodes have name, summary, tags and complexity.",
+    "All 68 importMap entries (type-reference and csproj ProjectReference derived) have matching imports edges, so no cross-batch gaps were found.",
+    "Complexity is skewed toward simple (84%). That fits a project at the early scaffolding stage.",
+    "OrganizationMembershipConfiguration -> OrganizationRole is a depends_on edge, not an imports edge, because the import map omits it. This is expected and was left unchanged."
+  ]
+}

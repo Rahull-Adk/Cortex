@@ -15,7 +15,7 @@ For PostgreSQL running on the same computer, set `Host=host.docker.internal` in 
 To create the local database and apply migrations from the repository root, install the .NET 10 SDK and EF CLI (`dotnet tool install --global dotnet-ef --version 10.0.14`), set the connection string environment variable for the shell, then run:
 
 ```sh
-dotnet ef database update --project Cortex.Infrastructure/Cortex.Infrastructure.csproj --startup-project Cortex.Api/Cortex.Api.csproj
+dotnet ef database update --project Cortex.Infrastructure/Cortex.Infrastructure.csproj --startup-project Cortex.Infrastructure/Cortex.Infrastructure.csproj
 ```
 
 For migrations run directly on the host, use `Host=localhost` in the connection string. In PowerShell: `$env:ConnectionStrings__DefaultConnection="Host=localhost;Port=5432;Database=<database>;Username=<user>;Password=<password>"`. In bash: `export ConnectionStrings__DefaultConnection='Host=localhost;Port=5432;Database=<database>;Username=<user>;Password=<password>'`. In `.env`, use `Host=host.docker.internal` so the API container can reach PostgreSQL on the host.
@@ -43,16 +43,32 @@ Content-Type: application/json
 {"idToken":"<Google ID token>"}
 ```
 
-5. On success, Cortex responds with `accessToken`, `refreshToken`, and `user`, and also sets `cortex_access_token` and `cortex_refresh_token` HttpOnly cookies. The JSON tokens are temporarily retained for integration testing.
+5. On success, Cortex responds with `accessToken`, `accessTokenExpiresAt`, `refreshToken`, `refreshTokenExpiresAt` (UTC), and `user`, and also sets `cortex_access_token` and `cortex_refresh_token` HttpOnly cookies. The JSON tokens are temporarily retained for integration testing.
 6. For browser requests directly to the API, set `credentials: "include"`. CORS is configured for the exact `FRONTEND_BASE_URL` origin and allows credentials. The API reads the access token from the cookie when no bearer token is supplied.
 
 The Google ID token must be sent to the backend over HTTPS outside local development. Keep it short-lived and do not log it. For NextAuth server-side callbacks, ensure the ID token is kept server-side rather than exposed in the public session object.
 
+## Error format
+
+Every error response, including 500, has the same `application/problem+json` body. Branch on the HTTP status, show `detail` to the user, and map `errors` onto form fields (the keys are camelCase).
+
+```json
+// 409
+{ "title": "Conflict", "status": 409, "detail": "This email is already registered.", "traceId": "00-…" }
+// 400 validation
+{ "title": "One or more validation errors occurred.", "status": 400, "errors": { "email": ["'Email' is not a valid email address."] }, "traceId": "00-…" }
+// 500
+{ "title": "Internal Server Error", "status": 500, "detail": "An unexpected error occurred.", "traceId": "00-…" }
+```
+
+`traceId` matches the server logs, so include it in bug reports.
+
 ## Other useful endpoints
 
-- `POST /api/auth/register`: creates an unverified account and sends a verification email; it does not sign the user in.
-- `POST /api/auth/login`: credential sign-in; returns `403` until the email is verified.
-- `GET /api/auth/verify-email?token=...`: verifies the email and issues a Cortex session.
-- `POST /api/auth/refresh`: refreshes the Cortex session. The current endpoint expects `refreshToken` in the JSON body during testing.
-- `POST /api/auth/logout`: clears the auth cookies.
+- `POST /api/auth/register`: creates an unverified account and sends a verification email. It returns `201` with the user and does not sign the user in. Errors: `409` if the email is taken.
+- `POST /api/auth/resend-verification`: sends a new verification email and returns `204`. Errors: `404` if no account uses the email, `409` if it's already verified.
+- `POST /api/auth/login`: credential sign-in. Errors: `401` for wrong credentials, `403` until the email is verified.
+- `GET /api/auth/verify-email?token=...`: verifies the email and issues a Cortex session. Errors: `400` if the token is invalid or expired.
+- `POST /api/auth/refresh`: rotates the session. The refresh token comes from the `cortex_refresh_token` cookie (send no body) or from `{"refreshToken":"..."}`. Each refresh token works **once**. Always store the new one from the response or cookies. Replaying a used token revokes the whole session, so keep only one refresh in flight per session (deduplicate concurrent refreshes in NextAuth and across tabs). A failed refresh returns `401` and clears the cookies, so send the user back to sign-in.
+- `POST /api/auth/logout`: revokes the session belonging to the refresh token (from the cookie or `{"refreshToken":"..."}`) and clears the cookies. It needs no access token and always returns `204`.
 - `GET /scalar`: interactive API reference in Development.

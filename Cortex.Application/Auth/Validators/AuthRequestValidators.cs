@@ -27,11 +27,6 @@ public sealed class GoogleSessionRequestValidator : AbstractValidator<GoogleSess
     public GoogleSessionRequestValidator() => RuleFor(x => x.IdToken).NotEmpty();
 }
 
-public sealed class RefreshRequestValidator : AbstractValidator<RefreshRequest>
-{
-    public RefreshRequestValidator() => RuleFor(x => x.RefreshToken).NotEmpty();
-}
-
 public sealed class ResendVerificationRequestValidator : AbstractValidator<ResendVerificationRequest>
 {
     public ResendVerificationRequestValidator() => RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength(254);

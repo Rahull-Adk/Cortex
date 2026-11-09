@@ -1,0 +1,1118 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 8,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 8,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 8,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 9,
+      "classes": [
+        {
+          "name": "IEmailVerificationTokenRepository",
+          "startLine": 5,
+          "endLine": 11,
+          "methods": [
+            "FindByTokenHashAsync",
+            "DeleteByUserIdAsync",
+            "Add",
+            "Remove"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "IEmailVerificationTokenRepository",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Interfaces/IUserRepository.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 9,
+      "classes": [
+        {
+          "name": "IUserRepository",
+          "startLine": 5,
+          "endLine": 11,
+          "methods": [
+            "FindByIdAsync",
+            "FindByEmailAsync",
+            "ExistsByEmailAsync",
+            "Add"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "IUserRepository",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Domain/Entities/EmailVerificationToken.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 36,
+      "nonEmptyLines": 28,
+      "functions": [
+        {
+          "name": "EmailVerificationToken",
+          "startLine": 5,
+          "endLine": 5,
+          "params": []
+        },
+        {
+          "name": "EmailVerificationToken",
+          "startLine": 7,
+          "endLine": 13,
+          "params": [
+            "id",
+            "userId",
+            "tokenHash",
+            "expiresAt"
+          ]
+        },
+        {
+          "name": "Create",
+          "startLine": 25,
+          "endLine": 35,
+          "params": [
+            "userId",
+            "tokenHash",
+            "validity"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "EmailVerificationToken",
+          "startLine": 3,
+          "endLine": 36,
+          "methods": [
+            "EmailVerificationToken",
+            "EmailVerificationToken",
+            "Create"
+          ],
+          "properties": [
+            "Id",
+            "UserId",
+            "TokenHash",
+            "ExpiresAt",
+            "CreatedAt",
+            "User",
+            "IsExpired"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Id",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "UserId",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "TokenHash",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "ExpiresAt",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "CreatedAt",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "User",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "IsExpired",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "Create",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "EmailVerificationToken",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Create",
+          "callee": "ArgumentException.ThrowIfNullOrWhiteSpace",
+          "lineNumber": 27
+        },
+        {
+          "caller": "Create",
+          "callee": "new EmailVerificationToken",
+          "lineNumber": 31
+        },
+        {
+          "caller": "Create",
+          "callee": "Guid.NewGuid",
+          "lineNumber": 31
+        },
+        {
+          "caller": "Create",
+          "callee": "now.Add",
+          "lineNumber": 31
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 9,
+        "functionCount": 3,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Domain/Entities/User.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 69,
+      "nonEmptyLines": 57,
+      "functions": [
+        {
+          "name": "User",
+          "startLine": 8,
+          "endLine": 8,
+          "params": []
+        },
+        {
+          "name": "User",
+          "startLine": 10,
+          "endLine": 15,
+          "params": [
+            "id",
+            "name",
+            "email"
+          ]
+        },
+        {
+          "name": "Create",
+          "startLine": 29,
+          "endLine": 41,
+          "params": [
+            "name",
+            "email"
+          ]
+        },
+        {
+          "name": "UpdateProfile",
+          "startLine": 43,
+          "endLine": 49,
+          "params": [
+            "name",
+            "avatarUrl"
+          ]
+        },
+        {
+          "name": "MarkEmailVerified",
+          "startLine": 51,
+          "endLine": 56,
+          "params": []
+        },
+        {
+          "name": "Deactivate",
+          "startLine": 58,
+          "endLine": 62,
+          "params": []
+        },
+        {
+          "name": "Reactivate",
+          "startLine": 64,
+          "endLine": 68,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "User",
+          "startLine": 3,
+          "endLine": 69,
+          "methods": [
+            "User",
+            "User",
+            "Create",
+            "UpdateProfile",
+            "MarkEmailVerified",
+            "Deactivate",
+            "Reactivate"
+          ],
+          "properties": [
+            "_accounts",
+            "_memberships",
+            "Id",
+            "Name",
+            "Email",
+            "EmailVerifiedAt",
+            "AvatarUrl",
+            "IsActive",
+            "CreatedAt",
+            "UpdatedAt",
+            "Accounts",
+            "Memberships"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Id",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "Name",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "Email",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "EmailVerifiedAt",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "AvatarUrl",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "IsActive",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "CreatedAt",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "UpdatedAt",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "Accounts",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "Memberships",
+          "line": 27,
+          "isDefault": false
+        },
+        {
+          "name": "Create",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "UpdateProfile",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "MarkEmailVerified",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "Deactivate",
+          "line": 58,
+          "isDefault": false
+        },
+        {
+          "name": "Reactivate",
+          "line": 64,
+          "isDefault": false
+        },
+        {
+          "name": "User",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Create",
+          "callee": "ArgumentException.ThrowIfNullOrWhiteSpace",
+          "lineNumber": 31
+        },
+        {
+          "caller": "Create",
+          "callee": "ArgumentException.ThrowIfNullOrWhiteSpace",
+          "lineNumber": 32
+        },
+        {
+          "caller": "Create",
+          "callee": "new User",
+          "lineNumber": 36
+        },
+        {
+          "caller": "Create",
+          "callee": "Guid.NewGuid",
+          "lineNumber": 36
+        },
+        {
+          "caller": "Create",
+          "callee": "name.Trim",
+          "lineNumber": 36
+        },
+        {
+          "caller": "Create",
+          "callee": "email.Trim().ToLowerInvariant",
+          "lineNumber": 36
+        },
+        {
+          "caller": "Create",
+          "callee": "email.Trim",
+          "lineNumber": 36
+        },
+        {
+          "caller": "UpdateProfile",
+          "callee": "ArgumentException.ThrowIfNullOrWhiteSpace",
+          "lineNumber": 45
+        },
+        {
+          "caller": "UpdateProfile",
+          "callee": "name.Trim",
+          "lineNumber": 46
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 16,
+        "functionCount": 7,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Infrastructure/Persistence/Configurations/EmailVerificationTokenConfiguration.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 44,
+      "nonEmptyLines": 34,
+      "functions": [
+        {
+          "name": "Configure",
+          "startLine": 9,
+          "endLine": 43,
+          "params": [
+            "builder"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "EmailVerificationTokenConfiguration",
+          "startLine": 7,
+          "endLine": 44,
+          "methods": [
+            "Configure"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Configure",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "EmailVerificationTokenConfiguration",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Configure",
+          "callee": "builder.ToTable",
+          "lineNumber": 11
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasKey",
+          "lineNumber": 13
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(t => t.Id)\n            .HasColumnName(\"id\")\n            .ValueGeneratedNever",
+          "lineNumber": 15
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(t => t.Id)\n            .HasColumnName",
+          "lineNumber": 15
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property",
+          "lineNumber": 15
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(t => t.UserId)\n            .HasColumnName(\"user_id\")\n            .IsRequired",
+          "lineNumber": 19
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(t => t.UserId)\n            .HasColumnName",
+          "lineNumber": 19
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property",
+          "lineNumber": 19
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(t => t.TokenHash)\n            .HasColumnName(\"token_hash\")\n            .HasMaxLength(128)\n            .IsRequired",
+          "lineNumber": 23
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(t => t.TokenHash)\n            .HasColumnName(\"token_hash\")\n            .HasMaxLength",
+          "lineNumber": 23
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(t => t.TokenHash)\n            .HasColumnName",
+          "lineNumber": 23
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property",
+          "lineNumber": 23
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasIndex(t => t.TokenHash)\n            .IsUnique",
+          "lineNumber": 28
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasIndex",
+          "lineNumber": 28
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(t => t.ExpiresAt)\n            .HasColumnName(\"expires_at\")\n            .IsRequired",
+          "lineNumber": 31
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(t => t.ExpiresAt)\n            .HasColumnName",
+          "lineNumber": 31
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property",
+          "lineNumber": 31
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(t => t.CreatedAt)\n            .HasColumnName(\"created_at\")\n            .IsRequired",
+          "lineNumber": 35
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(t => t.CreatedAt)\n            .HasColumnName",
+          "lineNumber": 35
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property",
+          "lineNumber": 35
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasOne(t => t.User)\n            .WithMany()\n            .HasForeignKey(t => t.UserId)\n            .OnDelete",
+          "lineNumber": 39
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasOne(t => t.User)\n            .WithMany()\n            .HasForeignKey",
+          "lineNumber": 39
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasOne(t => t.User)\n            .WithMany",
+          "lineNumber": 39
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasOne",
+          "lineNumber": 39
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Infrastructure/Persistence/Configurations/UserConfiguration.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 62,
+      "nonEmptyLines": 48,
+      "functions": [
+        {
+          "name": "Configure",
+          "startLine": 9,
+          "endLine": 61,
+          "params": [
+            "builder"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "UserConfiguration",
+          "startLine": 7,
+          "endLine": 62,
+          "methods": [
+            "Configure"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Configure",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "UserConfiguration",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Configure",
+          "callee": "builder.ToTable",
+          "lineNumber": 11
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasKey",
+          "lineNumber": 13
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.Id)\n            .HasColumnName(\"id\")\n            .ValueGeneratedNever",
+          "lineNumber": 15
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.Id)\n            .HasColumnName",
+          "lineNumber": 15
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property",
+          "lineNumber": 15
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.Name)\n            .HasColumnName(\"name\")\n            .HasMaxLength(255)\n            .IsRequired",
+          "lineNumber": 19
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.Name)\n            .HasColumnName(\"name\")\n            .HasMaxLength",
+          "lineNumber": 19
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.Name)\n            .HasColumnName",
+          "lineNumber": 19
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property",
+          "lineNumber": 19
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.Email)\n            .HasColumnName(\"email\")\n            .HasMaxLength(255)\n            .IsRequired",
+          "lineNumber": 24
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.Email)\n            .HasColumnName(\"email\")\n            .HasMaxLength",
+          "lineNumber": 24
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.Email)\n            .HasColumnName",
+          "lineNumber": 24
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property",
+          "lineNumber": 24
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasIndex(u => u.Email)\n            .IsUnique",
+          "lineNumber": 29
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasIndex",
+          "lineNumber": 29
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.EmailVerifiedAt)\n            .HasColumnName",
+          "lineNumber": 32
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property",
+          "lineNumber": 32
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.AvatarUrl)\n            .HasColumnName(\"avatar_url\")\n            .HasMaxLength",
+          "lineNumber": 35
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.AvatarUrl)\n            .HasColumnName",
+          "lineNumber": 35
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property",
+          "lineNumber": 35
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.IsActive)\n            .HasColumnName(\"is_active\")\n            .IsRequired()\n            .HasDefaultValue",
+          "lineNumber": 39
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.IsActive)\n            .HasColumnName(\"is_active\")\n            .IsRequired",
+          "lineNumber": 39
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.IsActive)\n            .HasColumnName",
+          "lineNumber": 39
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property",
+          "lineNumber": 39
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.CreatedAt)\n            .HasColumnName(\"created_at\")\n            .IsRequired",
+          "lineNumber": 44
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.CreatedAt)\n            .HasColumnName",
+          "lineNumber": 44
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property",
+          "lineNumber": 44
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.UpdatedAt)\n            .HasColumnName(\"updated_at\")\n            .IsRequired",
+          "lineNumber": 48
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property(u => u.UpdatedAt)\n            .HasColumnName",
+          "lineNumber": 48
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.Property",
+          "lineNumber": 48
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasMany(u => u.Accounts)\n            .WithOne(a => a.User)\n            .HasForeignKey(a => a.UserId)\n            .OnDelete",
+          "lineNumber": 52
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasMany(u => u.Accounts)\n            .WithOne(a => a.User)\n            .HasForeignKey",
+          "lineNumber": 52
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasMany(u => u.Accounts)\n            .WithOne",
+          "lineNumber": 52
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasMany",
+          "lineNumber": 52
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasMany(u => u.Memberships)\n            .WithOne(m => m.User)\n            .HasForeignKey(m => m.UserId)\n            .OnDelete",
+          "lineNumber": 57
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasMany(u => u.Memberships)\n            .WithOne(m => m.User)\n            .HasForeignKey",
+          "lineNumber": 57
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasMany(u => u.Memberships)\n            .WithOne",
+          "lineNumber": 57
+        },
+        {
+          "caller": "Configure",
+          "callee": "builder.HasMany",
+          "lineNumber": 57
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 29,
+      "nonEmptyLines": 21,
+      "functions": [
+        {
+          "name": "EmailVerificationTokenRepository",
+          "startLine": 12,
+          "endLine": 12,
+          "params": [
+            "db"
+          ]
+        },
+        {
+          "name": "FindByTokenHashAsync",
+          "startLine": 14,
+          "endLine": 15,
+          "params": [
+            "tokenHash",
+            "ct"
+          ]
+        },
+        {
+          "name": "DeleteByUserIdAsync",
+          "startLine": 17,
+          "endLine": 24,
+          "params": [
+            "userId",
+            "ct"
+          ]
+        },
+        {
+          "name": "Add",
+          "startLine": 26,
+          "endLine": 26,
+          "params": [
+            "token"
+          ]
+        },
+        {
+          "name": "Remove",
+          "startLine": 28,
+          "endLine": 28,
+          "params": [
+            "token"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "EmailVerificationTokenRepository",
+          "startLine": 8,
+          "endLine": 29,
+          "methods": [
+            "EmailVerificationTokenRepository",
+            "FindByTokenHashAsync",
+            "DeleteByUserIdAsync",
+            "Add",
+            "Remove"
+          ],
+          "properties": [
+            "_db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "EmailVerificationTokenRepository",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "FindByTokenHashAsync",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "DeleteByUserIdAsync",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "Add",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "Remove",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "EmailVerificationTokenRepository",
+          "line": 8,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "FindByTokenHashAsync",
+          "callee": "_db.EmailVerificationTokens.FirstOrDefaultAsync",
+          "lineNumber": 15
+        },
+        {
+          "caller": "DeleteByUserIdAsync",
+          "callee": "_db.EmailVerificationTokens\n            .Where(t => t.UserId == userId)\n            .ToListAsync",
+          "lineNumber": 19
+        },
+        {
+          "caller": "DeleteByUserIdAsync",
+          "callee": "_db.EmailVerificationTokens\n            .Where",
+          "lineNumber": 19
+        },
+        {
+          "caller": "DeleteByUserIdAsync",
+          "callee": "_db.EmailVerificationTokens.RemoveRange",
+          "lineNumber": 23
+        },
+        {
+          "caller": "Add",
+          "callee": "_db.EmailVerificationTokens.Add",
+          "lineNumber": 26
+        },
+        {
+          "caller": "Remove",
+          "callee": "_db.EmailVerificationTokens.Remove",
+          "lineNumber": 28
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 6,
+        "functionCount": 5,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Infrastructure/Repositories/UserRepository.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 24,
+      "nonEmptyLines": 17,
+      "functions": [
+        {
+          "name": "UserRepository",
+          "startLine": 12,
+          "endLine": 12,
+          "params": [
+            "db"
+          ]
+        },
+        {
+          "name": "FindByIdAsync",
+          "startLine": 14,
+          "endLine": 15,
+          "params": [
+            "id",
+            "ct"
+          ]
+        },
+        {
+          "name": "FindByEmailAsync",
+          "startLine": 17,
+          "endLine": 18,
+          "params": [
+            "email",
+            "ct"
+          ]
+        },
+        {
+          "name": "ExistsByEmailAsync",
+          "startLine": 20,
+          "endLine": 21,
+          "params": [
+            "email",
+            "ct"
+          ]
+        },
+        {
+          "name": "Add",
+          "startLine": 23,
+          "endLine": 23,
+          "params": [
+            "user"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "UserRepository",
+          "startLine": 8,
+          "endLine": 24,
+          "methods": [
+            "UserRepository",
+            "FindByIdAsync",
+            "FindByEmailAsync",
+            "ExistsByEmailAsync",
+            "Add"
+          ],
+          "properties": [
+            "_db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "UserRepository",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "FindByIdAsync",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "FindByEmailAsync",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "ExistsByEmailAsync",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "Add",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "UserRepository",
+          "line": 8,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "FindByIdAsync",
+          "callee": "_db.Users.FirstOrDefaultAsync",
+          "lineNumber": 15
+        },
+        {
+          "caller": "FindByEmailAsync",
+          "callee": "_db.Users.FirstOrDefaultAsync",
+          "lineNumber": 18
+        },
+        {
+          "caller": "ExistsByEmailAsync",
+          "callee": "_db.Users.AnyAsync",
+          "lineNumber": 21
+        },
+        {
+          "caller": "Add",
+          "callee": "_db.Users.Add",
+          "lineNumber": 23
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 6,
+        "functionCount": 5,
+        "classCount": 1
+      }
+    }
+  ]
+}
