@@ -1,0 +1,1081 @@
+{
+ "nodes": [
+  {
+   "id": "file:Cortex.Application/Auth/Dtos/ExternalIdentity.cs",
+   "type": "file",
+   "name": "ExternalIdentity.cs",
+   "filePath": "Cortex.Application/Auth/Dtos/ExternalIdentity.cs",
+   "summary": "Defines the ExternalIdentity record carrying a verified third-party (Google) identity: provider account ID, email, name and optional avatar URL.",
+   "tags": [
+    "data-model",
+    "dto",
+    "authentication",
+    "type-definition"
+   ],
+   "complexity": "simple",
+   "languageNotes": "Uses a C# positional record for a concise immutable DTO."
+  },
+  {
+   "id": "class:Cortex.Application/Auth/Dtos/ExternalIdentity.cs:ExternalIdentity",
+   "type": "class",
+   "name": "ExternalIdentity",
+   "filePath": "Cortex.Application/Auth/Dtos/ExternalIdentity.cs",
+   "lineRange": [
+    3,
+    3
+   ],
+   "summary": "Immutable positional record holding the verified identity claims returned by an external identity provider.",
+   "tags": [
+    "dto",
+    "data-model",
+    "authentication"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Application/DependencyInjection.cs",
+   "type": "file",
+   "name": "DependencyInjection.cs",
+   "filePath": "Cortex.Application/DependencyInjection.cs",
+   "summary": "Application-layer composition extension that registers AuthService and all FluentValidation validators from the Application assembly.",
+   "tags": [
+    "dependency-injection",
+    "config",
+    "extension-method",
+    "entry-point"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Application/DependencyInjection.cs:DependencyInjection",
+   "type": "class",
+   "name": "DependencyInjection",
+   "filePath": "Cortex.Application/DependencyInjection.cs",
+   "lineRange": [
+    7,
+    15
+   ],
+   "summary": "Static class exposing the AddApplication IServiceCollection extension for wiring Application-layer services.",
+   "tags": [
+    "dependency-injection",
+    "extension-method",
+    "composition"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:Cortex.Application/DependencyInjection.cs:AddApplication",
+   "type": "function",
+   "name": "AddApplication",
+   "filePath": "Cortex.Application/DependencyInjection.cs",
+   "lineRange": [
+    9,
+    14
+   ],
+   "summary": "Registers AuthService as scoped and scans the assembly for FluentValidation validators.",
+   "tags": [
+    "dependency-injection",
+    "registration",
+    "validation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Application/Interfaces/IEmailService.cs",
+   "type": "file",
+   "name": "IEmailService.cs",
+   "filePath": "Cortex.Application/Interfaces/IEmailService.cs",
+   "summary": "Application abstraction for sending transactional email, currently limited to email-verification messages.",
+   "tags": [
+    "interface",
+    "abstraction",
+    "email",
+    "type-definition"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Application/Interfaces/IEmailService.cs:IEmailService",
+   "type": "class",
+   "name": "IEmailService",
+   "filePath": "Cortex.Application/Interfaces/IEmailService.cs",
+   "lineRange": [
+    3,
+    6
+   ],
+   "summary": "Port for sending verification emails containing a raw verification token to a user.",
+   "tags": [
+    "interface",
+    "email",
+    "abstraction"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs",
+   "type": "file",
+   "name": "IExternalIdentityTokenValidator.cs",
+   "filePath": "Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs",
+   "summary": "Application abstraction for validating external identity provider tokens (Google ID tokens) and returning an ExternalIdentity.",
+   "tags": [
+    "interface",
+    "abstraction",
+    "authentication",
+    "oauth",
+    "type-definition"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs:IExternalIdentityTokenValidator",
+   "type": "class",
+   "name": "IExternalIdentityTokenValidator",
+   "filePath": "Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs",
+   "lineRange": [
+    5,
+    8
+   ],
+   "summary": "Port that validates a Google ID token and yields an ExternalIdentity or null when invalid.",
+   "tags": [
+    "interface",
+    "authentication",
+    "oauth"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Application/Interfaces/IPasswordHasher.cs",
+   "type": "file",
+   "name": "IPasswordHasher.cs",
+   "filePath": "Cortex.Application/Interfaces/IPasswordHasher.cs",
+   "summary": "Application abstraction for hashing and verifying user passwords, keeping the hashing algorithm out of the Application layer.",
+   "tags": [
+    "interface",
+    "abstraction",
+    "security",
+    "type-definition"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Application/Interfaces/IPasswordHasher.cs:IPasswordHasher",
+   "type": "class",
+   "name": "IPasswordHasher",
+   "filePath": "Cortex.Application/Interfaces/IPasswordHasher.cs",
+   "lineRange": [
+    3,
+    7
+   ],
+   "summary": "Port defining Hash and Verify operations for credential passwords.",
+   "tags": [
+    "interface",
+    "security",
+    "password"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Application/Interfaces/IUnitOfWork.cs",
+   "type": "file",
+   "name": "IUnitOfWork.cs",
+   "filePath": "Cortex.Application/Interfaces/IUnitOfWork.cs",
+   "summary": "Application abstraction for committing pending persistence changes as a single unit of work.",
+   "tags": [
+    "interface",
+    "abstraction",
+    "persistence",
+    "type-definition"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Application/Interfaces/IUnitOfWork.cs:IUnitOfWork",
+   "type": "class",
+   "name": "IUnitOfWork",
+   "filePath": "Cortex.Application/Interfaces/IUnitOfWork.cs",
+   "lineRange": [
+    3,
+    6
+   ],
+   "summary": "Port exposing an async SaveChangesAsync to commit tracked changes.",
+   "tags": [
+    "interface",
+    "persistence",
+    "unit-of-work"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Infrastructure/Auth/BcryptPasswordHasher.cs",
+   "type": "file",
+   "name": "BcryptPasswordHasher.cs",
+   "filePath": "Cortex.Infrastructure/Auth/BcryptPasswordHasher.cs",
+   "summary": "Infrastructure implementation of IPasswordHasher using BCrypt.Net with a work factor of 12.",
+   "tags": [
+    "service",
+    "security",
+    "password",
+    "adapter"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Infrastructure/Auth/BcryptPasswordHasher.cs:BcryptPasswordHasher",
+   "type": "class",
+   "name": "BcryptPasswordHasher",
+   "filePath": "Cortex.Infrastructure/Auth/BcryptPasswordHasher.cs",
+   "lineRange": [
+    5,
+    10
+   ],
+   "summary": "Hashes and verifies passwords via BCrypt with work factor 12.",
+   "tags": [
+    "security",
+    "password",
+    "adapter"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+   "type": "file",
+   "name": "BrevoEmailService.cs",
+   "filePath": "Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+   "summary": "Infrastructure implementation of IEmailService that sends branded verification emails through the Brevo transactional SMTP API using a named HttpClient.",
+   "tags": [
+    "service",
+    "email",
+    "external-api",
+    "adapter",
+    "authentication"
+   ],
+   "complexity": "moderate",
+   "languageNotes": "Uses a C# 11 raw interpolated string literal (double-dollar, triple-quoted) for the HTML template, with HtmlEncoder escaping of user-provided values."
+  },
+  {
+   "id": "class:Cortex.Infrastructure/Auth/BrevoEmailService.cs:BrevoEmailService",
+   "type": "class",
+   "name": "BrevoEmailService",
+   "filePath": "Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+   "lineRange": [
+    10,
+    77
+   ],
+   "summary": "Builds the verification link from frontend settings and posts a text/HTML email payload to Brevo's /v3/smtp/email endpoint.",
+   "tags": [
+    "email",
+    "external-api",
+    "adapter"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "function:Cortex.Infrastructure/Auth/BrevoEmailService.cs:SendVerificationEmailAsync",
+   "type": "function",
+   "name": "SendVerificationEmailAsync",
+   "filePath": "Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+   "lineRange": [
+    26,
+    76
+   ],
+   "summary": "Composes an HTML-encoded verification email with a 24-hour token link and sends it via Brevo, throwing on non-success responses.",
+   "tags": [
+    "email",
+    "async",
+    "http-client"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+   "type": "file",
+   "name": "GoogleIdentityTokenValidator.cs",
+   "filePath": "Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+   "summary": "Infrastructure implementation of IExternalIdentityTokenValidator that verifies Google ID tokens with Google.Apis.Auth against the configured client ID.",
+   "tags": [
+    "service",
+    "authentication",
+    "oauth",
+    "validation",
+    "adapter"
+   ],
+   "complexity": "simple",
+   "languageNotes": "Uses a C# 12 primary constructor to inject IOptions<GoogleAuthSettings>."
+  },
+  {
+   "id": "class:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs:GoogleIdentityTokenValidator",
+   "type": "class",
+   "name": "GoogleIdentityTokenValidator",
+   "filePath": "Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+   "lineRange": [
+    9,
+    41
+   ],
+   "summary": "Sealed validator that checks Google ID token signature and audience and requires a verified email before producing an ExternalIdentity.",
+   "tags": [
+    "authentication",
+    "oauth",
+    "validation"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs:ValidateGoogleIdTokenAsync",
+   "type": "function",
+   "name": "ValidateGoogleIdTokenAsync",
+   "filePath": "Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+   "lineRange": [
+    11,
+    40
+   ],
+   "summary": "Validates the token via GoogleJsonWebSignature, returns null for invalid tokens or missing/unverified claims, and throws if ClientId is unconfigured.",
+   "tags": [
+    "authentication",
+    "validation",
+    "async"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:Cortex.Infrastructure/Auth/Settings/BrevoSettings.cs",
+   "type": "file",
+   "name": "BrevoSettings.cs",
+   "filePath": "Cortex.Infrastructure/Auth/Settings/BrevoSettings.cs",
+   "summary": "Options class binding the Brevo configuration section: API key, sender email and sender name.",
+   "tags": [
+    "config",
+    "options-pattern",
+    "settings",
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Infrastructure/Auth/Settings/BrevoSettings.cs:BrevoSettings",
+   "type": "class",
+   "name": "BrevoSettings",
+   "filePath": "Cortex.Infrastructure/Auth/Settings/BrevoSettings.cs",
+   "lineRange": [
+    3,
+    8
+   ],
+   "summary": "Options class binding the Brevo configuration section: API key, sender email and sender name.",
+   "tags": [
+    "options-pattern",
+    "settings",
+    "config"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Infrastructure/Auth/Settings/FrontendSettings.cs",
+   "type": "file",
+   "name": "FrontendSettings.cs",
+   "filePath": "Cortex.Infrastructure/Auth/Settings/FrontendSettings.cs",
+   "summary": "Options class binding the Frontend configuration section, holding the frontend base URL used to build email links.",
+   "tags": [
+    "config",
+    "options-pattern",
+    "settings",
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Infrastructure/Auth/Settings/FrontendSettings.cs:FrontendSettings",
+   "type": "class",
+   "name": "FrontendSettings",
+   "filePath": "Cortex.Infrastructure/Auth/Settings/FrontendSettings.cs",
+   "lineRange": [
+    3,
+    6
+   ],
+   "summary": "Options class binding the Frontend configuration section, holding the frontend base URL used to build email links.",
+   "tags": [
+    "options-pattern",
+    "settings",
+    "config"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Infrastructure/Auth/Settings/GoogleAuthSettings.cs",
+   "type": "file",
+   "name": "GoogleAuthSettings.cs",
+   "filePath": "Cortex.Infrastructure/Auth/Settings/GoogleAuthSettings.cs",
+   "summary": "Options class binding the GoogleAuth configuration section, holding the Google OAuth client ID used as token audience.",
+   "tags": [
+    "config",
+    "options-pattern",
+    "settings",
+    "data-model"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Infrastructure/Auth/Settings/GoogleAuthSettings.cs:GoogleAuthSettings",
+   "type": "class",
+   "name": "GoogleAuthSettings",
+   "filePath": "Cortex.Infrastructure/Auth/Settings/GoogleAuthSettings.cs",
+   "lineRange": [
+    3,
+    6
+   ],
+   "summary": "Options class binding the GoogleAuth configuration section, holding the Google OAuth client ID used as token audience.",
+   "tags": [
+    "options-pattern",
+    "settings",
+    "config"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "type": "file",
+   "name": "DependencyInjection.cs",
+   "filePath": "Cortex.Infrastructure/DependencyInjection.cs",
+   "summary": "Infrastructure composition extension that registers the Npgsql EF Core DbContext, binds settings sections, maps Application interfaces to repository/auth/email implementations, and configures the Brevo HttpClient.",
+   "tags": [
+    "dependency-injection",
+    "config",
+    "composition-root",
+    "extension-method"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "class:Cortex.Infrastructure/DependencyInjection.cs:DependencyInjection",
+   "type": "class",
+   "name": "DependencyInjection",
+   "filePath": "Cortex.Infrastructure/DependencyInjection.cs",
+   "lineRange": [
+    13,
+    43
+   ],
+   "summary": "Static class exposing the AddInfrastructure extension that wires all Infrastructure services.",
+   "tags": [
+    "dependency-injection",
+    "extension-method",
+    "composition"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "function:Cortex.Infrastructure/DependencyInjection.cs:AddInfrastructure",
+   "type": "function",
+   "name": "AddInfrastructure",
+   "filePath": "Cortex.Infrastructure/DependencyInjection.cs",
+   "lineRange": [
+    15,
+    42
+   ],
+   "summary": "Registers CortexDbContext with PostgreSQL, configures Jwt/GoogleAuth/Brevo/Frontend options, scoped interface-to-implementation bindings, and the named Brevo HttpClient with api-key header.",
+   "tags": [
+    "dependency-injection",
+    "registration",
+    "persistence"
+   ],
+   "complexity": "moderate"
+  },
+  {
+   "id": "file:Cortex.Infrastructure/Repositories/UnitOfWork.cs",
+   "type": "file",
+   "name": "UnitOfWork.cs",
+   "filePath": "Cortex.Infrastructure/Repositories/UnitOfWork.cs",
+   "summary": "Infrastructure implementation of IUnitOfWork that delegates SaveChangesAsync to the EF Core CortexDbContext.",
+   "tags": [
+    "persistence",
+    "unit-of-work",
+    "adapter",
+    "service"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "class:Cortex.Infrastructure/Repositories/UnitOfWork.cs:UnitOfWork",
+   "type": "class",
+   "name": "UnitOfWork",
+   "filePath": "Cortex.Infrastructure/Repositories/UnitOfWork.cs",
+   "lineRange": [
+    6,
+    13
+   ],
+   "summary": "Thin EF Core wrapper committing tracked changes through CortexDbContext.SaveChangesAsync.",
+   "tags": [
+    "persistence",
+    "unit-of-work",
+    "ef-core"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:Cortex.Application/Auth/Dtos/ExternalIdentity.cs",
+   "target": "class:Cortex.Application/Auth/Dtos/ExternalIdentity.cs:ExternalIdentity",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Application/Auth/Dtos/ExternalIdentity.cs",
+   "target": "class:Cortex.Application/Auth/Dtos/ExternalIdentity.cs:ExternalIdentity",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Application/DependencyInjection.cs",
+   "target": "class:Cortex.Application/DependencyInjection.cs:DependencyInjection",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Application/DependencyInjection.cs",
+   "target": "class:Cortex.Application/DependencyInjection.cs:DependencyInjection",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Application/DependencyInjection.cs",
+   "target": "function:Cortex.Application/DependencyInjection.cs:AddApplication",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Application/DependencyInjection.cs",
+   "target": "function:Cortex.Application/DependencyInjection.cs:AddApplication",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "class:Cortex.Application/DependencyInjection.cs:DependencyInjection",
+   "target": "function:Cortex.Application/DependencyInjection.cs:AddApplication",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Application/Interfaces/IEmailService.cs",
+   "target": "class:Cortex.Application/Interfaces/IEmailService.cs:IEmailService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Application/Interfaces/IEmailService.cs",
+   "target": "class:Cortex.Application/Interfaces/IEmailService.cs:IEmailService",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs",
+   "target": "class:Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs:IExternalIdentityTokenValidator",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs",
+   "target": "class:Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs:IExternalIdentityTokenValidator",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Application/Interfaces/IPasswordHasher.cs",
+   "target": "class:Cortex.Application/Interfaces/IPasswordHasher.cs:IPasswordHasher",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Application/Interfaces/IPasswordHasher.cs",
+   "target": "class:Cortex.Application/Interfaces/IPasswordHasher.cs:IPasswordHasher",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Application/Interfaces/IUnitOfWork.cs",
+   "target": "class:Cortex.Application/Interfaces/IUnitOfWork.cs:IUnitOfWork",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Application/Interfaces/IUnitOfWork.cs",
+   "target": "class:Cortex.Application/Interfaces/IUnitOfWork.cs:IUnitOfWork",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/BcryptPasswordHasher.cs",
+   "target": "class:Cortex.Infrastructure/Auth/BcryptPasswordHasher.cs:BcryptPasswordHasher",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/BcryptPasswordHasher.cs",
+   "target": "class:Cortex.Infrastructure/Auth/BcryptPasswordHasher.cs:BcryptPasswordHasher",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "class:Cortex.Infrastructure/Auth/BcryptPasswordHasher.cs:BcryptPasswordHasher",
+   "target": "class:Cortex.Application/Interfaces/IPasswordHasher.cs:IPasswordHasher",
+   "type": "implements",
+   "direction": "forward",
+   "weight": 0.9
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+   "target": "class:Cortex.Infrastructure/Auth/BrevoEmailService.cs:BrevoEmailService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+   "target": "class:Cortex.Infrastructure/Auth/BrevoEmailService.cs:BrevoEmailService",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "class:Cortex.Infrastructure/Auth/BrevoEmailService.cs:BrevoEmailService",
+   "target": "class:Cortex.Application/Interfaces/IEmailService.cs:IEmailService",
+   "type": "implements",
+   "direction": "forward",
+   "weight": 0.9
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+   "target": "function:Cortex.Infrastructure/Auth/BrevoEmailService.cs:SendVerificationEmailAsync",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+   "target": "function:Cortex.Infrastructure/Auth/BrevoEmailService.cs:SendVerificationEmailAsync",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "class:Cortex.Infrastructure/Auth/BrevoEmailService.cs:BrevoEmailService",
+   "target": "function:Cortex.Infrastructure/Auth/BrevoEmailService.cs:SendVerificationEmailAsync",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+   "target": "class:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs:GoogleIdentityTokenValidator",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+   "target": "class:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs:GoogleIdentityTokenValidator",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "class:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs:GoogleIdentityTokenValidator",
+   "target": "class:Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs:IExternalIdentityTokenValidator",
+   "type": "implements",
+   "direction": "forward",
+   "weight": 0.9
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+   "target": "function:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs:ValidateGoogleIdTokenAsync",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+   "target": "function:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs:ValidateGoogleIdTokenAsync",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "class:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs:GoogleIdentityTokenValidator",
+   "target": "function:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs:ValidateGoogleIdTokenAsync",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/Settings/BrevoSettings.cs",
+   "target": "class:Cortex.Infrastructure/Auth/Settings/BrevoSettings.cs:BrevoSettings",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/Settings/BrevoSettings.cs",
+   "target": "class:Cortex.Infrastructure/Auth/Settings/BrevoSettings.cs:BrevoSettings",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/Settings/FrontendSettings.cs",
+   "target": "class:Cortex.Infrastructure/Auth/Settings/FrontendSettings.cs:FrontendSettings",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/Settings/FrontendSettings.cs",
+   "target": "class:Cortex.Infrastructure/Auth/Settings/FrontendSettings.cs:FrontendSettings",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/Settings/GoogleAuthSettings.cs",
+   "target": "class:Cortex.Infrastructure/Auth/Settings/GoogleAuthSettings.cs:GoogleAuthSettings",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/Settings/GoogleAuthSettings.cs",
+   "target": "class:Cortex.Infrastructure/Auth/Settings/GoogleAuthSettings.cs:GoogleAuthSettings",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "class:Cortex.Infrastructure/DependencyInjection.cs:DependencyInjection",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "class:Cortex.Infrastructure/DependencyInjection.cs:DependencyInjection",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "function:Cortex.Infrastructure/DependencyInjection.cs:AddInfrastructure",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "function:Cortex.Infrastructure/DependencyInjection.cs:AddInfrastructure",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "class:Cortex.Infrastructure/DependencyInjection.cs:DependencyInjection",
+   "target": "function:Cortex.Infrastructure/DependencyInjection.cs:AddInfrastructure",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Repositories/UnitOfWork.cs",
+   "target": "class:Cortex.Infrastructure/Repositories/UnitOfWork.cs:UnitOfWork",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Repositories/UnitOfWork.cs",
+   "target": "class:Cortex.Infrastructure/Repositories/UnitOfWork.cs:UnitOfWork",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "class:Cortex.Infrastructure/Repositories/UnitOfWork.cs:UnitOfWork",
+   "target": "class:Cortex.Application/Interfaces/IUnitOfWork.cs:IUnitOfWork",
+   "type": "implements",
+   "direction": "forward",
+   "weight": 0.9
+  },
+  {
+   "source": "file:Cortex.Application/DependencyInjection.cs",
+   "target": "file:Cortex.Application/Auth/AuthService.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/ExternalIdentity.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/BcryptPasswordHasher.cs",
+   "target": "file:Cortex.Application/Interfaces/IPasswordHasher.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+   "target": "file:Cortex.Application/Interfaces/IEmailService.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+   "target": "file:Cortex.Infrastructure/Auth/Settings/BrevoSettings.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+   "target": "file:Cortex.Infrastructure/Auth/Settings/FrontendSettings.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/ExternalIdentity.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+   "target": "file:Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+   "target": "file:Cortex.Infrastructure/Auth/Settings/GoogleAuthSettings.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Application/DependencyInjection.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Application/Interfaces/IEmailService.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Application/Interfaces/IPasswordHasher.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Application/Interfaces/ITokenService.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Application/Interfaces/IUnitOfWork.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Application/Interfaces/IUserAccountRepository.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Application/Interfaces/IUserRepository.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Infrastructure/Auth/BcryptPasswordHasher.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Infrastructure/Auth/JwtTokenService.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Infrastructure/Auth/Settings/BrevoSettings.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Infrastructure/Auth/Settings/FrontendSettings.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Infrastructure/Auth/Settings/GoogleAuthSettings.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Infrastructure/Auth/Settings/JwtSettings.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Infrastructure/Persistence/CortexDbContext.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Infrastructure/Repositories/EmailVerificationTokenRepository.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Infrastructure/Repositories/UnitOfWork.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Infrastructure/Repositories/UserAccountRepository.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/DependencyInjection.cs",
+   "target": "file:Cortex.Infrastructure/Repositories/UserRepository.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Repositories/UnitOfWork.cs",
+   "target": "file:Cortex.Application/Interfaces/IUnitOfWork.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Infrastructure/Repositories/UnitOfWork.cs",
+   "target": "file:Cortex.Infrastructure/Persistence/CortexDbContext.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "function:Cortex.Application/DependencyInjection.cs:AddApplication",
+   "target": "class:Cortex.Application/Auth/AuthService.cs:AuthService",
+   "type": "depends_on",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "function:Cortex.Infrastructure/DependencyInjection.cs:AddInfrastructure",
+   "target": "class:Cortex.Infrastructure/Auth/JwtTokenService.cs:JwtTokenService",
+   "type": "depends_on",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "function:Cortex.Infrastructure/DependencyInjection.cs:AddInfrastructure",
+   "target": "class:Cortex.Infrastructure/Persistence/CortexDbContext.cs:CortexDbContext",
+   "type": "depends_on",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "class:Cortex.Infrastructure/Repositories/UnitOfWork.cs:UnitOfWork",
+   "target": "class:Cortex.Infrastructure/Persistence/CortexDbContext.cs:CortexDbContext",
+   "type": "depends_on",
+   "direction": "forward",
+   "weight": 0.6
+  }
+ ]
+}

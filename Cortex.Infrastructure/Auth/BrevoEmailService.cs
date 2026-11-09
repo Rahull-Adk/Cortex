@@ -3,6 +3,7 @@ using System.Text.Json;
 using System.Text.Encodings.Web;
 using Cortex.Application.Interfaces;
 using Cortex.Infrastructure.Auth.Settings;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Cortex.Infrastructure.Auth;
@@ -12,15 +13,18 @@ public class BrevoEmailService : IEmailService
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly BrevoSettings _brevo;
     private readonly FrontendSettings _frontend;
+    private readonly ILogger<BrevoEmailService> _logger;
 
     public BrevoEmailService(
         IHttpClientFactory httpClientFactory,
         IOptions<BrevoSettings> brevo,
-        IOptions<FrontendSettings> frontend)
+        IOptions<FrontendSettings> frontend,
+        ILogger<BrevoEmailService> logger)
     {
         _httpClientFactory = httpClientFactory;
         _brevo = brevo.Value;
         _frontend = frontend.Value;
+        _logger = logger;
     }
 
     public async Task SendVerificationEmailAsync(string toEmail, string toName, string rawToken, CancellationToken ct = default)
@@ -71,7 +75,18 @@ public class BrevoEmailService : IEmailService
 
         var client = _httpClientFactory.CreateClient("Brevo");
         var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
-        var response = await client.PostAsync("/v3/smtp/email", content, ct);
-        response.EnsureSuccessStatusCode();
+        try
+        {
+            using var response = await client.PostAsync("/v3/smtp/email", content, ct);
+            if (response.IsSuccessStatusCode)
+                return;
+
+            var body = await response.Content.ReadAsStringAsync(ct);
+            _logger.LogWarning("Brevo rejected the verification email ({StatusCode}): {Body}", (int)response.StatusCode, body);
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogWarning(ex, "Could not reach Brevo to send the verification email.");
+        }
     }
 }

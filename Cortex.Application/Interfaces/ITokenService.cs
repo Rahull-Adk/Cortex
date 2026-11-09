@@ -4,7 +4,8 @@ namespace Cortex.Application.Interfaces;
 
 public interface ITokenService
 {
-    string GenerateAccessToken(User user);
-    string GenerateRefreshToken(User user);
-    Guid? ValidateRefreshToken(string token);
+    AccessToken GenerateAccessToken(User user);
+    TimeSpan RefreshTokenLifetime { get; }
 }
+
+public sealed record AccessToken(string Token, DateTime ExpiresAt);

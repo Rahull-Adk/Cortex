@@ -1,3 +1,8 @@
 namespace Cortex.Application.Auth.Dtos;
 
-public record AuthTokensDto(string AccessToken, string RefreshToken, UserDto User);
+public record AuthTokensDto(
+    string AccessToken,
+    DateTime AccessTokenExpiresAt,
+    string RefreshToken,
+    DateTime RefreshTokenExpiresAt,
+    UserDto User);

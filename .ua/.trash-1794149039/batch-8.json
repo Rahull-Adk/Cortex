@@ -1,0 +1,95 @@
+{
+  "nodes": [
+    {
+      "id": "config:Cortex.Api/Cortex.Api.csproj",
+      "type": "config",
+      "name": "Cortex.Api.csproj",
+      "filePath": "Cortex.Api/Cortex.Api.csproj",
+      "summary": "Web SDK project file for the API layer targeting net10.0 with nullable and implicit usings, referencing OpenAPI, Scalar API docs and EF Core packages plus the Application and Infrastructure projects as the composition root.",
+      "tags": [
+        "configuration",
+        "build-system",
+        "dotnet",
+        "composition-root"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:Cortex.Api/appsettings.Development.json",
+      "type": "config",
+      "name": "appsettings.Development.json",
+      "filePath": "Cortex.Api/appsettings.Development.json",
+      "summary": "Development-environment overrides for the API that set default and ASP.NET Core log levels.",
+      "tags": [
+        "configuration",
+        "logging",
+        "development"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:Cortex.Api/appsettings.json",
+      "type": "config",
+      "name": "appsettings.json",
+      "filePath": "Cortex.Api/appsettings.json",
+      "summary": "Base API configuration defining log levels and allowed hosts; JWT, database and Brevo settings are supplied via environment variables or user secrets instead.",
+      "tags": [
+        "configuration",
+        "logging",
+        "dotnet"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:Cortex.Api/Cortex.Api.csproj",
+      "target": "config:Cortex.Application/Cortex.Application.csproj",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "config:Cortex.Api/Cortex.Api.csproj",
+      "target": "config:Cortex.Infrastructure/Cortex.Infrastructure.csproj",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "config:Cortex.Api/Cortex.Api.csproj",
+      "target": "file:Cortex.Api/Program.cs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:Cortex.Api/Cortex.Api.csproj",
+      "target": "file:Cortex.Api/Controllers/AuthController.cs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:Cortex.Api/appsettings.json",
+      "target": "file:Cortex.Api/Program.cs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:Cortex.Api/appsettings.Development.json",
+      "target": "file:Cortex.Api/Program.cs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:Cortex.Api/appsettings.Development.json",
+      "target": "config:Cortex.Api/appsettings.json",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

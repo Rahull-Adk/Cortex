@@ -1,0 +1,1296 @@
+{
+ "nodes": [
+  {
+   "id": "file:Cortex.Api/Controllers/AuthController.cs",
+   "type": "file",
+   "name": "AuthController.cs",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "Thin ASP.NET Core API controller under /api/auth exposing register, login, Google session, email verification, refresh, logout and current-user endpoints; it delegates to AuthService, maps Result error codes to HTTP status codes, and sets HttpOnly JWT access/refresh cookies.",
+   "tags": [
+    "api-handler",
+    "authentication",
+    "controller",
+    "entry-point",
+    "cookies"
+   ],
+   "complexity": "moderate",
+   "languageNotes": "Uses attribute routing ([Route], [HttpPost]) and a C# switch expression to translate error codes into IActionResult responses."
+  },
+  {
+   "id": "file:Cortex.Application/Auth/AuthErrors.cs",
+   "type": "file",
+   "name": "AuthErrors.cs",
+   "filePath": "Cortex.Application/Auth/AuthErrors.cs",
+   "summary": "Defines the string error-code constants (email already registered, invalid credentials, email not verified, invalid token) shared between AuthService and the API error mapping.",
+   "tags": [
+    "constants",
+    "authentication",
+    "error-handling"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "file:Cortex.Application/Auth/AuthService.cs",
+   "type": "file",
+   "name": "AuthService.cs",
+   "filePath": "Cortex.Application/Auth/AuthService.cs",
+   "summary": "Core application service orchestrating the authentication use cases: credential registration and login, Google OAuth sign-in/account linking, email verification tokens, resending verification emails, refresh-token exchange and current-user lookup, all via injected repository and infrastructure abstractions.",
+   "tags": [
+    "service",
+    "authentication",
+    "use-case",
+    "email-verification",
+    "oauth"
+   ],
+   "complexity": "moderate",
+   "languageNotes": "Returns a Result/Result<T> type instead of throwing for expected failures; verification tokens are generated with RandomNumberGenerator and stored only as SHA-256 hashes."
+  },
+  {
+   "id": "file:Cortex.Application/Auth/Dtos/AuthTokensDto.cs",
+   "type": "file",
+   "name": "AuthTokensDto.cs",
+   "filePath": "Cortex.Application/Auth/Dtos/AuthTokensDto.cs",
+   "summary": "Response DTO record bundling the issued JWT access token, refresh token and the authenticated UserDto.",
+   "tags": [
+    "data-model",
+    "dto",
+    "authentication",
+    "tokens"
+   ],
+   "complexity": "simple",
+   "languageNotes": "C# positional record providing immutable value semantics in a single line."
+  },
+  {
+   "id": "class:Cortex.Application/Auth/Dtos/AuthTokensDto.cs:AuthTokensDto",
+   "type": "class",
+   "name": "AuthTokensDto",
+   "filePath": "Cortex.Application/Auth/Dtos/AuthTokensDto.cs",
+   "summary": "Response DTO record bundling the issued JWT access token, refresh token and the authenticated UserDto.",
+   "tags": [
+    "data-model",
+    "dto",
+    "authentication",
+    "tokens"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    3,
+    3
+   ]
+  },
+  {
+   "id": "file:Cortex.Application/Auth/Dtos/GoogleSessionRequest.cs",
+   "type": "file",
+   "name": "GoogleSessionRequest.cs",
+   "filePath": "Cortex.Application/Auth/Dtos/GoogleSessionRequest.cs",
+   "summary": "Request DTO record carrying the Google ID token submitted to exchange for a Cortex session.",
+   "tags": [
+    "data-model",
+    "dto",
+    "oauth",
+    "request"
+   ],
+   "complexity": "simple",
+   "languageNotes": "C# positional record providing immutable value semantics in a single line."
+  },
+  {
+   "id": "class:Cortex.Application/Auth/Dtos/GoogleSessionRequest.cs:GoogleSessionRequest",
+   "type": "class",
+   "name": "GoogleSessionRequest",
+   "filePath": "Cortex.Application/Auth/Dtos/GoogleSessionRequest.cs",
+   "summary": "Request DTO record carrying the Google ID token submitted to exchange for a Cortex session.",
+   "tags": [
+    "data-model",
+    "dto",
+    "oauth",
+    "request"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    3,
+    3
+   ]
+  },
+  {
+   "id": "file:Cortex.Application/Auth/Dtos/LoginRequest.cs",
+   "type": "file",
+   "name": "LoginRequest.cs",
+   "filePath": "Cortex.Application/Auth/Dtos/LoginRequest.cs",
+   "summary": "Request DTO record with email and password for credential-based login.",
+   "tags": [
+    "data-model",
+    "dto",
+    "authentication",
+    "request"
+   ],
+   "complexity": "simple",
+   "languageNotes": "C# positional record providing immutable value semantics in a single line."
+  },
+  {
+   "id": "class:Cortex.Application/Auth/Dtos/LoginRequest.cs:LoginRequest",
+   "type": "class",
+   "name": "LoginRequest",
+   "filePath": "Cortex.Application/Auth/Dtos/LoginRequest.cs",
+   "summary": "Request DTO record with email and password for credential-based login.",
+   "tags": [
+    "data-model",
+    "dto",
+    "authentication",
+    "request"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    3,
+    3
+   ]
+  },
+  {
+   "id": "file:Cortex.Application/Auth/Dtos/RefreshRequest.cs",
+   "type": "file",
+   "name": "RefreshRequest.cs",
+   "filePath": "Cortex.Application/Auth/Dtos/RefreshRequest.cs",
+   "summary": "Request DTO record carrying the refresh token used to obtain new access/refresh tokens.",
+   "tags": [
+    "data-model",
+    "dto",
+    "tokens",
+    "request"
+   ],
+   "complexity": "simple",
+   "languageNotes": "C# positional record providing immutable value semantics in a single line."
+  },
+  {
+   "id": "class:Cortex.Application/Auth/Dtos/RefreshRequest.cs:RefreshRequest",
+   "type": "class",
+   "name": "RefreshRequest",
+   "filePath": "Cortex.Application/Auth/Dtos/RefreshRequest.cs",
+   "summary": "Request DTO record carrying the refresh token used to obtain new access/refresh tokens.",
+   "tags": [
+    "data-model",
+    "dto",
+    "tokens",
+    "request"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    3,
+    3
+   ]
+  },
+  {
+   "id": "class:Cortex.Api/Controllers/AuthController.cs:AuthController",
+   "type": "class",
+   "name": "AuthController",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "API controller class for /api/auth that wires HTTP requests to AuthService and manages auth cookies.",
+   "tags": [
+    "api-handler",
+    "controller",
+    "authentication"
+   ],
+   "complexity": "moderate",
+   "lineRange": [
+    12,
+    128
+   ]
+  },
+  {
+   "id": "class:Cortex.Application/Auth/AuthErrors.cs:AuthErrors",
+   "type": "class",
+   "name": "AuthErrors",
+   "filePath": "Cortex.Application/Auth/AuthErrors.cs",
+   "summary": "Static class of auth error-code string constants.",
+   "tags": [
+    "constants",
+    "error-handling",
+    "authentication"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    3,
+    9
+   ]
+  },
+  {
+   "id": "class:Cortex.Application/Auth/AuthService.cs:AuthService",
+   "type": "class",
+   "name": "AuthService",
+   "filePath": "Cortex.Application/Auth/AuthService.cs",
+   "summary": "Authentication application service injected with user/account/token repositories, unit of work, password hasher, token service, Google token validator and email service.",
+   "tags": [
+    "service",
+    "authentication",
+    "use-case"
+   ],
+   "complexity": "moderate",
+   "lineRange": [
+    10,
+    194
+   ]
+  },
+  {
+   "id": "function:Cortex.Application/Auth/AuthService.cs:RegisterAsync",
+   "type": "function",
+   "name": "RegisterAsync",
+   "filePath": "Cortex.Application/Auth/AuthService.cs",
+   "summary": "Registers a credentials user: normalizes email, rejects duplicates, hashes the password, creates User and UserAccount, stores a hashed verification token and sends the verification email.",
+   "tags": [
+    "registration",
+    "use-case",
+    "email-verification"
+   ],
+   "complexity": "moderate",
+   "lineRange": [
+    41,
+    62
+   ]
+  },
+  {
+   "id": "function:Cortex.Application/Auth/AuthService.cs:LoginAsync",
+   "type": "function",
+   "name": "LoginAsync",
+   "filePath": "Cortex.Application/Auth/AuthService.cs",
+   "summary": "Authenticates email/password credentials, rejects unverified emails, and issues access/refresh tokens.",
+   "tags": [
+    "login",
+    "use-case",
+    "authentication"
+   ],
+   "complexity": "moderate",
+   "lineRange": [
+    64,
+    82
+   ]
+  },
+  {
+   "id": "function:Cortex.Application/Auth/AuthService.cs:GoogleSessionAsync",
+   "type": "function",
+   "name": "GoogleSessionAsync",
+   "filePath": "Cortex.Application/Auth/AuthService.cs",
+   "summary": "Validates a Google ID token, signs in an already-linked account or creates/links a user (marking email verified and updating profile), then issues tokens.",
+   "tags": [
+    "oauth",
+    "use-case",
+    "account-linking"
+   ],
+   "complexity": "moderate",
+   "lineRange": [
+    84,
+    116
+   ]
+  },
+  {
+   "id": "function:Cortex.Application/Auth/AuthService.cs:VerifyEmailAsync",
+   "type": "function",
+   "name": "VerifyEmailAsync",
+   "filePath": "Cortex.Application/Auth/AuthService.cs",
+   "summary": "Looks up a verification token by SHA-256 hash, rejects expired/unknown tokens, marks the email verified, deletes the token and issues tokens.",
+   "tags": [
+    "email-verification",
+    "use-case",
+    "tokens"
+   ],
+   "complexity": "moderate",
+   "lineRange": [
+    118,
+    134
+   ]
+  },
+  {
+   "id": "function:Cortex.Application/Auth/AuthService.cs:ResendVerificationAsync",
+   "type": "function",
+   "name": "ResendVerificationAsync",
+   "filePath": "Cortex.Application/Auth/AuthService.cs",
+   "summary": "Silently succeeds for unknown or already verified emails (avoiding enumeration), otherwise replaces existing tokens with a new 24h token and emails it.",
+   "tags": [
+    "email-verification",
+    "use-case",
+    "security"
+   ],
+   "complexity": "moderate",
+   "lineRange": [
+    136,
+    154
+   ]
+  },
+  {
+   "id": "function:Cortex.Application/Auth/AuthService.cs:RefreshAsync",
+   "type": "function",
+   "name": "RefreshAsync",
+   "filePath": "Cortex.Application/Auth/AuthService.cs",
+   "summary": "Validates a refresh token and re-issues tokens only for active, email-verified users.",
+   "tags": [
+    "tokens",
+    "use-case",
+    "authentication"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    156,
+    167
+   ]
+  },
+  {
+   "id": "function:Cortex.Application/Auth/AuthService.cs:GetCurrentUserAsync",
+   "type": "function",
+   "name": "GetCurrentUserAsync",
+   "filePath": "Cortex.Application/Auth/AuthService.cs",
+   "summary": "Returns the UserDto for a user id taken from the authenticated JWT subject.",
+   "tags": [
+    "user",
+    "query",
+    "authentication"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    169,
+    175
+   ]
+  },
+  {
+   "id": "function:Cortex.Api/Controllers/AuthController.cs:Register",
+   "type": "function",
+   "name": "Register",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "POST /api/auth/register action delegating to AuthService.RegisterAsync and returning the new user with a verify-your-email message.",
+   "tags": [
+    "api-handler",
+    "authentication",
+    "controller"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    25,
+    30
+   ]
+  },
+  {
+   "id": "function:Cortex.Api/Controllers/AuthController.cs:Login",
+   "type": "function",
+   "name": "Login",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "POST /api/auth/login action that calls AuthService.LoginAsync and sets token cookies on success.",
+   "tags": [
+    "api-handler",
+    "authentication",
+    "controller"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    32,
+    39
+   ]
+  },
+  {
+   "id": "function:Cortex.Api/Controllers/AuthController.cs:GoogleSession",
+   "type": "function",
+   "name": "GoogleSession",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "POST /api/auth/google-session action exchanging a Google ID token via AuthService.GoogleSessionAsync and setting token cookies.",
+   "tags": [
+    "api-handler",
+    "authentication",
+    "controller"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    41,
+    48
+   ]
+  },
+  {
+   "id": "function:Cortex.Api/Controllers/AuthController.cs:VerifyEmail",
+   "type": "function",
+   "name": "VerifyEmail",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "GET /api/auth/verify-email action verifying the query token via AuthService.VerifyEmailAsync and signing the user in.",
+   "tags": [
+    "api-handler",
+    "authentication",
+    "controller"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    50,
+    57
+   ]
+  },
+  {
+   "id": "function:Cortex.Api/Controllers/AuthController.cs:ResendVerification",
+   "type": "function",
+   "name": "ResendVerification",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "POST /api/auth/resend-verification action calling AuthService.ResendVerificationAsync and always returning a neutral message.",
+   "tags": [
+    "api-handler",
+    "authentication",
+    "controller"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    59,
+    64
+   ]
+  },
+  {
+   "id": "function:Cortex.Api/Controllers/AuthController.cs:Refresh",
+   "type": "function",
+   "name": "Refresh",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "POST /api/auth/refresh action rotating tokens via AuthService.RefreshAsync and resetting cookies.",
+   "tags": [
+    "api-handler",
+    "authentication",
+    "controller"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    66,
+    73
+   ]
+  },
+  {
+   "id": "function:Cortex.Api/Controllers/AuthController.cs:Logout",
+   "type": "function",
+   "name": "Logout",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "Authorized POST /api/auth/logout action that deletes the access and refresh token cookies.",
+   "tags": [
+    "api-handler",
+    "authentication",
+    "controller"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    75,
+    82
+   ]
+  },
+  {
+   "id": "function:Cortex.Api/Controllers/AuthController.cs:Me",
+   "type": "function",
+   "name": "Me",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "Authorized GET /api/auth/me action that parses the JWT sub claim and returns the current user via AuthService.GetCurrentUserAsync.",
+   "tags": [
+    "api-handler",
+    "authentication",
+    "controller"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    84,
+    95
+   ]
+  },
+  {
+   "id": "function:Cortex.Api/Controllers/AuthController.cs:SetTokenCookies",
+   "type": "function",
+   "name": "SetTokenCookies",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "Private helper writing HttpOnly, SameSite=Lax access and refresh token cookies with expirations from JwtSettings.",
+   "tags": [
+    "cookies",
+    "security",
+    "helper"
+   ],
+   "complexity": "simple",
+   "lineRange": [
+    106,
+    127
+   ]
+  },
+  {
+   "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/register",
+   "type": "endpoint",
+   "name": "POST /api/auth/register",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "POST /api/auth/register action delegating to AuthService.RegisterAsync and returning the new user with a verify-your-email message. Public (anonymous) endpoint.",
+   "tags": [
+    "endpoint",
+    "authentication",
+    "rest-api"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/login",
+   "type": "endpoint",
+   "name": "POST /api/auth/login",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "POST /api/auth/login action that calls AuthService.LoginAsync and sets token cookies on success. Public (anonymous) endpoint.",
+   "tags": [
+    "endpoint",
+    "authentication",
+    "rest-api"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/google-session",
+   "type": "endpoint",
+   "name": "POST /api/auth/google-session",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "POST /api/auth/google-session action exchanging a Google ID token via AuthService.GoogleSessionAsync and setting token cookies. Public (anonymous) endpoint.",
+   "tags": [
+    "endpoint",
+    "authentication",
+    "rest-api"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:GET /api/auth/verify-email",
+   "type": "endpoint",
+   "name": "GET /api/auth/verify-email",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "GET /api/auth/verify-email action verifying the query token via AuthService.VerifyEmailAsync and signing the user in. Public (anonymous) endpoint.",
+   "tags": [
+    "endpoint",
+    "authentication",
+    "rest-api"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/resend-verification",
+   "type": "endpoint",
+   "name": "POST /api/auth/resend-verification",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "POST /api/auth/resend-verification action calling AuthService.ResendVerificationAsync and always returning a neutral message. Public (anonymous) endpoint.",
+   "tags": [
+    "endpoint",
+    "authentication",
+    "rest-api"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/refresh",
+   "type": "endpoint",
+   "name": "POST /api/auth/refresh",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "POST /api/auth/refresh action rotating tokens via AuthService.RefreshAsync and resetting cookies. Public (anonymous) endpoint.",
+   "tags": [
+    "endpoint",
+    "authentication",
+    "rest-api"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/logout",
+   "type": "endpoint",
+   "name": "POST /api/auth/logout",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "Authorized POST /api/auth/logout action that deletes the access and refresh token cookies. Requires authorization.",
+   "tags": [
+    "endpoint",
+    "authentication",
+    "rest-api"
+   ],
+   "complexity": "simple"
+  },
+  {
+   "id": "endpoint:Cortex.Api/Controllers/AuthController.cs:GET /api/auth/me",
+   "type": "endpoint",
+   "name": "GET /api/auth/me",
+   "filePath": "Cortex.Api/Controllers/AuthController.cs",
+   "summary": "Authorized GET /api/auth/me action that parses the JWT sub claim and returns the current user via AuthService.GetCurrentUserAsync. Requires authorization.",
+   "tags": [
+    "endpoint",
+    "authentication",
+    "rest-api"
+   ],
+   "complexity": "simple"
+  }
+ ],
+ "edges": [
+  {
+   "source": "file:Cortex.Application/Auth/Dtos/AuthTokensDto.cs",
+   "target": "class:Cortex.Application/Auth/Dtos/AuthTokensDto.cs:AuthTokensDto",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Application/Auth/Dtos/AuthTokensDto.cs",
+   "target": "class:Cortex.Application/Auth/Dtos/AuthTokensDto.cs:AuthTokensDto",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Application/Auth/Dtos/GoogleSessionRequest.cs",
+   "target": "class:Cortex.Application/Auth/Dtos/GoogleSessionRequest.cs:GoogleSessionRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Application/Auth/Dtos/GoogleSessionRequest.cs",
+   "target": "class:Cortex.Application/Auth/Dtos/GoogleSessionRequest.cs:GoogleSessionRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Application/Auth/Dtos/LoginRequest.cs",
+   "target": "class:Cortex.Application/Auth/Dtos/LoginRequest.cs:LoginRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Application/Auth/Dtos/LoginRequest.cs",
+   "target": "class:Cortex.Application/Auth/Dtos/LoginRequest.cs:LoginRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Application/Auth/Dtos/RefreshRequest.cs",
+   "target": "class:Cortex.Application/Auth/Dtos/RefreshRequest.cs:RefreshRequest",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Application/Auth/Dtos/RefreshRequest.cs",
+   "target": "class:Cortex.Application/Auth/Dtos/RefreshRequest.cs:RefreshRequest",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "class:Cortex.Api/Controllers/AuthController.cs:AuthController",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "class:Cortex.Api/Controllers/AuthController.cs:AuthController",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthErrors.cs",
+   "target": "class:Cortex.Application/Auth/AuthErrors.cs:AuthErrors",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthErrors.cs",
+   "target": "class:Cortex.Application/Auth/AuthErrors.cs:AuthErrors",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "class:Cortex.Application/Auth/AuthService.cs:AuthService",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "class:Cortex.Application/Auth/AuthService.cs:AuthService",
+   "type": "exports",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:RegisterAsync",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:LoginAsync",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:GoogleSessionAsync",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:VerifyEmailAsync",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:ResendVerificationAsync",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:RefreshAsync",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:GetCurrentUserAsync",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:Register",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "function:Cortex.Api/Controllers/AuthController.cs:Register",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:RegisterAsync",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:Login",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "function:Cortex.Api/Controllers/AuthController.cs:Login",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:LoginAsync",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:Cortex.Api/Controllers/AuthController.cs:Login",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:SetTokenCookies",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:GoogleSession",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "function:Cortex.Api/Controllers/AuthController.cs:GoogleSession",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:GoogleSessionAsync",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:Cortex.Api/Controllers/AuthController.cs:GoogleSession",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:SetTokenCookies",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:VerifyEmail",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "function:Cortex.Api/Controllers/AuthController.cs:VerifyEmail",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:VerifyEmailAsync",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:Cortex.Api/Controllers/AuthController.cs:VerifyEmail",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:SetTokenCookies",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:ResendVerification",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "function:Cortex.Api/Controllers/AuthController.cs:ResendVerification",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:ResendVerificationAsync",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:Refresh",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "function:Cortex.Api/Controllers/AuthController.cs:Refresh",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:RefreshAsync",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "function:Cortex.Api/Controllers/AuthController.cs:Refresh",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:SetTokenCookies",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:Logout",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:Me",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "function:Cortex.Api/Controllers/AuthController.cs:Me",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:GetCurrentUserAsync",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:SetTokenCookies",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/register",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:Register",
+   "type": "routes",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/register",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:RegisterAsync",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/register",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/login",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:Login",
+   "type": "routes",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/login",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:LoginAsync",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/login",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/google-session",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:GoogleSession",
+   "type": "routes",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/google-session",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:GoogleSessionAsync",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/google-session",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "endpoint:Cortex.Api/Controllers/AuthController.cs:GET /api/auth/verify-email",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:VerifyEmail",
+   "type": "routes",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "endpoint:Cortex.Api/Controllers/AuthController.cs:GET /api/auth/verify-email",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:VerifyEmailAsync",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "endpoint:Cortex.Api/Controllers/AuthController.cs:GET /api/auth/verify-email",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/resend-verification",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:ResendVerification",
+   "type": "routes",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/resend-verification",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:ResendVerificationAsync",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/resend-verification",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/refresh",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:Refresh",
+   "type": "routes",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/refresh",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:RefreshAsync",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/refresh",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/logout",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:Logout",
+   "type": "routes",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "endpoint:Cortex.Api/Controllers/AuthController.cs:POST /api/auth/logout",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "endpoint:Cortex.Api/Controllers/AuthController.cs:GET /api/auth/me",
+   "target": "function:Cortex.Api/Controllers/AuthController.cs:Me",
+   "type": "routes",
+   "direction": "forward",
+   "weight": 0.6
+  },
+  {
+   "source": "endpoint:Cortex.Api/Controllers/AuthController.cs:GET /api/auth/me",
+   "target": "function:Cortex.Application/Auth/AuthService.cs:GetCurrentUserAsync",
+   "type": "calls",
+   "direction": "forward",
+   "weight": 0.8
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "endpoint:Cortex.Api/Controllers/AuthController.cs:GET /api/auth/me",
+   "type": "contains",
+   "direction": "forward",
+   "weight": 1.0
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "file:Cortex.Application/Auth/AuthErrors.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "file:Cortex.Application/Auth/AuthService.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/AuthTokensDto.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/GoogleSessionRequest.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/LoginRequest.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/RefreshRequest.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/RegisterRequest.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/ResendVerificationRequest.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/VerifyEmailRequest.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "file:Cortex.Application/Common/Result.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "file:Cortex.Domain/Entities/User.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Api/Controllers/AuthController.cs",
+   "target": "file:Cortex.Infrastructure/Auth/Settings/JwtSettings.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Auth/AuthErrors.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/AuthTokensDto.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/GoogleSessionRequest.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/LoginRequest.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/RefreshRequest.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/RegisterRequest.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/ResendVerificationRequest.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/UserDto.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Common/Result.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Interfaces/IEmailService.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Interfaces/IEmailVerificationTokenRepository.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Interfaces/IPasswordHasher.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Interfaces/ITokenService.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Interfaces/IUnitOfWork.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Interfaces/IUserAccountRepository.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Application/Interfaces/IUserRepository.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Domain/Entities/EmailVerificationToken.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Domain/Entities/User.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/AuthService.cs",
+   "target": "file:Cortex.Domain/Entities/UserAccount.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/Dtos/AuthTokensDto.cs",
+   "target": "file:Cortex.Application/Auth/Dtos/UserDto.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  },
+  {
+   "source": "file:Cortex.Application/Auth/Dtos/AuthTokensDto.cs",
+   "target": "file:Cortex.Domain/Entities/User.cs",
+   "type": "imports",
+   "direction": "forward",
+   "weight": 0.7
+  }
+ ]
+}

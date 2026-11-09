@@ -1,0 +1,183 @@
+{
+  "nodes": [
+    {
+      "id": "config:.env.example",
+      "type": "config",
+      "name": ".env.example",
+      "filePath": ".env.example",
+      "summary": "Template for the local .env file consumed by Docker Compose, listing required settings for the database connection string, JWT secret/issuer/audience, Google OAuth client ID, Brevo API key and sender identity, and the frontend base URL (placeholder values only).",
+      "tags": [
+        "configuration",
+        "environment",
+        "secrets-template",
+        "local-development"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:AGENTS.md",
+      "type": "document",
+      "name": "AGENTS.md",
+      "filePath": "AGENTS.md",
+      "summary": "Authoritative project charter for contributors and AI coding agents describing Cortex as a multi-tenant AI support and conversational commerce SaaS, its core features (assistants, RAG, catalogs, widget, billing), intended tech stack, Clean Architecture layering, and mandatory rules such as no MediatR, strict tenant isolation and no unrequested implementation.",
+      "tags": [
+        "documentation",
+        "entry-point",
+        "architecture",
+        "guidelines",
+        "multi-tenancy"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:FRONTEND_INTEGRATION.md",
+      "type": "document",
+      "name": "FRONTEND_INTEGRATION.md",
+      "filePath": "FRONTEND_INTEGRATION.md",
+      "summary": "Developer guide for running the backend locally with Docker Compose and an external PostgreSQL instance, applying EF Core migrations, and integrating the NextAuth frontend via the Google ID-token exchange at /api/auth/google-session, HttpOnly auth cookies, CORS with credentials, and the other auth endpoints.",
+      "tags": [
+        "documentation",
+        "authentication",
+        "local-development",
+        "api-reference",
+        "integration"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:.env.example",
+      "target": "service:docker-compose.yml",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:.env.example",
+      "target": "file:Cortex.Infrastructure/Auth/Settings/JwtSettings.cs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:.env.example",
+      "target": "file:Cortex.Infrastructure/Auth/Settings/BrevoSettings.cs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:.env.example",
+      "target": "file:Cortex.Infrastructure/Auth/Settings/GoogleAuthSettings.cs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:.env.example",
+      "target": "file:Cortex.Infrastructure/Auth/Settings/FrontendSettings.cs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:.env.example",
+      "target": "file:Cortex.Infrastructure/Persistence/CortexDbContext.cs",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "document:AGENTS.md",
+      "target": "file:Cortex.slnx",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:AGENTS.md",
+      "target": "config:Cortex.Domain/Cortex.Domain.csproj",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:AGENTS.md",
+      "target": "config:Cortex.Application/Cortex.Application.csproj",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:AGENTS.md",
+      "target": "config:Cortex.Infrastructure/Cortex.Infrastructure.csproj",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:AGENTS.md",
+      "target": "config:Cortex.Api/Cortex.Api.csproj",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:AGENTS.md",
+      "target": "file:Cortex.Api/Program.cs",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:FRONTEND_INTEGRATION.md",
+      "target": "file:Cortex.Api/Controllers/AuthController.cs",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:FRONTEND_INTEGRATION.md",
+      "target": "file:Cortex.Application/Auth/AuthService.cs",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:FRONTEND_INTEGRATION.md",
+      "target": "service:docker-compose.yml",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:FRONTEND_INTEGRATION.md",
+      "target": "config:.env.example",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:FRONTEND_INTEGRATION.md",
+      "target": "config:Cortex.Infrastructure/Cortex.Infrastructure.csproj",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:FRONTEND_INTEGRATION.md",
+      "target": "file:Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:FRONTEND_INTEGRATION.md",
+      "target": "file:Cortex.Api/Program.cs",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    }
+  ]
+}

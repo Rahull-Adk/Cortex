@@ -15,7 +15,9 @@ public class JwtTokenService : ITokenService
 
     public JwtTokenService(IOptions<JwtSettings> settings) => _settings = settings.Value;
 
-    public string GenerateAccessToken(User user)
+    public TimeSpan RefreshTokenLifetime => TimeSpan.FromDays(_settings.RefreshTokenExpiryDays);
+
+    public AccessToken GenerateAccessToken(User user)
     {
         var claims = new[]
         {
@@ -26,37 +28,8 @@ public class JwtTokenService : ITokenService
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
-        return BuildToken(claims, DateTime.UtcNow.AddMinutes(_settings.AccessTokenExpiryMinutes));
-    }
-
-    public string GenerateRefreshToken(User user)
-    {
-        var claims = new[]
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim("type", "refresh"),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        };
-
-        return BuildToken(claims, DateTime.UtcNow.AddDays(_settings.RefreshTokenExpiryDays));
-    }
-
-    public Guid? ValidateRefreshToken(string token)
-    {
-        try
-        {
-            var principal = new JwtSecurityTokenHandler().ValidateToken(token, BuildValidationParameters(), out _);
-
-            if (principal.FindFirstValue("type") != "refresh")
-                return null;
-
-            var sub = principal.FindFirstValue(JwtRegisteredClaimNames.Sub);
-            return Guid.TryParse(sub, out var userId) ? userId : null;
-        }
-        catch
-        {
-            return null;
-        }
+        var expiresAt = DateTime.UtcNow.AddMinutes(_settings.AccessTokenExpiryMinutes);
+        return new AccessToken(BuildToken(claims, expiresAt), expiresAt);
     }
 
     private string BuildToken(Claim[] claims, DateTime expires)
@@ -71,16 +44,4 @@ public class JwtTokenService : ITokenService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
-
-    public TokenValidationParameters BuildValidationParameters() => new()
-    {
-        ValidateIssuer = true,
-        ValidIssuer = _settings.Issuer,
-        ValidateAudience = true,
-        ValidAudience = _settings.Audience,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Secret)),
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero,
-    };
 }

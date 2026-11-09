@@ -1,0 +1,862 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 14,
+  "filesSkipped": [],
+  "filesUnreadable": [],
+  "analysisOutcomes": {
+    "structure": {
+      "succeeded": 14,
+      "failed": 0
+    },
+    "callGraph": {
+      "succeeded": 14,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "results": [
+    {
+      "path": "Cortex.Application/Auth/Dtos/ExternalIdentity.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 3,
+      "nonEmptyLines": 2,
+      "classes": [
+        {
+          "name": "ExternalIdentity",
+          "startLine": 3,
+          "endLine": 3,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ExternalIdentity",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/DependencyInjection.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 15,
+      "nonEmptyLines": 13,
+      "functions": [
+        {
+          "name": "AddApplication",
+          "startLine": 9,
+          "endLine": 14,
+          "params": [
+            "services"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "DependencyInjection",
+          "startLine": 7,
+          "endLine": 15,
+          "methods": [
+            "AddApplication"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "AddApplication",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "DependencyInjection",
+          "line": 7,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "AddApplication",
+          "callee": "services.AddScoped<AuthService>",
+          "lineNumber": 11
+        },
+        {
+          "caller": "AddApplication",
+          "callee": "services.AddValidatorsFromAssemblyContaining<AuthService>",
+          "lineNumber": 12
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Interfaces/IEmailService.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 6,
+      "nonEmptyLines": 5,
+      "classes": [
+        {
+          "name": "IEmailService",
+          "startLine": 3,
+          "endLine": 6,
+          "methods": [
+            "SendVerificationEmailAsync"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "IEmailService",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Interfaces/IExternalIdentityTokenValidator.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 8,
+      "nonEmptyLines": 6,
+      "classes": [
+        {
+          "name": "IExternalIdentityTokenValidator",
+          "startLine": 5,
+          "endLine": 8,
+          "methods": [
+            "ValidateGoogleIdTokenAsync"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "IExternalIdentityTokenValidator",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Interfaces/IPasswordHasher.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 7,
+      "nonEmptyLines": 6,
+      "classes": [
+        {
+          "name": "IPasswordHasher",
+          "startLine": 3,
+          "endLine": 7,
+          "methods": [
+            "Hash",
+            "Verify"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "IPasswordHasher",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Application/Interfaces/IUnitOfWork.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 6,
+      "nonEmptyLines": 5,
+      "classes": [
+        {
+          "name": "IUnitOfWork",
+          "startLine": 3,
+          "endLine": 6,
+          "methods": [
+            "SaveChangesAsync"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "IUnitOfWork",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Infrastructure/Auth/BcryptPasswordHasher.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 10,
+      "nonEmptyLines": 7,
+      "functions": [
+        {
+          "name": "Hash",
+          "startLine": 7,
+          "endLine": 7,
+          "params": [
+            "password"
+          ]
+        },
+        {
+          "name": "Verify",
+          "startLine": 9,
+          "endLine": 9,
+          "params": [
+            "password",
+            "hash"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "BcryptPasswordHasher",
+          "startLine": 5,
+          "endLine": 10,
+          "methods": [
+            "Hash",
+            "Verify"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Hash",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "Verify",
+          "line": 9,
+          "isDefault": false
+        },
+        {
+          "name": "BcryptPasswordHasher",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Hash",
+          "callee": "BCrypt.Net.BCrypt.HashPassword",
+          "lineNumber": 7
+        },
+        {
+          "caller": "Verify",
+          "callee": "BCrypt.Net.BCrypt.Verify",
+          "lineNumber": 9
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Infrastructure/Auth/BrevoEmailService.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 77,
+      "nonEmptyLines": 71,
+      "functions": [
+        {
+          "name": "BrevoEmailService",
+          "startLine": 16,
+          "endLine": 24,
+          "params": [
+            "httpClientFactory",
+            "brevo",
+            "frontend"
+          ]
+        },
+        {
+          "name": "SendVerificationEmailAsync",
+          "startLine": 26,
+          "endLine": 76,
+          "params": [
+            "toEmail",
+            "toName",
+            "rawToken",
+            "ct"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "BrevoEmailService",
+          "startLine": 10,
+          "endLine": 77,
+          "methods": [
+            "BrevoEmailService",
+            "SendVerificationEmailAsync"
+          ],
+          "properties": [
+            "_httpClientFactory",
+            "_brevo",
+            "_frontend"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "BrevoEmailService",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "SendVerificationEmailAsync",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "BrevoEmailService",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "SendVerificationEmailAsync",
+          "callee": "_frontend.BaseUrl.TrimEnd",
+          "lineNumber": 28
+        },
+        {
+          "caller": "SendVerificationEmailAsync",
+          "callee": "Uri.EscapeDataString",
+          "lineNumber": 28
+        },
+        {
+          "caller": "SendVerificationEmailAsync",
+          "callee": "HtmlEncoder.Default.Encode",
+          "lineNumber": 29
+        },
+        {
+          "caller": "SendVerificationEmailAsync",
+          "callee": "HtmlEncoder.Default.Encode",
+          "lineNumber": 30
+        },
+        {
+          "caller": "SendVerificationEmailAsync",
+          "callee": "_httpClientFactory.CreateClient",
+          "lineNumber": 72
+        },
+        {
+          "caller": "SendVerificationEmailAsync",
+          "callee": "new StringContent",
+          "lineNumber": 73
+        },
+        {
+          "caller": "SendVerificationEmailAsync",
+          "callee": "JsonSerializer.Serialize",
+          "lineNumber": 73
+        },
+        {
+          "caller": "SendVerificationEmailAsync",
+          "callee": "client.PostAsync",
+          "lineNumber": 74
+        },
+        {
+          "caller": "SendVerificationEmailAsync",
+          "callee": "response.EnsureSuccessStatusCode",
+          "lineNumber": 75
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Infrastructure/Auth/GoogleIdentityTokenValidator.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 41,
+      "nonEmptyLines": 36,
+      "functions": [
+        {
+          "name": "ValidateGoogleIdTokenAsync",
+          "startLine": 11,
+          "endLine": 40,
+          "params": [
+            "idToken",
+            "ct"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "GoogleIdentityTokenValidator",
+          "startLine": 9,
+          "endLine": 41,
+          "methods": [
+            "ValidateGoogleIdTokenAsync"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ValidateGoogleIdTokenAsync",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "GoogleIdentityTokenValidator",
+          "line": 9,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ValidateGoogleIdTokenAsync",
+          "callee": "string.IsNullOrWhiteSpace",
+          "lineNumber": 13
+        },
+        {
+          "caller": "ValidateGoogleIdTokenAsync",
+          "callee": "new InvalidOperationException",
+          "lineNumber": 14
+        },
+        {
+          "caller": "ValidateGoogleIdTokenAsync",
+          "callee": "GoogleJsonWebSignature.ValidateAsync",
+          "lineNumber": 18
+        },
+        {
+          "caller": "ValidateGoogleIdTokenAsync",
+          "callee": "ct.ThrowIfCancellationRequested",
+          "lineNumber": 23
+        },
+        {
+          "caller": "ValidateGoogleIdTokenAsync",
+          "callee": "string.IsNullOrWhiteSpace",
+          "lineNumber": 24
+        },
+        {
+          "caller": "ValidateGoogleIdTokenAsync",
+          "callee": "string.IsNullOrWhiteSpace",
+          "lineNumber": 25
+        },
+        {
+          "caller": "ValidateGoogleIdTokenAsync",
+          "callee": "string.IsNullOrWhiteSpace",
+          "lineNumber": 27
+        },
+        {
+          "caller": "ValidateGoogleIdTokenAsync",
+          "callee": "new ExternalIdentity",
+          "lineNumber": 30
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Infrastructure/Auth/Settings/BrevoSettings.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 8,
+      "nonEmptyLines": 7,
+      "classes": [
+        {
+          "name": "BrevoSettings",
+          "startLine": 3,
+          "endLine": 8,
+          "methods": [],
+          "properties": [
+            "ApiKey",
+            "SenderEmail",
+            "SenderName"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ApiKey",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "SenderEmail",
+          "line": 6,
+          "isDefault": false
+        },
+        {
+          "name": "SenderName",
+          "line": 7,
+          "isDefault": false
+        },
+        {
+          "name": "BrevoSettings",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Infrastructure/Auth/Settings/FrontendSettings.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 6,
+      "nonEmptyLines": 5,
+      "classes": [
+        {
+          "name": "FrontendSettings",
+          "startLine": 3,
+          "endLine": 6,
+          "methods": [],
+          "properties": [
+            "BaseUrl"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "BaseUrl",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "FrontendSettings",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Infrastructure/Auth/Settings/GoogleAuthSettings.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 6,
+      "nonEmptyLines": 5,
+      "classes": [
+        {
+          "name": "GoogleAuthSettings",
+          "startLine": 3,
+          "endLine": 6,
+          "methods": [],
+          "properties": [
+            "ClientId"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ClientId",
+          "line": 5,
+          "isDefault": false
+        },
+        {
+          "name": "GoogleAuthSettings",
+          "line": 3,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Infrastructure/DependencyInjection.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 44,
+      "nonEmptyLines": 37,
+      "functions": [
+        {
+          "name": "AddInfrastructure",
+          "startLine": 15,
+          "endLine": 42,
+          "params": [
+            "services",
+            "configuration"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "DependencyInjection",
+          "startLine": 13,
+          "endLine": 43,
+          "methods": [
+            "AddInfrastructure"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "AddInfrastructure",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "DependencyInjection",
+          "line": 13,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "AddInfrastructure",
+          "callee": "services.AddDbContext<CortexDbContext>",
+          "lineNumber": 17
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "options.UseNpgsql",
+          "lineNumber": 18
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "configuration.GetConnectionString",
+          "lineNumber": 18
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "services.Configure<JwtSettings>",
+          "lineNumber": 20
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "configuration.GetSection",
+          "lineNumber": 20
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "services.Configure<GoogleAuthSettings>",
+          "lineNumber": 21
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "configuration.GetSection",
+          "lineNumber": 21
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "services.Configure<BrevoSettings>",
+          "lineNumber": 22
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "configuration.GetSection",
+          "lineNumber": 22
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "services.Configure<FrontendSettings>",
+          "lineNumber": 23
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "configuration.GetSection",
+          "lineNumber": 23
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "services.AddScoped<IUserRepository, UserRepository>",
+          "lineNumber": 25
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "services.AddScoped<IUserAccountRepository, UserAccountRepository>",
+          "lineNumber": 26
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "services.AddScoped<IEmailVerificationTokenRepository, EmailVerificationTokenRepository>",
+          "lineNumber": 27
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "services.AddScoped<IUnitOfWork, UnitOfWork>",
+          "lineNumber": 28
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "services.AddScoped<ITokenService, JwtTokenService>",
+          "lineNumber": 29
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "services.AddScoped<IExternalIdentityTokenValidator, GoogleIdentityTokenValidator>",
+          "lineNumber": 30
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "services.AddScoped<IPasswordHasher, BcryptPasswordHasher>",
+          "lineNumber": 31
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "services.AddScoped<IEmailService, BrevoEmailService>",
+          "lineNumber": 32
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "services.AddHttpClient",
+          "lineNumber": 34
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "sp.GetRequiredService<IOptions<BrevoSettings>>",
+          "lineNumber": 36
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "new Uri",
+          "lineNumber": 37
+        },
+        {
+          "caller": "AddInfrastructure",
+          "callee": "client.DefaultRequestHeaders.Add",
+          "lineNumber": 38
+        }
+      ],
+      "metrics": {
+        "importCount": 22,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "Cortex.Infrastructure/Repositories/UnitOfWork.cs",
+      "language": "csharp",
+      "fileCategory": "code",
+      "totalLines": 13,
+      "nonEmptyLines": 9,
+      "functions": [
+        {
+          "name": "UnitOfWork",
+          "startLine": 10,
+          "endLine": 10,
+          "params": [
+            "db"
+          ]
+        },
+        {
+          "name": "SaveChangesAsync",
+          "startLine": 12,
+          "endLine": 12,
+          "params": [
+            "ct"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "UnitOfWork",
+          "startLine": 6,
+          "endLine": 13,
+          "methods": [
+            "UnitOfWork",
+            "SaveChangesAsync"
+          ],
+          "properties": [
+            "_db"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "UnitOfWork",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "SaveChangesAsync",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "UnitOfWork",
+          "line": 6,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "SaveChangesAsync",
+          "callee": "_db.SaveChangesAsync",
+          "lineNumber": 12
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 1
+      }
+    }
+  ]
+}
