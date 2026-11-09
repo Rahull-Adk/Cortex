@@ -1,15 +1,17 @@
+using System.Text.Json;
 using FluentValidation;
-using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Cortex.Api;
 
-public sealed class ValidationFilter(IServiceProvider services) : IAsyncActionFilter
+public sealed class ValidationFilter(IServiceProvider services, ProblemDetailsFactory problemDetailsFactory) : IAsyncActionFilter
 {
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        var failures = new List<ValidationFailure>();
+        var modelState = new ModelStateDictionary();
 
         foreach (var argument in context.ActionArguments.Values.Where(value => value is not null))
         {
@@ -18,22 +20,22 @@ public sealed class ValidationFilter(IServiceProvider services) : IAsyncActionFi
                 continue;
 
             var result = await validator.ValidateAsync(new ValidationContext<object>(argument), context.HttpContext.RequestAborted);
-            failures.AddRange(result.Errors);
+            foreach (var failure in result.Errors)
+                modelState.AddModelError(ToCamelCase(failure.PropertyName), failure.ErrorMessage);
         }
 
-        if (failures.Count == 0)
+        if (modelState.IsValid)
         {
             await next();
             return;
         }
 
-        var errors = failures.GroupBy(failure => failure.PropertyName)
-            .ToDictionary(group => group.Key, group => group.Select(failure => failure.ErrorMessage).ToArray());
+        var problem = problemDetailsFactory.CreateValidationProblemDetails(
+            context.HttpContext, modelState, StatusCodes.Status400BadRequest);
 
-        context.Result = new BadRequestObjectResult(new ValidationProblemDetails(errors)
-        {
-            Status = StatusCodes.Status400BadRequest,
-            Title = "One or more validation errors occurred."
-        });
+        context.Result = new ObjectResult(problem) { StatusCode = problem.Status };
     }
+
+    private static string ToCamelCase(string propertyPath) =>
+        string.Join('.', propertyPath.Split('.').Select(JsonNamingPolicy.CamelCase.ConvertName));
 }
