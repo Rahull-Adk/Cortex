@@ -2,6 +2,7 @@ using Cortex.Application.Common;
 using Cortex.Application.Interfaces;
 using Cortex.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace Cortex.Infrastructure.Repositories;
 
@@ -20,6 +21,10 @@ public class UnitOfWork : IUnitOfWork
         catch (DbUpdateConcurrencyException ex)
         {
             throw new ConcurrencyConflictException(ex);
+        }
+        catch (DbUpdateException ex) when (ex.InnerException is PostgresException { SqlState: PostgresErrorCodes.UniqueViolation })
+        {
+            throw new UniqueConstraintException(ex);
         }
     }
 

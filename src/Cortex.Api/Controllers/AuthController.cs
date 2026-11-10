@@ -3,7 +3,6 @@ using Cortex.Application.Auth.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace Cortex.Api.Controllers;
 
@@ -78,9 +77,7 @@ public class AuthController : ApiControllerBase
     [HttpGet("me")]
     public async Task<IActionResult> Me(CancellationToken ct)
     {
-        var sub = User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-
-        if (!Guid.TryParse(sub, out var userId))
+        if (!TryGetUserId(out var userId))
             return Unauthorized();
 
         var result = await _authService.GetCurrentUserAsync(userId, ct);

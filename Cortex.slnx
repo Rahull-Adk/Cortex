@@ -1,6 +1,9 @@
 <Solution>
-  <Project Path="Cortex.Api/Cortex.Api.csproj" />
-  <Project Path="Cortex.Application/Cortex.Application.csproj" />
-  <Project Path="Cortex.Domain/Cortex.Domain.csproj" />
-  <Project Path="Cortex.Infrastructure/Cortex.Infrastructure.csproj" />
+  <Folder Name="/src/">
+    <Project Path="src/Cortex.Api/Cortex.Api.csproj" />
+    <Project Path="src/Cortex.Application/Cortex.Application.csproj" />
+    <Project Path="src/Cortex.Domain/Cortex.Domain.csproj" />
+    <Project Path="src/Cortex.Infrastructure/Cortex.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/test/" />
 </Solution>

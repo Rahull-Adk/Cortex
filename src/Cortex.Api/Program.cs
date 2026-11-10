@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using Cortex.Api;
 using Cortex.Application;
 using Cortex.Infrastructure;
@@ -9,7 +10,8 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>());
+builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
+    .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddScoped<ValidationFilter>();
 builder.Services.AddProblemDetails(options =>
 {

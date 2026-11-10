@@ -15,7 +15,7 @@ For PostgreSQL running on the same computer, set `Host=host.docker.internal` in 
 To create the local database and apply migrations from the repository root, install the .NET 10 SDK and EF CLI (`dotnet tool install --global dotnet-ef --version 10.0.14`), set the connection string environment variable for the shell, then run:
 
 ```sh
-dotnet ef database update --project Cortex.Infrastructure/Cortex.Infrastructure.csproj --startup-project Cortex.Infrastructure/Cortex.Infrastructure.csproj
+dotnet ef database update --project src/Cortex.Infrastructure/Cortex.Infrastructure.csproj --startup-project src/Cortex.Infrastructure/Cortex.Infrastructure.csproj
 ```
 
 For migrations run directly on the host, use `Host=localhost` in the connection string. In PowerShell: `$env:ConnectionStrings__DefaultConnection="Host=localhost;Port=5432;Database=<database>;Username=<user>;Password=<password>"`. In bash: `export ConnectionStrings__DefaultConnection='Host=localhost;Port=5432;Database=<database>;Username=<user>;Password=<password>'`. In `.env`, use `Host=host.docker.internal` so the API container can reach PostgreSQL on the host.
@@ -72,3 +72,25 @@ Every error response, including 500, has the same `application/problem+json` bod
 - `POST /api/auth/refresh`: rotates the session. The refresh token comes from the `cortex_refresh_token` cookie (send no body) or from `{"refreshToken":"..."}`. Each refresh token works **once**. Always store the new one from the response or cookies. Replaying a used token revokes the whole session, so keep only one refresh in flight per session (deduplicate concurrent refreshes in NextAuth and across tabs). A failed refresh returns `401` and clears the cookies, so send the user back to sign-in.
 - `POST /api/auth/logout`: revokes the session belonging to the refresh token (from the cookie or `{"refreshToken":"..."}`) and clears the cookies. It needs no access token and always returns `204`.
 - `GET /scalar`: interactive API reference in Development.
+
+## Businesses and members
+
+All of these need a signed-in user. The business is named by `{organizationId}` in the URL, and the backend looks up the caller's membership on every request. The role is not in the JWT, so a role change or removal takes effect on the next request.
+
+- `POST /api/organizations`: body `{"name":"...","slug":"..."}`. `slug` is optional (3–100 chars, lowercase letters, numbers and hyphens); when omitted it's derived from the name. Returns `201` with the business, and the caller becomes its `Owner`. Errors: `409` if the slug is taken.
+- `GET /api/organizations`: the caller's businesses, each with the caller's `role`. Use it for the business switcher.
+- `GET /api/organizations/{organizationId}` and `PUT /api/organizations/{organizationId}` (body `{"name":"...","logoUrl":"https://..."}`).
+- `GET /api/organizations/{organizationId}/members`: members with `userId`, `name`, `email`, `avatarUrl`, `role`, `joinedAt`.
+- `POST /api/organizations/{organizationId}/members`: body `{"email":"...","role":"Admin"}`. The email must belong to an existing Cortex account. Errors: `404` if no account uses the email, `409` if already a member.
+- `PUT /api/organizations/{organizationId}/members/{userId}`: body `{"role":"Member"}`.
+- `DELETE /api/organizations/{organizationId}/members/{userId}`: removes a member, or leaves the business when `{userId}` is the caller. Returns `204`.
+
+Roles are sent and returned as strings: `Owner`, `Admin`, `Member`. Only `Admin` and `Member` can be assigned (`400` otherwise). The owner's membership can't be changed or removed (`403`).
+
+| | Owner | Admin | Member |
+|---|---|---|---|
+| View business and members | yes | yes | yes |
+| Update business details | yes | yes | no |
+| Add, change and remove members | yes | yes | no |
+
+A caller who is not a member gets `404`, the same as for a business that doesn't exist. A member without the needed permission gets `403`. Hide controls by role in the UI, but treat these responses as the source of truth.

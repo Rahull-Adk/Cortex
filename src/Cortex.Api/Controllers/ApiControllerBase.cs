@@ -1,11 +1,15 @@
 using Cortex.Application.Common;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Cortex.Api.Controllers;
 
 [ApiController]
 public abstract class ApiControllerBase : ControllerBase
 {
+    protected bool TryGetUserId(out Guid userId) =>
+        Guid.TryParse(User.FindFirst(JwtRegisteredClaimNames.Sub)?.Value, out userId);
+
     protected IActionResult FromResult<T>(Result<T> result, Func<T, IActionResult> onSuccess) =>
         result.IsSuccess ? onSuccess(result.Value) : Problem(result.Error);
 

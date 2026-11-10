@@ -1,3 +1,5 @@
+using Cortex.Domain.Enums;
+
 namespace Cortex.Domain.Entities;
 
 public class Organization
@@ -23,18 +25,25 @@ public class Organization
 
     public IReadOnlyCollection<OrganizationMembership> Memberships => _memberships.AsReadOnly();
 
-    public static Organization Create(string name, string slug)
+    public static Organization Create(string name, string slug, Guid ownerUserId)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         ArgumentException.ThrowIfNullOrWhiteSpace(slug);
+        if (ownerUserId == Guid.Empty)
+            throw new ArgumentException("An organization requires an owner.", nameof(ownerUserId));
 
         var now = DateTime.UtcNow;
 
-        return new Organization(Guid.NewGuid(), name.Trim(), slug.Trim().ToLowerInvariant())
+        var organization = new Organization(Guid.NewGuid(), name.Trim(), slug.Trim().ToLowerInvariant())
         {
             CreatedAt = now,
             UpdatedAt = now,
         };
+
+        organization._memberships.Add(
+            OrganizationMembership.Create(organization.Id, ownerUserId, OrganizationRole.Owner));
+
+        return organization;
     }
 
     public void UpdateDetails(string name, string? logoUrl)
