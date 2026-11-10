@@ -3,6 +3,7 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 **Read `AGENTS.md` first.** It holds the product spec and the mandatory rules for this project. The most important ones:
+
 - **Do not implement, modify source, add packages, or generate migrations unless explicitly told to.** The project is still being planned. By default, explain the design, the affected layers and the trade-offs, then wait.
 - **No MediatR**, and no custom mediator, CQRS handlers or `ISender`-style abstractions. Use cases are plain application service classes resolved through DI.
 - Clean Architecture is strict, and multi-tenant isolation must be enforced in the backend, never only in the frontend.
@@ -49,6 +50,7 @@ Four projects under `src/`. Test projects go under `test/`. Dependencies point i
 - **Api**: the composition root is `Program.cs`. Controllers stay thin and inherit `ApiControllerBase`. They return `FromResult(result, onSuccess)`. `ApiControllerBase.Problem(Error)` is the **only** place that maps `ErrorType` to a status code (400/401/403/404/409), so don't add per-controller switches. Every error body is a trimmed ProblemDetails, `{ title, status, detail?, errors?, traceId }`, configured in `Program.cs` through `AddProblemDetails`, which removes `type` and `instance`. `UseStatusCodePages` gives empty 401/404 responses the same body. Unhandled exceptions go to `GlobalExceptionHandler`, which logs the full exception and returns a short 500. Validation is global: `ValidationFilter` runs any registered `IValidator<T>` against action arguments and returns a 400 with camelCase `errors` keys. Controllers should not validate by hand.
 
 ### Organizations and authorization
+
 - Business-scoped endpoints take `{organizationId}` in the route (`/api/organizations/{organizationId}/...`). The ID only names the target. Every business-scoped service method first calls `OrganizationAuthorizer.AuthorizeAsync(userId, organizationId, Permission)`, which loads the caller's membership from the database. No business or role is ever put in the JWT.
 - A non-member (or an inactive business or user) gets `NotFound`. A member without the permission gets `Forbidden`.
 - The role → permission matrix lives only in `Application/Authorization/RolePermissions.cs`. Add new `Permission` values there with the feature that needs them.
@@ -58,6 +60,7 @@ Four projects under `src/`. Test projects go under `test/`. Dependencies point i
 - Subscriptions, plan limits and billing are not built yet.
 
 ### Auth flow (business owners only)
+
 - The API issues a short-lived access JWT and an opaque refresh token. It sets both as HttpOnly cookies (`cortex_access_token`, `cortex_refresh_token`) and, for now, also returns them in the JSON body.
 - Refresh tokens live in `refresh_tokens`, which stores only their SHA-256 hash. Each sign-in starts a token family. `/refresh` rotates the token, and replaying a token that was already rotated revokes the whole family. Single use is guaranteed by an `xmin` concurrency token, and `UnitOfWork` turns EF concurrency failures into `ConcurrencyConflictException`. `/refresh` and `/logout` read the token from the body or the cookie, and `/logout` needs no access token. JWT bearer auth falls back to the `cortex_access_token` cookie when no `Authorization` header is present. `MapInboundClaims = false` is set on JwtBearer, so claims keep their JWT names. Read the user id from `JwtRegisteredClaimNames.Sub`. Clearing `JwtSecurityTokenHandler.DefaultInboundClaimTypeMap` does nothing since .NET 8, because JwtBearer now uses `JsonWebTokenHandler`.
 - Email/password registration creates an unverified user and emails a verification token. The token is stored hashed and expires after 24h. Login returns 403 until the email is verified. If Brevo fails to send, the failure is logged and registration still succeeds, so the user can call resend-verification. The verify-email endpoint issues the session.
