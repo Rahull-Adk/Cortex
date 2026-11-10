@@ -30,7 +30,7 @@ dotnet ef database update     --project src/Cortex.Infrastructure/Cortex.Infrast
 
 `CortexDbDesignTimeFactory` reads `ConnectionStrings__DefaultConnection` from user secrets or environment variables. It never reads appsettings. Use `Host=localhost` when running on the host and `Host=host.docker.internal` inside `.env` for the container. PostgreSQL is **not** part of docker-compose, so each developer runs their own.
 
-The repo has no test project and no lint configuration yet.
+Tests are xUnit with Moq and live under `test/`: `Cortex.Application.Tests` (application services, authorization, validators, domain entities) and `Cortex.Infrastructure.Tests` (JWT and BCrypt adapters). Run them with `dotnet test Cortex.slnx`. Tests marked `Skip` describe rules that are not implemented yet; the reason is in the attribute. There is no lint configuration yet.
 
 CI/CD is `.github/workflows/ci-cd.yml`: pull requests and pushes to `main` restore, build in Release with warnings as errors, run `dotnet test`, and build the Docker image. Pushes to `main` also publish the image to `ghcr.io/<owner>/<repo>` (`latest` and `sha-<short>`). There is no deploy step yet.
 
@@ -41,7 +41,7 @@ Settings are bound from configuration sections. Locally they come from user secr
 
 ## Architecture
 
-Four projects under `src/`. Test projects go under `test/` (empty for now). Dependencies point inward: `Api → Application, Infrastructure`, `Infrastructure → Application, Domain`, `Application → Domain`.
+Four projects under `src/`. Test projects go under `test/`. Dependencies point inward: `Api → Application, Infrastructure`, `Infrastructure → Application, Domain`, `Application → Domain`.
 
 - **Domain**: entities with private setters, private constructors and static factories (`User.Create`, `UserAccount.CreateCredentials/CreateOAuth`). State changes go through methods such as `MarkEmailVerified`. The project has no package references. Tenancy is modeled as `Organization` plus `OrganizationMembership` (with `OrganizationRole`). A `User` is a business-owner identity. A `UserAccount` is one login method per provider (`"credentials"` stores a password hash, `"google"` stores the provider account id).
 - **Application**: use-case services organized by feature folder (`Auth/AuthService.cs`, `Auth/Dtos`, `Auth/Validators`, `Auth/AuthErrors.cs`). Ports live in `Interfaces/`: repositories, `IUnitOfWork`, `ITokenService`, `IPasswordHasher`, `IEmailService`, `IExternalIdentityTokenValidator`. For expected failures, services return `Common/Result` or `Result<T>` and do not throw. A failure carries an `Error(ErrorType, Message)`, where `ErrorType` is one of Validation/Unauthorized/Forbidden/NotFound/Conflict. Errors are predefined per feature, for example `AuthErrors.EmailAlreadyRegistered`. Implicit conversions let a service simply `return AuthErrors.X;` or `return dto;`. The Application layer never references HTTP status codes. `AddApplication()` registers the services and scans the assembly for FluentValidation validators.

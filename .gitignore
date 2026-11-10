@@ -17,7 +17,7 @@
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
-
+CLAUDE.md
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
