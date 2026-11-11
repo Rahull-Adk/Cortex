@@ -7,6 +7,7 @@ namespace Cortex.Api.Controllers;
 
 [Authorize]
 [Route("api/organizations")]
+[ProducesProblem(StatusCodes.Status401Unauthorized)]
 public class OrganizationsController : ApiControllerBase
 {
     private readonly OrganizationService _organizations;
@@ -19,6 +20,9 @@ public class OrganizationsController : ApiControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType<OrganizationDto>(StatusCodes.Status201Created, "application/json")]
+    [ProducesValidationProblem]
+    [ProducesProblem(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Create([FromBody] CreateOrganizationRequest request, CancellationToken ct)
     {
         if (!TryGetUserId(out var userId))
@@ -30,6 +34,7 @@ public class OrganizationsController : ApiControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType<IReadOnlyList<OrganizationDto>>(StatusCodes.Status200OK, "application/json")]
     public async Task<IActionResult> ListMine(CancellationToken ct)
     {
         if (!TryGetUserId(out var userId))
@@ -39,6 +44,8 @@ public class OrganizationsController : ApiControllerBase
     }
 
     [HttpGet("{organizationId:guid}")]
+    [ProducesResponseType<OrganizationDto>(StatusCodes.Status200OK, "application/json")]
+    [ProducesProblem(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Get(Guid organizationId, CancellationToken ct)
     {
         if (!TryGetUserId(out var userId))
@@ -49,6 +56,10 @@ public class OrganizationsController : ApiControllerBase
     }
 
     [HttpPut("{organizationId:guid}")]
+    [ProducesResponseType<OrganizationDto>(StatusCodes.Status200OK, "application/json")]
+    [ProducesValidationProblem]
+    [ProducesProblem(StatusCodes.Status403Forbidden)]
+    [ProducesProblem(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(
         Guid organizationId,
         [FromBody] UpdateOrganizationRequest request,
@@ -62,6 +73,8 @@ public class OrganizationsController : ApiControllerBase
     }
 
     [HttpGet("{organizationId:guid}/members")]
+    [ProducesResponseType<IReadOnlyList<MemberDto>>(StatusCodes.Status200OK, "application/json")]
+    [ProducesProblem(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ListMembers(Guid organizationId, CancellationToken ct)
     {
         if (!TryGetUserId(out var userId))
@@ -72,6 +85,11 @@ public class OrganizationsController : ApiControllerBase
     }
 
     [HttpPost("{organizationId:guid}/members")]
+    [ProducesResponseType<MemberDto>(StatusCodes.Status201Created, "application/json")]
+    [ProducesValidationProblem]
+    [ProducesProblem(StatusCodes.Status403Forbidden)]
+    [ProducesProblem(StatusCodes.Status404NotFound)]
+    [ProducesProblem(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> AddMember(
         Guid organizationId,
         [FromBody] AddMemberRequest request,
@@ -85,6 +103,10 @@ public class OrganizationsController : ApiControllerBase
     }
 
     [HttpPut("{organizationId:guid}/members/{memberUserId:guid}")]
+    [ProducesResponseType<MemberDto>(StatusCodes.Status200OK, "application/json")]
+    [ProducesValidationProblem]
+    [ProducesProblem(StatusCodes.Status403Forbidden)]
+    [ProducesProblem(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> ChangeMemberRole(
         Guid organizationId,
         Guid memberUserId,
@@ -99,6 +121,9 @@ public class OrganizationsController : ApiControllerBase
     }
 
     [HttpDelete("{organizationId:guid}/members/{memberUserId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesProblem(StatusCodes.Status403Forbidden)]
+    [ProducesProblem(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> RemoveMember(Guid organizationId, Guid memberUserId, CancellationToken ct)
     {
         if (!TryGetUserId(out var userId))
