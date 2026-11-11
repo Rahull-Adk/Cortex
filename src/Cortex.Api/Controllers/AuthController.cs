@@ -17,6 +17,9 @@ public class AuthController : ApiControllerBase
     public AuthController(AuthService authService) => _authService = authService;
 
     [HttpPost("register")]
+    [ProducesResponseType<UserDto>(StatusCodes.Status201Created, "application/json")]
+    [ProducesValidationProblem]
+    [ProducesProblem(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request, CancellationToken ct)
     {
         var result = await _authService.RegisterAsync(request, ct);
@@ -24,6 +27,10 @@ public class AuthController : ApiControllerBase
     }
 
     [HttpPost("login")]
+    [ProducesResponseType<AuthTokensDto>(StatusCodes.Status200OK, "application/json")]
+    [ProducesValidationProblem]
+    [ProducesProblem(StatusCodes.Status401Unauthorized)]
+    [ProducesProblem(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Login([FromBody] LoginRequest request, CancellationToken ct)
     {
         var result = await _authService.LoginAsync(request, ct);
@@ -31,6 +38,9 @@ public class AuthController : ApiControllerBase
     }
 
     [HttpPost("google-session")]
+    [ProducesResponseType<AuthTokensDto>(StatusCodes.Status200OK, "application/json")]
+    [ProducesValidationProblem]
+    [ProducesProblem(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> GoogleSession([FromBody] GoogleSessionRequest request, CancellationToken ct)
     {
         var result = await _authService.GoogleSessionAsync(request, ct);
@@ -38,6 +48,8 @@ public class AuthController : ApiControllerBase
     }
 
     [HttpGet("verify-email")]
+    [ProducesResponseType<AuthTokensDto>(StatusCodes.Status200OK, "application/json")]
+    [ProducesValidationProblem]
     public async Task<IActionResult> VerifyEmail([FromQuery] VerifyEmailRequest request, CancellationToken ct)
     {
         var result = await _authService.VerifyEmailAsync(request.Token, ct);
@@ -45,6 +57,10 @@ public class AuthController : ApiControllerBase
     }
 
     [HttpPost("resend-verification")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesValidationProblem]
+    [ProducesProblem(StatusCodes.Status404NotFound)]
+    [ProducesProblem(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> ResendVerification([FromBody] ResendVerificationRequest request, CancellationToken ct)
     {
         var result = await _authService.ResendVerificationAsync(request, ct);
@@ -52,6 +68,8 @@ public class AuthController : ApiControllerBase
     }
 
     [HttpPost("refresh")]
+    [ProducesResponseType<AuthTokensDto>(StatusCodes.Status200OK, "application/json")]
+    [ProducesProblem(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Refresh(
         [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] RefreshRequest? request,
         CancellationToken ct)
@@ -64,6 +82,7 @@ public class AuthController : ApiControllerBase
     }
 
     [HttpPost("logout")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Logout(
         [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] LogoutRequest? request,
         CancellationToken ct)
@@ -75,6 +94,8 @@ public class AuthController : ApiControllerBase
 
     [Authorize]
     [HttpGet("me")]
+    [ProducesResponseType<UserDto>(StatusCodes.Status200OK, "application/json")]
+    [ProducesProblem(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Me(CancellationToken ct)
     {
         if (!TryGetUserId(out var userId))
