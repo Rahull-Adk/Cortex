@@ -76,7 +76,7 @@ var app = builder.Build();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("ApiDocs:Enabled"))
 {
     app.MapOpenApi();
     app.MapScalarApiReference(options => options.AddPreferredSecuritySchemes("Bearer"));
