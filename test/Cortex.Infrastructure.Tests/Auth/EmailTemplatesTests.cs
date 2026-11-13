@@ -6,10 +6,12 @@ public class EmailTemplatesTests
 {
     private const string Link = "https://app.cortex.test/invitations/accept?token=abc_123-XYZ";
 
+    private static readonly EmailBranding Branding = new("https://app.cortex.test");
+
     [Fact]
     public void Verification_ContainsNameLinkAndExpiry()
     {
-        var message = EmailTemplates.Verification("Aye Chan", "https://app.cortex.test/verify-email?token=t0ken");
+        var message = EmailTemplates.Verification(Branding, "Aye Chan", "https://app.cortex.test/verify-email?token=t0ken");
 
         Assert.Equal("Confirm your email address", message.Subject);
         Assert.Contains("Hi Aye Chan,", message.Html);
@@ -22,7 +24,7 @@ public class EmailTemplatesTests
     [Fact]
     public void OrganizationInvitation_ContainsBusinessInviterRoleAndLink()
     {
-        var message = EmailTemplates.OrganizationInvitation("staff@example.com", "Shwe Store", "Aye Chan", "Admin", Link);
+        var message = EmailTemplates.OrganizationInvitation(Branding, "staff@example.com", "Shwe Store", "Aye Chan", "Admin", Link);
 
         Assert.Equal("Aye Chan invited you to join Shwe Store on Cortex", message.Subject);
         Assert.Contains("Shwe Store", message.Html);
@@ -39,7 +41,7 @@ public class EmailTemplatesTests
     public void OrganizationInvitation_EscapesHtmlInNamesTheUserControls()
     {
         var message = EmailTemplates.OrganizationInvitation(
-            "staff@example.com", "<script>alert(1)</script>", "<img src=x onerror=alert(2)>", "Member", Link);
+            Branding, "staff@example.com", "<script>alert(1)</script>", "<img src=x onerror=alert(2)>", "Member", Link);
 
         Assert.DoesNotContain("<script>alert(1)</script>", message.Html);
         Assert.DoesNotContain("<img src=x", message.Html);
@@ -49,7 +51,7 @@ public class EmailTemplatesTests
     [Fact]
     public void Verification_EscapesHtmlInName()
     {
-        var message = EmailTemplates.Verification("<b>Bob</b>", "https://app.cortex.test/verify-email?token=t");
+        var message = EmailTemplates.Verification(Branding, "<b>Bob</b>", "https://app.cortex.test/verify-email?token=t");
 
         Assert.DoesNotContain("<b>Bob</b>", message.Html);
         Assert.Contains("&lt;b&gt;Bob&lt;/b&gt;", message.Html);
@@ -58,7 +60,7 @@ public class EmailTemplatesTests
     [Fact]
     public void Link_IsEncodedInsideAttributes()
     {
-        var message = EmailTemplates.Verification("Bob", "https://app.cortex.test/verify-email?token=a&next=\"><script>");
+        var message = EmailTemplates.Verification(Branding, "Bob", "https://app.cortex.test/verify-email?token=a&next=\"><script>");
 
         Assert.DoesNotContain("\"><script>", message.Html);
     }
@@ -69,13 +71,35 @@ public class EmailTemplatesTests
     public void Layout_IsCompleteDocumentWithPlainTextAlternative(bool invitation)
     {
         var message = invitation
-            ? EmailTemplates.OrganizationInvitation("staff@example.com", "Shwe Store", "Aye Chan", "Member", Link)
-            : EmailTemplates.Verification("Aye Chan", Link);
+            ? EmailTemplates.OrganizationInvitation(Branding, "staff@example.com", "Shwe Store", "Aye Chan", "Member", Link)
+            : EmailTemplates.Verification(Branding, "Aye Chan", Link);
 
         Assert.StartsWith("<!doctype html>", message.Html);
         Assert.EndsWith("</html>", message.Html.TrimEnd());
         Assert.DoesNotContain("{{", message.Html);
         Assert.DoesNotContain("<", message.Text);
         Assert.Contains("Cortex", message.Text);
+    }
+
+    [Fact]
+    public void Layout_WithoutLogo_ShowsWordmarkOnly()
+    {
+        var message = EmailTemplates.Verification(Branding, "Aye Chan", Link);
+
+        Assert.DoesNotContain("<img", message.Html);
+        Assert.Contains(">Cortex</a>", message.Html);
+    }
+
+    [Fact]
+    public void Layout_WithLogo_UsesItAndLinksToSite()
+    {
+        var branding = new EmailBranding("https://app.cortex.test", "https://app.cortex.test/brand/mark.png");
+
+        var message = EmailTemplates.Verification(branding, "Aye Chan", Link);
+
+        Assert.Contains("<img src=\"https://app.cortex.test/brand/mark.png\"", message.Html);
+        Assert.Contains("href=\"https://app.cortex.test\"", message.Html);
+        Assert.Contains(">app.cortex.test</a>", message.Html);
+        Assert.Contains("https://app.cortex.test", message.Text);
     }
 }

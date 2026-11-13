@@ -31,7 +31,7 @@ public class BrevoEmailService : IEmailService
             "verification",
             toEmail,
             toName,
-            EmailTemplates.Verification(toName, FrontendLink("/verify-email", rawToken)),
+            EmailTemplates.Verification(Branding, toName, FrontendLink(_frontend.VerifyEmailPath, rawToken)),
             ct);
 
     public Task SendOrganizationInvitationAsync(
@@ -46,11 +46,20 @@ public class BrevoEmailService : IEmailService
             toEmail,
             toEmail,
             EmailTemplates.OrganizationInvitation(
-                toEmail, organizationName, inviterName, roleName, FrontendLink("/invitations/accept", rawToken)),
+                Branding,
+                toEmail,
+                organizationName,
+                inviterName,
+                roleName,
+                FrontendLink(_frontend.InvitationAcceptPath, rawToken)),
             ct);
 
+    private string SiteUrl => _frontend.BaseUrl.TrimEnd('/');
+
+    private EmailBranding Branding => new(SiteUrl, _frontend.EmailLogoUrl);
+
     private string FrontendLink(string path, string rawToken) =>
-        $"{_frontend.BaseUrl.TrimEnd('/')}{path}?token={Uri.EscapeDataString(rawToken)}";
+        $"{SiteUrl}/{path.TrimStart('/')}?token={Uri.EscapeDataString(rawToken)}";
 
     private async Task SendAsync(string kind, string toEmail, string toName, EmailMessage message, CancellationToken ct)
     {

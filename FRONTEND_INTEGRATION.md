@@ -104,7 +104,7 @@ Nobody is added to a business directly. An owner or admin invites an email addre
 - `GET /api/invitations/preview?token=...`: public. Returns `organizationName`, `organizationLogoUrl`, `email`, `role`, `invitedByName`, `expiresAt` so the accept page can say who invited whom. Errors: `400` if the link is invalid, expired or cancelled.
 - `POST /api/invitations/accept`: body `{"token":"..."}`, signed-in user. Adds the caller to the business and returns it (same shape as `GET /api/organizations/{organizationId}`). Errors: `400` if the link is invalid, expired or already used, `403` if the caller is signed in with a different email than the one invited.
 
-The email links to `/invitations/accept?token=...` on the frontend. That page should:
+The email links to `/invitations/accept?token=...` on the frontend (change it with `Frontend:InvitationAcceptPath` on the backend if the page lives elsewhere). That page should:
 
 1. Call the preview endpoint and show the business, the inviter and the invited email.
 2. If nobody is signed in, send the person to sign in or register with the invited email, keeping the token, then come back.

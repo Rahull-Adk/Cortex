@@ -67,7 +67,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
     {
-        policy.WithOrigins(builder.Configuration["Frontend:BaseUrl"]!)
+        policy.WithOrigins(builder.Configuration["Frontend:BaseUrl"]!.TrimEnd('/'))
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
