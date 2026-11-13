@@ -1,5 +1,3 @@
-using System.Security.Cryptography;
-using System.Text;
 using Cortex.Application.Auth.Dtos;
 using Cortex.Application.Common;
 using Cortex.Application.Interfaces;
@@ -50,8 +48,8 @@ public class AuthService
 
         var user = User.Create(request.Name, request.Email);
         var account = UserAccount.CreateCredentials(user.Id, _passwordHasher.Hash(request.Password));
-        var rawToken = GenerateRawToken();
-        var verificationToken = EmailVerificationToken.Create(user.Id, HashToken(rawToken), TimeSpan.FromHours(24));
+        var rawToken = SecureToken.Generate();
+        var verificationToken = EmailVerificationToken.Create(user.Id, SecureToken.Hash(rawToken), TimeSpan.FromHours(24));
 
         _users.Add(user);
         _accounts.Add(account);
@@ -116,7 +114,7 @@ public class AuthService
 
     public async Task<Result<AuthTokensDto>> VerifyEmailAsync(string rawToken, CancellationToken ct = default)
     {
-        var token = await _verificationTokens.FindByTokenHashAsync(HashToken(rawToken), ct);
+        var token = await _verificationTokens.FindByTokenHashAsync(SecureToken.Hash(rawToken), ct);
 
         if (token is null || token.IsExpired)
             return AuthErrors.InvalidVerificationToken;
@@ -143,8 +141,8 @@ public class AuthService
 
         await _verificationTokens.DeleteByUserIdAsync(user.Id, ct);
 
-        var rawToken = GenerateRawToken();
-        _verificationTokens.Add(EmailVerificationToken.Create(user.Id, HashToken(rawToken), TimeSpan.FromHours(24)));
+        var rawToken = SecureToken.Generate();
+        _verificationTokens.Add(EmailVerificationToken.Create(user.Id, SecureToken.Hash(rawToken), TimeSpan.FromHours(24)));
 
         await _unitOfWork.SaveChangesAsync(ct);
 
@@ -157,7 +155,7 @@ public class AuthService
         if (string.IsNullOrWhiteSpace(rawRefreshToken))
             return AuthErrors.InvalidRefreshToken;
 
-        var token = await _refreshTokens.FindByTokenHashAsync(HashToken(rawRefreshToken), ct);
+        var token = await _refreshTokens.FindByTokenHashAsync(SecureToken.Hash(rawRefreshToken), ct);
         if (token is null)
             return AuthErrors.InvalidRefreshToken;
 
@@ -195,7 +193,7 @@ public class AuthService
         if (string.IsNullOrWhiteSpace(rawRefreshToken))
             return;
 
-        var token = await _refreshTokens.FindByTokenHashAsync(HashToken(rawRefreshToken), ct);
+        var token = await _refreshTokens.FindByTokenHashAsync(SecureToken.Hash(rawRefreshToken), ct);
         if (token is not null)
             await RevokeFamilyAsync(token.FamilyId, ct);
     }
@@ -214,8 +212,8 @@ public class AuthService
 
     private async Task<AuthTokensDto> IssueTokensAsync(User user, Guid familyId, RefreshToken? replacedToken, CancellationToken ct)
     {
-        var rawRefreshToken = GenerateRawToken();
-        var refreshToken = RefreshToken.Create(user.Id, familyId, HashToken(rawRefreshToken), _tokenService.RefreshTokenLifetime);
+        var rawRefreshToken = SecureToken.Generate();
+        var refreshToken = RefreshToken.Create(user.Id, familyId, SecureToken.Hash(rawRefreshToken), _tokenService.RefreshTokenLifetime);
 
         _refreshTokens.Add(refreshToken);
         replacedToken?.Revoke(refreshToken.Id);
@@ -235,16 +233,4 @@ public class AuthService
 
     private static UserDto MapToDto(User user) =>
         new(user.Id, user.Name, user.Email, user.EmailVerifiedAt.HasValue, user.AvatarUrl);
-
-    private static string GenerateRawToken()
-    {
-        var bytes = RandomNumberGenerator.GetBytes(32);
-        return Convert.ToBase64String(bytes).Replace("+", "-").Replace("/", "_").TrimEnd('=');
-    }
-
-    private static string HashToken(string rawToken)
-    {
-        var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(rawToken));
-        return Convert.ToHexString(bytes).ToLowerInvariant();
-    }
 }

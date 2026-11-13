@@ -7,4 +7,5 @@ public enum ErrorType
     Forbidden,
     NotFound,
     Conflict,
+    PaymentRequired,
 }

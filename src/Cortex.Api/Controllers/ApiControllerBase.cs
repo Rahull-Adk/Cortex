@@ -17,7 +17,10 @@ public abstract class ApiControllerBase : ControllerBase
         result.IsSuccess ? onSuccess() : Problem(result.Error);
 
     protected IActionResult Problem(Error error) =>
-        Problem(statusCode: ToStatusCode(error.Type), detail: error.Message);
+        Problem(
+            statusCode: ToStatusCode(error.Type),
+            detail: error.Message,
+            extensions: error.Code is null ? null : new Dictionary<string, object?> { ["code"] = error.Code });
 
     private static int ToStatusCode(ErrorType type) => type switch
     {
@@ -26,6 +29,7 @@ public abstract class ApiControllerBase : ControllerBase
         ErrorType.Forbidden => StatusCodes.Status403Forbidden,
         ErrorType.NotFound => StatusCodes.Status404NotFound,
         ErrorType.Conflict => StatusCodes.Status409Conflict,
+        ErrorType.PaymentRequired => StatusCodes.Status402PaymentRequired,
         _ => StatusCodes.Status500InternalServerError,
     };
 }

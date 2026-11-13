@@ -145,9 +145,9 @@ public class OrganizationRequestValidatorTests
     [InlineData(OrganizationRole.Owner, false)]
     [InlineData(OrganizationRole.None, false)]
     [InlineData((OrganizationRole)99, false)]
-    public void AddMember_Role_MustBeAdminOrMember(OrganizationRole role, bool valid)
+    public void InviteMember_Role_MustBeAdminOrMember(OrganizationRole role, bool valid)
     {
-        var result = new AddMemberRequestValidator().TestValidate(new AddMemberRequest("staff@example.com", role));
+        var result = new InviteMemberRequestValidator().TestValidate(new InviteMemberRequest("staff@example.com", role));
 
         Assert.Equal(valid, result.IsValid);
         if (!valid)
@@ -157,10 +157,10 @@ public class OrganizationRequestValidatorTests
     [Theory]
     [InlineData("")]
     [InlineData("not-an-email")]
-    public void AddMember_MalformedEmail_Fails(string email)
+    public void InviteMember_MalformedEmail_Fails(string email)
     {
-        var result = new AddMemberRequestValidator()
-            .TestValidate(new AddMemberRequest(email, OrganizationRole.Member));
+        var result = new InviteMemberRequestValidator()
+            .TestValidate(new InviteMemberRequest(email, OrganizationRole.Member));
 
         result.ShouldHaveValidationErrorFor(x => x.Email);
     }

@@ -39,42 +39,6 @@ public class MemberService
         return members.Select(m => MapToDto(m, m.User)).ToList();
     }
 
-    public async Task<Result<MemberDto>> AddAsync(
-        Guid actorUserId,
-        Guid organizationId,
-        AddMemberRequest request,
-        CancellationToken ct = default)
-    {
-        var access = await _authorizer.AuthorizeAsync(actorUserId, organizationId, Permission.MembersManage, ct);
-        if (access.IsFailure)
-            return access.Error;
-
-        if (!IsAssignable(request.Role))
-            return OrganizationErrors.OwnerImmutable;
-
-        var user = await _users.FindByEmailAsync(request.Email.Trim().ToLowerInvariant(), ct);
-        if (user is null || !user.IsActive)
-            return OrganizationErrors.UserNotRegistered;
-
-        if (await _memberships.FindWithUserAsync(organizationId, user.Id, ct) is not null)
-            return OrganizationErrors.AlreadyMember;
-
-        var membership = OrganizationMembership.Create(organizationId, user.Id, request.Role);
-        _memberships.Add(membership);
-
-        try
-        {
-            await _unitOfWork.SaveChangesAsync(ct);
-        }
-        catch (UniqueConstraintException)
-        {
-            _unitOfWork.DiscardChanges();
-            return OrganizationErrors.AlreadyMember;
-        }
-
-        return MapToDto(membership, user);
-    }
-
     public async Task<Result<MemberDto>> ChangeRoleAsync(
         Guid actorUserId,
         Guid organizationId,

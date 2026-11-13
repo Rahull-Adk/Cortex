@@ -81,7 +81,6 @@ All of these need a signed-in user. The business is named by `{organizationId}` 
 - `GET /api/organizations`: the caller's businesses, each with the caller's `role`. Use it for the business switcher.
 - `GET /api/organizations/{organizationId}` and `PUT /api/organizations/{organizationId}` (body `{"name":"...","logoUrl":"https://..."}`).
 - `GET /api/organizations/{organizationId}/members`: members with `userId`, `name`, `email`, `avatarUrl`, `role`, `joinedAt`.
-- `POST /api/organizations/{organizationId}/members`: body `{"email":"...","role":"Admin"}`. The email must belong to an existing Cortex account. Errors: `404` if no account uses the email, `409` if already a member.
 - `PUT /api/organizations/{organizationId}/members/{userId}`: body `{"role":"Member"}`.
 - `DELETE /api/organizations/{organizationId}/members/{userId}`: removes a member, or leaves the business when `{userId}` is the caller. Returns `204`.
 
@@ -91,6 +90,55 @@ Roles are sent and returned as strings: `Owner`, `Admin`, `Member`. Only `Admin`
 |---|---|---|---|
 | View business and members | yes | yes | yes |
 | Update business details | yes | yes | no |
-| Add, change and remove members | yes | yes | no |
+| Invite, change and remove members | yes | yes | no |
 
 A caller who is not a member gets `404`, the same as for a business that doesn't exist. A member without the needed permission gets `403`. Hide controls by role in the UI, but treat these responses as the source of truth.
+
+## Inviting members
+
+Nobody is added to a business directly. An owner or admin invites an email address, Cortex emails a link, and the person becomes a member only after accepting it. The invited person does not need a Cortex account when the invitation is sent.
+
+- `POST /api/organizations/{organizationId}/invitations`: body `{"email":"...","role":"Member"}`. Sends the email and returns `201` with `id`, `email`, `role`, `invitedByName`, `createdAt`, `expiresAt`. Inviting the same email again sends a fresh link and cancels the old one. Errors: `409` if the email already belongs to a member.
+- `GET /api/organizations/{organizationId}/invitations`: invitations that have not been accepted yet. Compare `expiresAt` with the current time to label expired ones.
+- `DELETE /api/organizations/{organizationId}/invitations/{invitationId}`: cancels an invitation. Returns `204`, and the emailed link stops working.
+- `GET /api/invitations/preview?token=...`: public. Returns `organizationName`, `organizationLogoUrl`, `email`, `role`, `invitedByName`, `expiresAt` so the accept page can say who invited whom. Errors: `400` if the link is invalid, expired or cancelled.
+- `POST /api/invitations/accept`: body `{"token":"..."}`, signed-in user. Adds the caller to the business and returns it (same shape as `GET /api/organizations/{organizationId}`). Errors: `400` if the link is invalid, expired or already used, `403` if the caller is signed in with a different email than the one invited.
+
+The email links to `/invitations/accept?token=...` on the frontend (change it with `Frontend:InvitationAcceptPath` on the backend if the page lives elsewhere). That page should:
+
+1. Call the preview endpoint and show the business, the inviter and the invited email.
+2. If nobody is signed in, send the person to sign in or register with the invited email, keeping the token, then come back.
+3. On "Accept", call the accept endpoint and open the returned business.
+
+Links last 7 days and work once. Only owners and admins can invite, list and cancel (`403` for members).
+
+## Plans and subscriptions
+
+Creating a business and managing members is free. Knowledge uploads, ingestion and AI answers need a paid subscription. Billing runs on Stripe: the backend returns a Stripe URL, the frontend redirects to it, and Stripe webhooks update the subscription. There is no "confirm payment" call to make from the frontend.
+
+- `GET /api/plans`: public plan catalog, in display order. Each plan has `code`, `name`, `priceMinor` (satang, so `99000` is ฿990), `currency`, `aiAnswersPerPeriod`, `maxDocuments`, `maxStorageBytes`.
+- `GET /api/organizations/{organizationId}/subscription`: the current plan, `status`, `hasPaidAccess`, `currentPeriodStart`, `currentPeriodEnd`, `paidThroughUtc`, `cancelAtPeriodEnd` and `usage` (`aiAnswersUsed`, `documentCount`, `storageBytes`). A business that never subscribed gets the `free` plan with `status: null`.
+- `POST /api/organizations/{organizationId}/subscription/checkout`: body `{"planCode":"starter"}`. Returns `{"url":"..."}` for Stripe Checkout. Errors: `404` for an unknown plan, `400` for the free plan, `409` if the business already has a subscription (send the owner to the portal instead).
+- `POST /api/organizations/{organizationId}/subscription/portal`: returns `{"url":"..."}` for the Stripe customer portal, where the owner switches plan, cancels or updates the card. Errors: `404` if the business has never checked out.
+
+Stripe sends the user back to `/organizations/{organizationId}/billing?checkout=success` or `?checkout=cancelled`, and the portal returns to `/organizations/{organizationId}/billing`. These paths are configurable on the backend (`Stripe:CheckoutSuccessPath`, `Stripe:CheckoutCancelPath`, `Stripe:PortalReturnPath`). After a successful checkout the webhook can land a moment after the redirect, so poll the subscription endpoint until `hasPaidAccess` is `true`.
+
+`status` is one of `Pending`, `Active`, `PastDue`, `Cancelled`, `Expired`. Use `hasPaidAccess` to decide what to unlock, not `status`: a cancelled or past-due subscription keeps access until `paidThroughUtc`.
+
+| | Owner | Admin | Member |
+|---|---|---|---|
+| View subscription and usage | yes | yes | no |
+| Start checkout, open portal | yes | no | no |
+
+Paid features answer `402` when they are locked, with a `code` in the problem details:
+
+```json
+{ "title": "Payment Required", "status": 402, "detail": "An active subscription is required for this feature.", "code": "subscription_required" }
+```
+
+- `subscription_required`: no paid access. Show the upgrade prompt.
+- `quota_exceeded`: the plan's AI answer allowance, document limit or storage limit is used up. Only that operation is paused; the workspace and existing knowledge stay available. AI answers reset at the next billing period.
+
+### Local Stripe setup
+
+Set `Stripe__SecretKey`, `Stripe__WebhookSecret`, `Stripe__Prices__starter` and `Stripe__Prices__growth` (see `.env.example`). Create two monthly THB prices in Stripe test mode and enable plan switching in the customer portal settings. Forward webhooks with `stripe listen --forward-to localhost:5203/api/webhooks/stripe` and use the signing secret it prints. The endpoint needs `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.paid` and `invoice.payment_failed`.

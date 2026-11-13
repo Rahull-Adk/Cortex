@@ -12,6 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>())
     .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+// The OpenAPI generator reads these options, so enums are documented as strings like the API returns them.
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddScoped<ValidationFilter>();
 builder.Services.AddProblemDetails(options =>
 {
@@ -64,7 +67,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("FrontendPolicy", policy =>
     {
-        policy.WithOrigins(builder.Configuration["Frontend:BaseUrl"]!)
+        policy.WithOrigins(builder.Configuration["Frontend:BaseUrl"]!.TrimEnd('/'))
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
