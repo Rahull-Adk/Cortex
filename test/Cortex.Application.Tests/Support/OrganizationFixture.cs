@@ -106,9 +106,11 @@ internal sealed class OrganizationFixture
             .Callback<OrganizationInvitation>(invitation => _invitations.Remove(invitation));
 
         EmailService.Setup(e => e.SendOrganizationInvitationAsync(
-                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
-            .Callback<string, string, string, string, CancellationToken>((email, organizationName, inviterName, rawToken, _) =>
-                SentInvitations.Add(new SentInvitation(email, organizationName, inviterName, rawToken, SaveCount)))
+                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(),
+                It.IsAny<CancellationToken>()))
+            .Callback<string, string, string, string, string, CancellationToken>(
+                (email, organizationName, inviterName, roleName, rawToken, _) => SentInvitations.Add(
+                    new SentInvitation(email, organizationName, inviterName, roleName, rawToken, SaveCount)))
             .Returns(Task.CompletedTask);
 
         var authorizer = new OrganizationAuthorizer(Memberships.Object);
@@ -165,4 +167,4 @@ internal sealed class OrganizationFixture
 }
 
 internal sealed record SentInvitation(
-    string Email, string OrganizationName, string InviterName, string RawToken, int SavesBeforeSend);
+    string Email, string OrganizationName, string InviterName, string RoleName, string RawToken, int SavesBeforeSend);

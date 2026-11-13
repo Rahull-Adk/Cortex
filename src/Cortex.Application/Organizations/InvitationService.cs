@@ -89,7 +89,7 @@ public class InvitationService
         }
 
         await _emailService.SendOrganizationInvitationAsync(
-            email, access.Value.Organization.Name, inviter.Name, rawToken, ct);
+            email, access.Value.Organization.Name, inviter.Name, invitation.Role.ToString(), rawToken, ct);
 
         return new InvitationDto(
             invitation.Id, invitation.Email, invitation.Role, inviter.Name, invitation.CreatedAt, invitation.ExpiresAt);

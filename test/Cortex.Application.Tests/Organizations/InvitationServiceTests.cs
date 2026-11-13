@@ -56,6 +56,7 @@ public class InvitationServiceTests
         Assert.Equal(StaffEmail, sent.Email);
         Assert.Equal(_organization.Name, sent.OrganizationName);
         Assert.Equal(actor.Name, sent.InviterName);
+        Assert.Equal(newRole.ToString(), sent.RoleName);
         Assert.Equal(1, sent.SavesBeforeSend);
     }
 
