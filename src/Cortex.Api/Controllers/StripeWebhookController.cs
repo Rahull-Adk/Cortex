@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cortex.Api.Controllers;
 
 [AllowAnonymous]
+[ApiExplorerSettings(IgnoreApi = true)]
 [Route("api/webhooks/stripe")]
 public class StripeWebhookController : ApiControllerBase
 {
