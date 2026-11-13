@@ -94,3 +94,34 @@ Roles are sent and returned as strings: `Owner`, `Admin`, `Member`. Only `Admin`
 | Add, change and remove members | yes | yes | no |
 
 A caller who is not a member gets `404`, the same as for a business that doesn't exist. A member without the needed permission gets `403`. Hide controls by role in the UI, but treat these responses as the source of truth.
+
+## Plans and subscriptions
+
+Creating a business and managing members is free. Knowledge uploads, ingestion and AI answers need a paid subscription. Billing runs on Stripe: the backend returns a Stripe URL, the frontend redirects to it, and Stripe webhooks update the subscription. There is no "confirm payment" call to make from the frontend.
+
+- `GET /api/plans`: public plan catalog, in display order. Each plan has `code`, `name`, `priceMinor` (satang, so `99000` is ฿990), `currency`, `aiAnswersPerPeriod`, `maxDocuments`, `maxStorageBytes`.
+- `GET /api/organizations/{organizationId}/subscription`: the current plan, `status`, `hasPaidAccess`, `currentPeriodStart`, `currentPeriodEnd`, `paidThroughUtc`, `cancelAtPeriodEnd` and `usage` (`aiAnswersUsed`, `documentCount`, `storageBytes`). A business that never subscribed gets the `free` plan with `status: null`.
+- `POST /api/organizations/{organizationId}/subscription/checkout`: body `{"planCode":"starter"}`. Returns `{"url":"..."}` for Stripe Checkout. Errors: `404` for an unknown plan, `400` for the free plan, `409` if the business already has a subscription (send the owner to the portal instead).
+- `POST /api/organizations/{organizationId}/subscription/portal`: returns `{"url":"..."}` for the Stripe customer portal, where the owner switches plan, cancels or updates the card. Errors: `404` if the business has never checked out.
+
+Stripe sends the user back to `/organizations/{organizationId}/billing?checkout=success` or `?checkout=cancelled`, and the portal returns to `/organizations/{organizationId}/billing`. These paths are configurable on the backend (`Stripe:CheckoutSuccessPath`, `Stripe:CheckoutCancelPath`, `Stripe:PortalReturnPath`). After a successful checkout the webhook can land a moment after the redirect, so poll the subscription endpoint until `hasPaidAccess` is `true`.
+
+`status` is one of `Pending`, `Active`, `PastDue`, `Cancelled`, `Expired`. Use `hasPaidAccess` to decide what to unlock, not `status`: a cancelled or past-due subscription keeps access until `paidThroughUtc`.
+
+| | Owner | Admin | Member |
+|---|---|---|---|
+| View subscription and usage | yes | yes | no |
+| Start checkout, open portal | yes | no | no |
+
+Paid features answer `402` when they are locked, with a `code` in the problem details:
+
+```json
+{ "title": "Payment Required", "status": 402, "detail": "An active subscription is required for this feature.", "code": "subscription_required" }
+```
+
+- `subscription_required`: no paid access. Show the upgrade prompt.
+- `quota_exceeded`: the plan's AI answer allowance, document limit or storage limit is used up. Only that operation is paused; the workspace and existing knowledge stay available. AI answers reset at the next billing period.
+
+### Local Stripe setup
+
+Set `Stripe__SecretKey`, `Stripe__WebhookSecret`, `Stripe__Prices__starter` and `Stripe__Prices__growth` (see `.env.example`). Create two monthly THB prices in Stripe test mode and enable plan switching in the customer portal settings. Forward webhooks with `stripe listen --forward-to localhost:5203/api/webhooks/stripe` and use the signing secret it prints. The endpoint needs `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.paid` and `invoice.payment_failed`.

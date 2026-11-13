@@ -1,6 +1,8 @@
 using Cortex.Application.Interfaces;
 using Cortex.Infrastructure.Auth;
 using Cortex.Infrastructure.Auth.Settings;
+using Cortex.Infrastructure.Billing;
+using Cortex.Infrastructure.Billing.Settings;
 using Cortex.Infrastructure.Persistence;
 using Cortex.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +23,7 @@ public static class DependencyInjection
         services.Configure<GoogleAuthSettings>(configuration.GetSection("GoogleAuth"));
         services.Configure<BrevoSettings>(configuration.GetSection("Brevo"));
         services.Configure<FrontendSettings>(configuration.GetSection("Frontend"));
+        services.Configure<StripeSettings>(configuration.GetSection("Stripe"));
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserAccountRepository, UserAccountRepository>();
@@ -28,11 +31,15 @@ public static class DependencyInjection
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         services.AddScoped<IOrganizationMembershipRepository, OrganizationMembershipRepository>();
+        services.AddScoped<IPlanRepository, PlanRepository>();
+        services.AddScoped<IOrganizationSubscriptionRepository, OrganizationSubscriptionRepository>();
+        services.AddScoped<IUsageRepository, UsageRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ITokenService, JwtTokenService>();
         services.AddScoped<IExternalIdentityTokenValidator, GoogleIdentityTokenValidator>();
         services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
         services.AddScoped<IEmailService, BrevoEmailService>();
+        services.AddSingleton<IBillingProvider, StripeBillingProvider>();
 
         services.AddHttpClient("Brevo", (sp, client) =>
         {

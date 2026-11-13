@@ -22,6 +22,36 @@ namespace Cortex.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Cortex.Domain.Entities.AiUsagePeriod", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("AnswersUsed")
+                        .HasColumnType("integer")
+                        .HasColumnName("answers_used");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
+                    b.Property<DateTime>("PeriodEnd")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("period_end");
+
+                    b.Property<DateTime>("PeriodStart")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("period_start");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId", "PeriodStart")
+                        .IsUnique();
+
+                    b.ToTable("ai_usage_periods", (string)null);
+                });
+
             modelBuilder.Entity("Cortex.Domain.Entities.EmailVerificationToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -133,6 +163,196 @@ namespace Cortex.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("organization_memberships", (string)null);
+                });
+
+            modelBuilder.Entity("Cortex.Domain.Entities.OrganizationStorageUsage", b =>
+                {
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
+                    b.Property<int>("DocumentCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("document_count");
+
+                    b.Property<long>("StorageBytes")
+                        .HasColumnType("bigint")
+                        .HasColumnName("storage_bytes");
+
+                    b.HasKey("OrganizationId");
+
+                    b.ToTable("organization_storage_usage", (string)null);
+                });
+
+            modelBuilder.Entity("Cortex.Domain.Entities.OrganizationSubscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("BillingCustomerRef")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("billing_customer_ref");
+
+                    b.Property<string>("BillingSubscriptionRef")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("billing_subscription_ref");
+
+                    b.Property<bool>("CancelAtPeriodEnd")
+                        .HasColumnType("boolean")
+                        .HasColumnName("cancel_at_period_end");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime?>("CurrentPeriodEnd")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("current_period_end");
+
+                    b.Property<DateTime?>("CurrentPeriodStart")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("current_period_start");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("organization_id");
+
+                    b.Property<DateTime?>("PaidThroughUtc")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("paid_through_utc");
+
+                    b.Property<Guid>("PlanId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("plan_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("status");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<uint>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("xid")
+                        .HasColumnName("xmin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BillingSubscriptionRef");
+
+                    b.HasIndex("OrganizationId")
+                        .IsUnique();
+
+                    b.HasIndex("PlanId");
+
+                    b.ToTable("organization_subscriptions", (string)null);
+                });
+
+            modelBuilder.Entity("Cortex.Domain.Entities.Plan", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("AiAnswersPerPeriod")
+                        .HasColumnType("integer")
+                        .HasColumnName("ai_answers_per_period");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("code");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)")
+                        .HasColumnName("currency");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<int>("MaxDocuments")
+                        .HasColumnType("integer")
+                        .HasColumnName("max_documents");
+
+                    b.Property<long>("MaxStorageBytes")
+                        .HasColumnType("bigint")
+                        .HasColumnName("max_storage_bytes");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<long>("PriceMinor")
+                        .HasColumnType("bigint")
+                        .HasColumnName("price_minor");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer")
+                        .HasColumnName("sort_order");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("plans", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("7b1f6f0e-5c0a-4b7e-9d53-0d7c5a1e0001"),
+                            AiAnswersPerPeriod = 0,
+                            Code = "free",
+                            Currency = "thb",
+                            IsActive = true,
+                            MaxDocuments = 0,
+                            MaxStorageBytes = 0L,
+                            Name = "Free",
+                            PriceMinor = 0L,
+                            SortOrder = 0
+                        },
+                        new
+                        {
+                            Id = new Guid("7b1f6f0e-5c0a-4b7e-9d53-0d7c5a1e0002"),
+                            AiAnswersPerPeriod = 500,
+                            Code = "starter",
+                            Currency = "thb",
+                            IsActive = true,
+                            MaxDocuments = 100,
+                            MaxStorageBytes = 2147483648L,
+                            Name = "Starter",
+                            PriceMinor = 99000L,
+                            SortOrder = 1
+                        },
+                        new
+                        {
+                            Id = new Guid("7b1f6f0e-5c0a-4b7e-9d53-0d7c5a1e0003"),
+                            AiAnswersPerPeriod = 2500,
+                            Code = "growth",
+                            Currency = "thb",
+                            IsActive = true,
+                            MaxDocuments = 500,
+                            MaxStorageBytes = 10737418240L,
+                            Name = "Growth",
+                            PriceMinor = 249000L,
+                            SortOrder = 2
+                        });
                 });
 
             modelBuilder.Entity("Cortex.Domain.Entities.RefreshToken", b =>
@@ -279,6 +499,15 @@ namespace Cortex.Infrastructure.Migrations
                     b.ToTable("user_accounts", (string)null);
                 });
 
+            modelBuilder.Entity("Cortex.Domain.Entities.AiUsagePeriod", b =>
+                {
+                    b.HasOne("Cortex.Domain.Entities.Organization", null)
+                        .WithMany()
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Cortex.Domain.Entities.EmailVerificationToken", b =>
                 {
                     b.HasOne("Cortex.Domain.Entities.User", "User")
@@ -307,6 +536,32 @@ namespace Cortex.Infrastructure.Migrations
                     b.Navigation("Organization");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Cortex.Domain.Entities.OrganizationStorageUsage", b =>
+                {
+                    b.HasOne("Cortex.Domain.Entities.Organization", null)
+                        .WithOne()
+                        .HasForeignKey("Cortex.Domain.Entities.OrganizationStorageUsage", "OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Cortex.Domain.Entities.OrganizationSubscription", b =>
+                {
+                    b.HasOne("Cortex.Domain.Entities.Organization", null)
+                        .WithOne()
+                        .HasForeignKey("Cortex.Domain.Entities.OrganizationSubscription", "OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Cortex.Domain.Entities.Plan", "Plan")
+                        .WithMany()
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Plan");
                 });
 
             modelBuilder.Entity("Cortex.Domain.Entities.RefreshToken", b =>

@@ -17,5 +17,9 @@ services:
       Brevo__ApiKey: ${Brevo__ApiKey:?Set Brevo__ApiKey in .env}
       Brevo__SenderEmail: ${Brevo__SenderEmail:?Set Brevo__SenderEmail in .env}
       Brevo__SenderName: ${Brevo__SenderName:-Cortex}
+      Stripe__SecretKey: ${Stripe__SecretKey:-}
+      Stripe__WebhookSecret: ${Stripe__WebhookSecret:-}
+      Stripe__Prices__starter: ${Stripe__Prices__starter:-}
+      Stripe__Prices__growth: ${Stripe__Prices__growth:-}
     ports:
       - "5203:8080"

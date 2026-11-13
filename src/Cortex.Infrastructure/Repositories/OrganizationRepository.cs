@@ -11,6 +11,9 @@ public class OrganizationRepository : IOrganizationRepository
 
     public OrganizationRepository(CortexDbContext db) => _db = db;
 
+    public Task<bool> ExistsAsync(Guid organizationId, CancellationToken ct = default) =>
+        _db.Organizations.AnyAsync(o => o.Id == organizationId, ct);
+
     public Task<bool> ExistsBySlugAsync(string slug, CancellationToken ct = default) =>
         _db.Organizations.AnyAsync(o => o.Slug == slug, ct);
 

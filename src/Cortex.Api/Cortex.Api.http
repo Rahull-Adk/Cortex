@@ -4,3 +4,29 @@ GET {{Cortex.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+GET {{Cortex.Api_HostAddress}}/api/plans
+Accept: application/json
+
+###
+
+@organizationId = 00000000-0000-0000-0000-000000000000
+@accessToken = paste-access-token
+
+GET {{Cortex.Api_HostAddress}}/api/organizations/{{organizationId}}/subscription
+Authorization: Bearer {{accessToken}}
+
+###
+
+POST {{Cortex.Api_HostAddress}}/api/organizations/{{organizationId}}/subscription/checkout
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{ "planCode": "starter" }
+
+###
+
+POST {{Cortex.Api_HostAddress}}/api/organizations/{{organizationId}}/subscription/portal
+Authorization: Bearer {{accessToken}}
+
+###
