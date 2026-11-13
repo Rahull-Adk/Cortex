@@ -34,17 +34,16 @@ public class EntitlementServiceTests
     public async Task FreeBusiness_CanStillBeCreatedAndManageMembers()
     {
         _fx.Orgs.HasUser(_owner);
-        _fx.Orgs.HasUser("staff@example.com");
 
         var created = await _fx.Orgs.OrganizationService.CreateAsync(
             _owner.Id, new CreateOrganizationRequest("Shwe Store", "shwe-store"));
         Assert.True(created.IsSuccess);
 
         var organization = _fx.HasOrganization(_owner);
-        var added = await _fx.Orgs.MemberService.AddAsync(
-            _owner.Id, organization.Id, new AddMemberRequest("staff@example.com", OrganizationRole.Member));
+        var invited = await _fx.Orgs.InvitationService.InviteAsync(
+            _owner.Id, organization.Id, new InviteMemberRequest("staff@example.com", OrganizationRole.Member));
 
-        Assert.True(added.IsSuccess);
+        Assert.True(invited.IsSuccess);
         AssertSubscriptionRequired(await Service.TryConsumeAiAnswerAsync(organization.Id));
     }
 

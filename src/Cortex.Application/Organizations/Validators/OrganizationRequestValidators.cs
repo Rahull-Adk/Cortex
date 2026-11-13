@@ -34,9 +34,9 @@ public sealed class UpdateOrganizationRequestValidator : AbstractValidator<Updat
         && (uri.Scheme == Uri.UriSchemeHttps || uri.Scheme == Uri.UriSchemeHttp);
 }
 
-public sealed class AddMemberRequestValidator : AbstractValidator<AddMemberRequest>
+public sealed class InviteMemberRequestValidator : AbstractValidator<InviteMemberRequest>
 {
-    public AddMemberRequestValidator()
+    public InviteMemberRequestValidator()
     {
         RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength(254);
         RuleFor(x => x.Role).Must(AssignableRoles.Contains).WithMessage(AssignableRoles.Message);
@@ -47,6 +47,12 @@ public sealed class ChangeMemberRoleRequestValidator : AbstractValidator<ChangeM
 {
     public ChangeMemberRoleRequestValidator() =>
         RuleFor(x => x.Role).Must(AssignableRoles.Contains).WithMessage(AssignableRoles.Message);
+}
+
+public sealed class AcceptInvitationRequestValidator : AbstractValidator<AcceptInvitationRequest>
+{
+    public AcceptInvitationRequestValidator() =>
+        RuleFor(x => x.Token).NotEmpty().MaximumLength(200);
 }
 
 internal static class AssignableRoles

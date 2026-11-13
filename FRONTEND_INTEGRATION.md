@@ -81,7 +81,6 @@ All of these need a signed-in user. The business is named by `{organizationId}` 
 - `GET /api/organizations`: the caller's businesses, each with the caller's `role`. Use it for the business switcher.
 - `GET /api/organizations/{organizationId}` and `PUT /api/organizations/{organizationId}` (body `{"name":"...","logoUrl":"https://..."}`).
 - `GET /api/organizations/{organizationId}/members`: members with `userId`, `name`, `email`, `avatarUrl`, `role`, `joinedAt`.
-- `POST /api/organizations/{organizationId}/members`: body `{"email":"...","role":"Admin"}`. The email must belong to an existing Cortex account. Errors: `404` if no account uses the email, `409` if already a member.
 - `PUT /api/organizations/{organizationId}/members/{userId}`: body `{"role":"Member"}`.
 - `DELETE /api/organizations/{organizationId}/members/{userId}`: removes a member, or leaves the business when `{userId}` is the caller. Returns `204`.
 
@@ -91,9 +90,27 @@ Roles are sent and returned as strings: `Owner`, `Admin`, `Member`. Only `Admin`
 |---|---|---|---|
 | View business and members | yes | yes | yes |
 | Update business details | yes | yes | no |
-| Add, change and remove members | yes | yes | no |
+| Invite, change and remove members | yes | yes | no |
 
 A caller who is not a member gets `404`, the same as for a business that doesn't exist. A member without the needed permission gets `403`. Hide controls by role in the UI, but treat these responses as the source of truth.
+
+## Inviting members
+
+Nobody is added to a business directly. An owner or admin invites an email address, Cortex emails a link, and the person becomes a member only after accepting it. The invited person does not need a Cortex account when the invitation is sent.
+
+- `POST /api/organizations/{organizationId}/invitations`: body `{"email":"...","role":"Member"}`. Sends the email and returns `201` with `id`, `email`, `role`, `invitedByName`, `createdAt`, `expiresAt`. Inviting the same email again sends a fresh link and cancels the old one. Errors: `409` if the email already belongs to a member.
+- `GET /api/organizations/{organizationId}/invitations`: invitations that have not been accepted yet. Compare `expiresAt` with the current time to label expired ones.
+- `DELETE /api/organizations/{organizationId}/invitations/{invitationId}`: cancels an invitation. Returns `204`, and the emailed link stops working.
+- `GET /api/invitations/preview?token=...`: public. Returns `organizationName`, `organizationLogoUrl`, `email`, `role`, `invitedByName`, `expiresAt` so the accept page can say who invited whom. Errors: `400` if the link is invalid, expired or cancelled.
+- `POST /api/invitations/accept`: body `{"token":"..."}`, signed-in user. Adds the caller to the business and returns it (same shape as `GET /api/organizations/{organizationId}`). Errors: `400` if the link is invalid, expired or already used, `403` if the caller is signed in with a different email than the one invited.
+
+The email links to `/invitations/accept?token=...` on the frontend. That page should:
+
+1. Call the preview endpoint and show the business, the inviter and the invited email.
+2. If nobody is signed in, send the person to sign in or register with the invited email, keeping the token, then come back.
+3. On "Accept", call the accept endpoint and open the returned business.
+
+Links last 7 days and work once. Only owners and admins can invite, list and cancel (`403` for members).
 
 ## Plans and subscriptions
 

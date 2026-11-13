@@ -84,24 +84,6 @@ public class OrganizationsController : ApiControllerBase
         return FromResult(result, Ok);
     }
 
-    [HttpPost("{organizationId:guid}/members")]
-    [ProducesResponseType<MemberDto>(StatusCodes.Status201Created, "application/json")]
-    [ProducesValidationProblem]
-    [ProducesProblem(StatusCodes.Status403Forbidden)]
-    [ProducesProblem(StatusCodes.Status404NotFound)]
-    [ProducesProblem(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> AddMember(
-        Guid organizationId,
-        [FromBody] AddMemberRequest request,
-        CancellationToken ct)
-    {
-        if (!TryGetUserId(out var userId))
-            return Unauthorized();
-
-        var result = await _members.AddAsync(userId, organizationId, request, ct);
-        return FromResult(result, member => StatusCode(StatusCodes.Status201Created, member));
-    }
-
     [HttpPut("{organizationId:guid}/members/{memberUserId:guid}")]
     [ProducesResponseType<MemberDto>(StatusCodes.Status200OK, "application/json")]
     [ProducesValidationProblem]

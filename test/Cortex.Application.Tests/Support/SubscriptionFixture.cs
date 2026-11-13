@@ -112,7 +112,7 @@ internal sealed class SubscriptionFixture
 
 internal sealed class FakeClock : TimeProvider
 {
-    public DateTime UtcNow { get; private set; } = new(2026, 11, 11, 9, 0, 0, DateTimeKind.Utc);
+    public DateTime UtcNow { get; private set; } = DateTime.UtcNow;
 
     public override DateTimeOffset GetUtcNow() => new(UtcNow);
 

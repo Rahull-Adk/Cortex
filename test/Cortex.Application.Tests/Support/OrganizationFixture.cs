@@ -12,21 +12,30 @@ internal sealed class OrganizationFixture
 {
     private readonly List<OrganizationMembership> _stored = [];
     private readonly HashSet<string> _takenSlugs = [];
+    private readonly List<OrganizationInvitation> _invitations = [];
+    private readonly Dictionary<Guid, Organization> _organizations = [];
+    private readonly Dictionary<Guid, User> _users = [];
 
     public Mock<IOrganizationRepository> Organizations { get; } = new();
     public Mock<IOrganizationMembershipRepository> Memberships { get; } = new();
     public Mock<IUserRepository> Users { get; } = new();
     public Mock<IUnitOfWork> UnitOfWork { get; } = new();
+    public Mock<IOrganizationInvitationRepository> Invitations { get; } = new();
+    public Mock<IEmailService> EmailService { get; } = new();
+    public FakeClock Clock { get; } = new();
 
     public List<Organization> AddedOrganizations { get; } = [];
     public List<OrganizationMembership> AddedMemberships { get; } = [];
     public List<OrganizationMembership> RemovedMemberships { get; } = [];
     public List<string> CheckedSlugs { get; } = [];
+    public List<SentInvitation> SentInvitations { get; } = [];
+    public IReadOnlyList<OrganizationInvitation> PendingInvitations => _invitations;
     public int SaveCount { get; private set; }
     public int DiscardCount { get; private set; }
 
     public OrganizationService OrganizationService { get; }
     public MemberService MemberService { get; }
+    public InvitationService InvitationService { get; }
 
     public OrganizationFixture()
     {
@@ -71,16 +80,50 @@ internal sealed class OrganizationFixture
             .Returns(Task.CompletedTask);
         UnitOfWork.Setup(u => u.DiscardChanges()).Callback(() => DiscardCount++);
 
+        Invitations.Setup(r => r.FindByTokenHashAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((string tokenHash, CancellationToken _) => _invitations.FirstOrDefault(i => i.TokenHash == tokenHash));
+        Invitations.Setup(r => r.FindByEmailAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Guid organizationId, string email, CancellationToken _) => _invitations.FirstOrDefault(i =>
+                i.OrganizationId == organizationId && i.Email == email));
+        Invitations.Setup(r => r.FindByIdAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Guid organizationId, Guid invitationId, CancellationToken _) => _invitations.FirstOrDefault(i =>
+                i.OrganizationId == organizationId && i.Id == invitationId));
+        Invitations.Setup(r => r.ListByOrganizationAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Guid organizationId, CancellationToken _) => _invitations
+                .Where(i => i.OrganizationId == organizationId)
+                .ToList());
+        Invitations.Setup(r => r.Add(It.IsAny<OrganizationInvitation>()))
+            .Callback<OrganizationInvitation>(invitation =>
+            {
+                // Navigations have private setters that only EF populates.
+                typeof(OrganizationInvitation).GetProperty(nameof(OrganizationInvitation.Organization))!
+                    .SetValue(invitation, _organizations[invitation.OrganizationId]);
+                typeof(OrganizationInvitation).GetProperty(nameof(OrganizationInvitation.InvitedBy))!
+                    .SetValue(invitation, _users[invitation.InvitedByUserId]);
+                _invitations.Add(invitation);
+            });
+        Invitations.Setup(r => r.Remove(It.IsAny<OrganizationInvitation>()))
+            .Callback<OrganizationInvitation>(invitation => _invitations.Remove(invitation));
+
+        EmailService.Setup(e => e.SendOrganizationInvitationAsync(
+                It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .Callback<string, string, string, string, CancellationToken>((email, organizationName, inviterName, rawToken, _) =>
+                SentInvitations.Add(new SentInvitation(email, organizationName, inviterName, rawToken, SaveCount)))
+            .Returns(Task.CompletedTask);
+
         var authorizer = new OrganizationAuthorizer(Memberships.Object);
         OrganizationService = new OrganizationService(
             Organizations.Object, Memberships.Object, Users.Object, UnitOfWork.Object, authorizer);
         MemberService = new MemberService(Memberships.Object, Users.Object, UnitOfWork.Object, authorizer);
+        InvitationService = new InvitationService(
+            Invitations.Object, Memberships.Object, Users.Object, EmailService.Object, UnitOfWork.Object, authorizer, Clock);
     }
 
     public User HasUser(User user)
     {
         Users.Setup(r => r.FindByIdAsync(user.Id, It.IsAny<CancellationToken>())).ReturnsAsync(user);
         Users.Setup(r => r.FindByEmailAsync(user.Email, It.IsAny<CancellationToken>())).ReturnsAsync(user);
+        _users[user.Id] = user;
         return user;
     }
 
@@ -93,6 +136,7 @@ internal sealed class OrganizationFixture
         HasUser(owner);
         var organization = Organization.Create(name, slug, owner.Id);
         _takenSlugs.Add(organization.Slug);
+        _organizations[organization.Id] = organization;
         Store(organization.Memberships.Single(), organization, owner);
         return organization;
     }
@@ -119,3 +163,6 @@ internal sealed class OrganizationFixture
         _stored.Add(membership);
     }
 }
+
+internal sealed record SentInvitation(
+    string Email, string OrganizationName, string InviterName, string RawToken, int SavesBeforeSend);

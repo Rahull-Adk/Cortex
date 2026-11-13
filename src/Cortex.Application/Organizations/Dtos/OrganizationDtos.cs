@@ -14,7 +14,25 @@ public sealed record OrganizationDto(
     OrganizationRole Role,
     DateTime CreatedAt);
 
-public sealed record AddMemberRequest(string Email, OrganizationRole Role);
+public sealed record InviteMemberRequest(string Email, OrganizationRole Role);
+
+public sealed record InvitationDto(
+    Guid Id,
+    string Email,
+    OrganizationRole Role,
+    string InvitedByName,
+    DateTime CreatedAt,
+    DateTime ExpiresAt);
+
+public sealed record InvitationPreviewDto(
+    string OrganizationName,
+    string? OrganizationLogoUrl,
+    string Email,
+    OrganizationRole Role,
+    string InvitedByName,
+    DateTime ExpiresAt);
+
+public sealed record AcceptInvitationRequest(string Token);
 
 public sealed record ChangeMemberRoleRequest(OrganizationRole Role);
 

@@ -17,6 +17,7 @@ public static class DependencyInjection
         services.AddScoped<OrganizationAuthorizer>();
         services.AddScoped<OrganizationService>();
         services.AddScoped<MemberService>();
+        services.AddScoped<InvitationService>();
         services.AddScoped<SubscriptionService>();
         services.AddScoped<EntitlementService>();
         services.AddValidatorsFromAssemblyContaining<AuthService>();
