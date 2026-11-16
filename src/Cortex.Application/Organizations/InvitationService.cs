@@ -137,13 +137,17 @@ public class InvitationService
         if (invitation is null)
             return OrganizationErrors.InvalidInvitation;
 
+        // An account that never verified its email is replaced by the invited signup, so it does not count.
+        var user = await _users.FindByEmailAsync(invitation.Email, ct);
+
         return new InvitationPreviewDto(
             invitation.Organization.Name,
             invitation.Organization.LogoUrl,
             invitation.Email,
             invitation.Role,
             invitation.InvitedBy.Name,
-            invitation.ExpiresAt);
+            invitation.ExpiresAt,
+            AccountExists: user is not null && user.EmailVerifiedAt.HasValue);
     }
 
     public async Task<Result<OrganizationDto>> AcceptAsync(
@@ -194,12 +198,8 @@ public class InvitationService
             return null;
 
         var invitation = await _invitations.FindByTokenHashAsync(SecureToken.Hash(rawToken.Trim()), ct);
-        if (invitation is null
-            || invitation.IsExpired(_clock.GetUtcNow().UtcDateTime)
-            || !invitation.Organization.IsActive)
-        {
+        if (invitation is null || !invitation.IsUsable(_clock.GetUtcNow().UtcDateTime))
             return null;
-        }
 
         return invitation;
     }

@@ -26,6 +26,16 @@ public class AuthController : ApiControllerBase
         return FromResult(result, user => StatusCode(StatusCodes.Status201Created, user));
     }
 
+    [HttpPost("register-invited")]
+    [ProducesResponseType<AuthTokensDto>(StatusCodes.Status200OK, "application/json")]
+    [ProducesValidationProblem]
+    [ProducesProblem(StatusCodes.Status409Conflict)]
+    public async Task<IActionResult> RegisterInvited([FromBody] RegisterInvitedRequest request, CancellationToken ct)
+    {
+        var result = await _authService.RegisterInvitedAsync(request, ct);
+        return FromResult(result, StartSession);
+    }
+
     [HttpPost("login")]
     [ProducesResponseType<AuthTokensDto>(StatusCodes.Status200OK, "application/json")]
     [ProducesValidationProblem]

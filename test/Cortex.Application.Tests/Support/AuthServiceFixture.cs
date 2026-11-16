@@ -1,7 +1,9 @@
 using Cortex.Application.Auth;
 using Cortex.Application.Auth.Dtos;
+using Cortex.Application.Common;
 using Cortex.Application.Interfaces;
 using Cortex.Domain.Entities;
+using Cortex.Domain.Enums;
 using Moq;
 
 namespace Cortex.Application.Tests.Support;
@@ -21,6 +23,14 @@ internal sealed class AuthServiceFixture
     public Mock<ITokenService> TokenService { get; } = new();
     public Mock<IExternalIdentityTokenValidator> GoogleValidator { get; } = new();
     public Mock<IEmailService> EmailService { get; } = new();
+    public Mock<IOrganizationInvitationRepository> Invitations { get; } = new();
+    public Mock<IOrganizationMembershipRepository> Memberships { get; } = new();
+    public FakeClock Clock { get; } = new();
+
+    public List<OrganizationMembership> AddedMemberships { get; } = [];
+    public List<OrganizationInvitation> RemovedInvitations { get; } = [];
+    public List<Guid> ClearedVerificationTokensFor { get; } = [];
+    public int DiscardCount { get; private set; }
 
     public List<User> AddedUsers { get; } = [];
     public List<UserAccount> AddedAccounts { get; } = [];
@@ -58,6 +68,14 @@ internal sealed class AuthServiceFixture
             .Callback<string, string, string, CancellationToken>((email, name, rawToken, _) =>
                 SentEmails.Add(new SentEmail(email, name, rawToken, SaveCount)))
             .Returns(Task.CompletedTask);
+        VerificationTokens.Setup(r => r.DeleteByUserIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .Callback<Guid, CancellationToken>((userId, _) => ClearedVerificationTokensFor.Add(userId))
+            .Returns(Task.CompletedTask);
+        UnitOfWork.Setup(u => u.DiscardChanges()).Callback(() => DiscardCount++);
+        Memberships.Setup(r => r.Add(It.IsAny<OrganizationMembership>()))
+            .Callback<OrganizationMembership>(AddedMemberships.Add);
+        Invitations.Setup(r => r.Remove(It.IsAny<OrganizationInvitation>()))
+            .Callback<OrganizationInvitation>(RemovedInvitations.Add);
 
         Service = new AuthService(
             Users.Object,
@@ -68,8 +86,33 @@ internal sealed class AuthServiceFixture
             PasswordHasher.Object,
             TokenService.Object,
             GoogleValidator.Object,
-            EmailService.Object);
+            EmailService.Object,
+            Invitations.Object,
+            Memberships.Object,
+            Clock);
     }
+
+    public OrganizationInvitation HasInvitation(
+        string rawToken,
+        string email,
+        OrganizationRole role = OrganizationRole.Member,
+        Organization? organization = null)
+    {
+        organization ??= Organization.Create("Shwe Store", "shwe-store", Guid.NewGuid());
+        var invitation = OrganizationInvitation.Create(
+            organization.Id, email, role, TestData.Sha256(rawToken), Guid.NewGuid(), TimeSpan.FromDays(7));
+
+        // Navigations have private setters that only EF populates.
+        typeof(OrganizationInvitation).GetProperty(nameof(OrganizationInvitation.Organization))!
+            .SetValue(invitation, organization);
+        Invitations.Setup(r => r.FindByTokenHashAsync(invitation.TokenHash, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(invitation);
+        return invitation;
+    }
+
+    public void SaveHitsUniqueConstraint() =>
+        UnitOfWork.Setup(u => u.SaveChangesAsync(It.IsAny<CancellationToken>()))
+            .ThrowsAsync(new UniqueConstraintException(new InvalidOperationException("duplicate key")));
 
     public static string HashOf(string password) => $"hashed:{password}";
 

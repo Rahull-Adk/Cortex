@@ -249,6 +249,38 @@ public class InvitationServiceTests
         Assert.Equal("Owner", result.Value.InvitedByName);
     }
 
+    [Fact]
+    public async Task PreviewAsync_EmailWithoutAccount_ReportsNoAccount()
+    {
+        var rawToken = await InviteStaffAsync();
+
+        var result = await Service.PreviewAsync(rawToken);
+
+        Assert.False(result.Value.AccountExists);
+    }
+
+    [Fact]
+    public async Task PreviewAsync_UnverifiedAccount_ReportsNoAccount()
+    {
+        var rawToken = await InviteStaffAsync();
+        _fx.HasUser(TestData.UnverifiedUser(StaffEmail, "Unverified"));
+
+        var result = await Service.PreviewAsync(rawToken);
+
+        Assert.False(result.Value.AccountExists);
+    }
+
+    [Fact]
+    public async Task PreviewAsync_VerifiedAccount_ReportsAccountExists()
+    {
+        var rawToken = await InviteStaffAsync();
+        _fx.HasUser(StaffEmail);
+
+        var result = await Service.PreviewAsync(rawToken);
+
+        Assert.True(result.Value.AccountExists);
+    }
+
     [Theory]
     [InlineData("")]
     [InlineData("not-a-real-token")]

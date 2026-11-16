@@ -86,3 +86,6 @@ public class PlanConfiguration : IEntityTypeConfiguration<Plan>
             IsActive = true,
         };
 }
+//  growth
+//  starter
+// 

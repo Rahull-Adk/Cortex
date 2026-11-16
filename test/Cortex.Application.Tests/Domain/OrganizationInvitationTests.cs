@@ -67,4 +67,20 @@ public class OrganizationInvitationTests
         Assert.True(invitation.IsExpired(invitation.ExpiresAt));
         Assert.False(invitation.IsExpired(invitation.ExpiresAt.AddTicks(-1)));
     }
+
+    [Fact]
+    public void IsUsable_RequiresUnexpiredInvitationAndActiveBusiness()
+    {
+        var organization = Organization.Create("Shwe Store", "shwe-store", Guid.NewGuid());
+        var invitation = Invitation();
+        typeof(OrganizationInvitation).GetProperty(nameof(OrganizationInvitation.Organization))!
+            .SetValue(invitation, organization);
+
+        Assert.True(invitation.IsUsable(DateTime.UtcNow));
+        Assert.False(invitation.IsUsable(invitation.ExpiresAt));
+
+        organization.Deactivate();
+
+        Assert.False(invitation.IsUsable(DateTime.UtcNow));
+    }
 }

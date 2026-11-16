@@ -60,4 +60,6 @@ public class OrganizationInvitation
     }
 
     public bool IsExpired(DateTime utcNow) => utcNow >= ExpiresAt;
+
+    public bool IsUsable(DateTime utcNow) => !IsExpired(utcNow) && Organization.IsActive;
 }
