@@ -13,6 +13,16 @@ public sealed class RegisterRequestValidator : AbstractValidator<RegisterRequest
     }
 }
 
+public sealed class RegisterInvitedRequestValidator : AbstractValidator<RegisterInvitedRequest>
+{
+    public RegisterInvitedRequestValidator()
+    {
+        RuleFor(x => x.Token).NotEmpty().MaximumLength(200);
+        RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
+        RuleFor(x => x.Password).NotEmpty().MinimumLength(8).MaximumLength(128);
+    }
+}
+
 public sealed class LoginRequestValidator : AbstractValidator<LoginRequest>
 {
     public LoginRequestValidator()

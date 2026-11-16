@@ -8,6 +8,8 @@ public class AuthRequestValidatorTests
 {
     private static readonly RegisterRequest ValidRegister = new("Aye Chan", "aye@example.com", "S3cret-pass");
 
+    private static readonly RegisterInvitedRequest ValidRegisterInvited = new("raw-token", "New Staff", "S3cret-pass");
+
     private static string EmailOfLength(int length) => new string('a', length - "@example.com".Length) + "@example.com";
 
     [Fact]
@@ -76,6 +78,41 @@ public class AuthRequestValidatorTests
         Assert.Equal(valid, result.IsValid);
         if (!valid)
             result.ShouldHaveValidationErrorFor(x => x.Password);
+    }
+
+    [Fact]
+    public void RegisterInvited_ValidRequest_Passes()
+    {
+        var result = new RegisterInvitedRequestValidator().TestValidate(ValidRegisterInvited);
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Theory]
+    [InlineData(0, false)]
+    [InlineData(200, true)]
+    [InlineData(201, false)]
+    public void RegisterInvited_TokenLength_RequiresOneTo200(int length, bool valid)
+    {
+        var request = ValidRegisterInvited with { Token = new string('t', length) };
+
+        var result = new RegisterInvitedRequestValidator().TestValidate(request);
+
+        Assert.Equal(valid, result.IsValid);
+    }
+
+    [Theory]
+    [InlineData("", "S3cret-pass")]
+    [InlineData("   ", "S3cret-pass")]
+    [InlineData("New Staff", "")]
+    [InlineData("New Staff", "short")]
+    public void RegisterInvited_BlankNameOrWeakPassword_Fails(string name, string password)
+    {
+        var request = ValidRegisterInvited with { Name = name, Password = password };
+
+        var result = new RegisterInvitedRequestValidator().TestValidate(request);
+
+        Assert.False(result.IsValid);
     }
 
     [Fact]

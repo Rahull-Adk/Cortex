@@ -30,3 +30,17 @@ POST {{Cortex.Api_HostAddress}}/api/organizations/{{organizationId}}/subscriptio
 Authorization: Bearer {{accessToken}}
 
 ###
+
+@invitationToken = paste-invitation-token
+
+GET {{Cortex.Api_HostAddress}}/api/invitations/preview?token={{invitationToken}}
+Accept: application/json
+
+###
+
+POST {{Cortex.Api_HostAddress}}/api/auth/register-invited
+Content-Type: application/json
+
+{ "token": "{{invitationToken}}", "name": "New Staff", "password": "paste-password" }
+
+###

@@ -1,6 +1,7 @@
 using Cortex.Application.Auth.Dtos;
 using Cortex.Application.Common;
 using Cortex.Application.Interfaces;
+using Cortex.Application.Organizations;
 using Cortex.Domain.Entities;
 
 namespace Cortex.Application.Auth;
@@ -16,6 +17,9 @@ public class AuthService
     private readonly ITokenService _tokenService;
     private readonly IExternalIdentityTokenValidator _externalIdentityTokenValidator;
     private readonly IEmailService _emailService;
+    private readonly IOrganizationInvitationRepository _invitations;
+    private readonly IOrganizationMembershipRepository _memberships;
+    private readonly TimeProvider _clock;
 
     public AuthService(
         IUserRepository users,
@@ -26,8 +30,14 @@ public class AuthService
         IPasswordHasher passwordHasher,
         ITokenService tokenService,
         IExternalIdentityTokenValidator externalIdentityTokenValidator,
-        IEmailService emailService)
+        IEmailService emailService,
+        IOrganizationInvitationRepository invitations,
+        IOrganizationMembershipRepository memberships,
+        TimeProvider clock)
     {
+        _invitations = invitations;
+        _memberships = memberships;
+        _clock = clock;
         _users = users;
         _accounts = accounts;
         _verificationTokens = verificationTokens;
@@ -60,6 +70,57 @@ public class AuthService
         await _emailService.SendVerificationEmailAsync(user.Email, user.Name, rawToken, ct);
 
         return MapToDto(user);
+    }
+
+    // The emailed invitation link proves ownership of the address, so no verification email is needed.
+    public async Task<Result<AuthTokensDto>> RegisterInvitedAsync(RegisterInvitedRequest request, CancellationToken ct = default)
+    {
+        var invitation = await _invitations.FindByTokenHashAsync(SecureToken.Hash(request.Token.Trim()), ct);
+        if (invitation is null || !invitation.IsUsable(_clock.GetUtcNow().UtcDateTime))
+            return OrganizationErrors.InvalidInvitation;
+
+        var passwordHash = _passwordHasher.Hash(request.Password);
+        var user = await _users.FindByEmailAsync(invitation.Email, ct);
+
+        if (user is null)
+        {
+            user = User.Create(request.Name, invitation.Email);
+            _users.Add(user);
+            _accounts.Add(UserAccount.CreateCredentials(user.Id, passwordHash));
+            _memberships.Add(OrganizationMembership.Create(invitation.OrganizationId, user.Id, invitation.Role));
+        }
+        else
+        {
+            if (!user.IsActive || user.EmailVerifiedAt.HasValue)
+                return AuthErrors.EmailAlreadyRegistered;
+
+            // Someone registered this address but never proved they own it. The invited person takes it over.
+            user.UpdateProfile(request.Name, user.AvatarUrl);
+
+            var account = await _accounts.FindCredentialsByUserIdAsync(user.Id, ct);
+            if (account is null)
+                _accounts.Add(UserAccount.CreateCredentials(user.Id, passwordHash));
+            else
+                account.UpdatePasswordHash(passwordHash);
+
+            await _verificationTokens.DeleteByUserIdAsync(user.Id, ct);
+
+            if (await _memberships.FindWithUserAsync(invitation.OrganizationId, user.Id, ct) is null)
+                _memberships.Add(OrganizationMembership.Create(invitation.OrganizationId, user.Id, invitation.Role));
+        }
+
+        user.MarkEmailVerified();
+        _invitations.Remove(invitation);
+
+        try
+        {
+            return await IssueTokensAsync(user, ct);
+        }
+        catch (Exception ex) when (ex is UniqueConstraintException or ConcurrencyConflictException)
+        {
+            _unitOfWork.DiscardChanges();
+            return AuthErrors.EmailAlreadyRegistered;
+        }
     }
 
     public async Task<Result<AuthTokensDto>> LoginAsync(LoginRequest request, CancellationToken ct = default)

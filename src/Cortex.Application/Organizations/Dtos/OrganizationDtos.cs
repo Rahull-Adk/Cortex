@@ -30,7 +30,8 @@ public sealed record InvitationPreviewDto(
     string Email,
     OrganizationRole Role,
     string InvitedByName,
-    DateTime ExpiresAt);
+    DateTime ExpiresAt,
+    bool AccountExists);
 
 public sealed record AcceptInvitationRequest(string Token);
 
