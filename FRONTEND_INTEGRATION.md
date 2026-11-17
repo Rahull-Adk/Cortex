@@ -121,7 +121,7 @@ Creating a business and managing members is free. Knowledge uploads, ingestion a
 - `POST /api/organizations/{organizationId}/subscription/checkout`: body `{"planCode":"starter"}`. Returns `{"url":"..."}` for Stripe Checkout. Errors: `404` for an unknown plan, `400` for the free plan, `409` if the business already has a subscription (send the owner to the portal instead).
 - `POST /api/organizations/{organizationId}/subscription/portal`: returns `{"url":"..."}` for the Stripe customer portal, where the owner switches plan, cancels or updates the card. Errors: `404` if the business has never checked out.
 
-Stripe sends the user back to `/organizations/{organizationId}/billing?checkout=success` or `?checkout=cancelled`, and the portal returns to `/organizations/{organizationId}/billing`. These paths are configurable on the backend (`Stripe:CheckoutSuccessPath`, `Stripe:CheckoutCancelPath`, `Stripe:PortalReturnPath`). After a successful checkout the webhook can land a moment after the redirect, so poll the subscription endpoint until `hasPaidAccess` is `true`.
+Stripe sends the user back to `/console/organizations/{organizationId}?tab=billing&checkout=success` or `&checkout=cancelled`, and the portal returns to `/console/organizations/{organizationId}?tab=billing`. These paths are configurable on the backend (`Stripe:CheckoutSuccessPath`, `Stripe:CheckoutCancelPath`, `Stripe:PortalReturnPath`). After a successful checkout the webhook can land a moment after the redirect, so poll the subscription endpoint until `hasPaidAccess` is `true`.
 
 `status` is one of `Pending`, `Active`, `PastDue`, `Cancelled`, `Expired`. Use `hasPaidAccess` to decide what to unlock, not `status`: a cancelled or past-due subscription keeps access until `paidThroughUtc`.
 

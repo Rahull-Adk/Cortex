@@ -9,7 +9,7 @@ public class StripeSettings
 
     public Dictionary<string, string> Prices { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
-    public string CheckoutSuccessPath { get; set; } = "/organizations/{organizationId}/billing?checkout=success";
-    public string CheckoutCancelPath { get; set; } = "/organizations/{organizationId}/billing?checkout=cancelled";
-    public string PortalReturnPath { get; set; } = "/organizations/{organizationId}/billing";
+    public string CheckoutSuccessPath { get; set; } = "/console/organizations/{organizationId}?tab=billing&checkout=success";
+    public string CheckoutCancelPath { get; set; } = "/console/organizations/{organizationId}?tab=billing&checkout=cancelled";
+    public string PortalReturnPath { get; set; } = "/console/organizations/{organizationId}?tab=billing";
 }
