@@ -21,5 +21,17 @@ services:
       Stripe__WebhookSecret: ${Stripe__WebhookSecret:-}
       Stripe__Prices__starter: ${Stripe__Prices__starter:-}
       Stripe__Prices__growth: ${Stripe__Prices__growth:-}
+      OTEL_SERVICE_NAME: cortex-api
+      OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://aspire-dashboard:18889}
     ports:
       - "5203:8080"
+    depends_on:
+      - aspire-dashboard
+
+  aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:13.6
+    environment:
+      ASPIRE_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: "true"
+    ports:
+      - "18888:18888"
+      - "4317:18889"

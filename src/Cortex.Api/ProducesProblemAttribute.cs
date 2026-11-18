@@ -8,5 +8,9 @@ public sealed class ProducesProblemAttribute(int statusCode)
     : ProducesResponseTypeAttribute(typeof(ProblemDetails), statusCode, "application/problem+json");
 
 [AttributeUsage(AttributeTargets.Method)]
-public sealed class ProducesValidationProblemAttribute()
-    : ProducesResponseTypeAttribute(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest, "application/problem+json");
+public sealed class ProducesValidationProblemAttribute : ProducesResponseTypeAttribute
+{
+    public ProducesValidationProblemAttribute()
+        : base(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest, "application/problem+json") =>
+        Description = "Some fields are invalid. errors maps each field (camelCase) to its messages.";
+}

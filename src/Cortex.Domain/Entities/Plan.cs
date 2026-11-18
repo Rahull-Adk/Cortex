@@ -16,7 +16,6 @@ public class Plan
     public long MaxStorageBytes { get; private set; }
     public int SortOrder { get; private set; }
     public bool IsActive { get; private set; } = true;
-
     public bool IsPaid => PriceMinor > 0;
 
     public static Plan Create(
