@@ -3,6 +3,7 @@ using Cortex.Application.Common;
 using Cortex.Application.Interfaces;
 using Cortex.Application.Subscriptions.Dtos;
 using Cortex.Domain.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Cortex.Application.Subscriptions;
 
@@ -17,6 +18,8 @@ public class SubscriptionService
     private readonly OrganizationAuthorizer _authorizer;
     private readonly TimeProvider _clock;
 
+    private readonly ILogger<SubscriptionService> _logger;
+
     public SubscriptionService(
         IPlanRepository plans,
         IOrganizationSubscriptionRepository subscriptions,
@@ -25,8 +28,10 @@ public class SubscriptionService
         IBillingProvider billing,
         IUnitOfWork unitOfWork,
         OrganizationAuthorizer authorizer,
-        TimeProvider clock)
+        TimeProvider clock,
+        ILogger<SubscriptionService> logger)
     {
+        _logger = logger;
         _plans = plans;
         _subscriptions = subscriptions;
         _organizations = organizations;
@@ -89,16 +94,27 @@ public class SubscriptionService
 
         var plan = await _plans.FindByCodeAsync(request.PlanCode.Trim().ToLowerInvariant(), ct);
         if (plan is null || !plan.IsActive)
+        {
+            _logger.CheckoutRejected(organizationId, "unknown plan");
             return SubscriptionErrors.PlanNotFound;
+        }
+
         if (!plan.IsPaid)
+        {
+            _logger.CheckoutRejected(organizationId, "plan is not purchasable");
             return SubscriptionErrors.PlanNotPurchasable;
+        }
 
         var subscription = await _subscriptions.FindByOrganizationAsync(organizationId, ct);
         if (subscription is { IsLive: true })
+        {
+            _logger.CheckoutRejected(organizationId, "already subscribed");
             return SubscriptionErrors.AlreadySubscribed;
+        }
 
         var url = await _billing.CreateCheckoutSessionAsync(
             new CheckoutSessionRequest(organizationId, plan.Code, subscription?.BillingCustomerRef), ct);
+        _logger.CheckoutStarted(organizationId, userId, plan.Code);
 
         return new BillingRedirectDto(url);
     }
@@ -117,6 +133,7 @@ public class SubscriptionService
             return SubscriptionErrors.NoBillingAccount;
 
         var url = await _billing.CreatePortalSessionAsync(organizationId, subscription.BillingCustomerRef, ct);
+        _logger.PortalOpened(organizationId, userId);
         return new BillingRedirectDto(url);
     }
 
@@ -124,28 +141,41 @@ public class SubscriptionService
     {
         var parsed = await _billing.ParseWebhookAsync(payload, signature, ct);
         if (parsed.IsFailure)
+        {
+            _logger.WebhookRejected();
             return parsed.Error;
+        }
 
         var snapshot = parsed.Value.Snapshot;
         if (snapshot is null)
+        {
+            _logger.WebhookIgnored("no subscription change in the event");
             return Result.Success();
+        }
 
         // Unknown plans and businesses are acknowledged so the provider stops retrying them.
         var plan = await _plans.FindByCodeAsync(snapshot.PlanCode, ct);
         if (plan is null)
+        {
+            _logger.WebhookIgnored("unknown plan");
             return Result.Success();
+        }
 
         var subscription = await _subscriptions.FindByOrganizationAsync(snapshot.OrganizationId, ct);
         if (subscription is null)
         {
             if (!await _organizations.ExistsAsync(snapshot.OrganizationId, ct))
+            {
+                _logger.WebhookIgnored("unknown business");
                 return Result.Success();
+            }
 
             subscription = OrganizationSubscription.Create(snapshot.OrganizationId, plan);
             _subscriptions.Add(subscription);
         }
         else if (!subscription.Accepts(snapshot.BillingSubscriptionRef, snapshot.Status))
         {
+            _logger.WebhookIgnored("stale or superseded subscription state");
             return Result.Success();
         }
 
@@ -167,9 +197,12 @@ public class SubscriptionService
         {
             // Two events for the same business raced. The provider redelivers and the retry reads fresh state.
             _unitOfWork.DiscardChanges();
+            _logger.WebhookConflict(snapshot.OrganizationId);
             return SubscriptionErrors.WebhookConflict;
         }
 
+        _logger.SubscriptionUpdated(
+            snapshot.OrganizationId, plan.Code, snapshot.Status, snapshot.CancelAtPeriodEnd, snapshot.PaidThroughUtc);
         return Result.Success();
     }
 

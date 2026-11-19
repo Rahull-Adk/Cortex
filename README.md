@@ -84,6 +84,7 @@ We're still early. Accounts and organizations work today, and the AI parts come 
 | Caching | Redis* |
 | Storage | AWS S3* |
 | AI | LLMs, embedding models, RAG with contextual chunking* |
+| Observability | OpenTelemetry (traces, metrics, logs over OTLP), .NET Aspire Dashboard |
 | DevOps | Docker, GitHub Actions |
 | Testing | xUnit, Moq |
 
@@ -150,6 +151,14 @@ dotnet run --project src/Cortex.Api
 ```
 
 The API runs at `http://localhost:5203`. Open `http://localhost:5203/scalar` to try the endpoints in the browser.
+
+### Observability
+
+The API sends traces, metrics and logs over OTLP with OpenTelemetry. It traces incoming requests, outgoing HTTP calls (Brevo, Google, Stripe) and every PostgreSQL query.
+
+`docker compose up` also starts the .NET Aspire Dashboard. Open `http://localhost:18888` to see the telemetry. When you use `dotnet run` instead, the launch profile sends telemetry to `http://localhost:4317`, so start only the dashboard with `docker compose up aspire-dashboard`.
+
+Export is off when `OTEL_EXPORTER_OTLP_ENDPOINT` is not set. To send telemetry somewhere else, set that variable to any OTLP collector.
 
 ### Other commands
 

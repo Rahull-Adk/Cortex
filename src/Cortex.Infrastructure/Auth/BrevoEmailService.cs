@@ -78,14 +78,31 @@ public class BrevoEmailService : IEmailService
         {
             using var response = await client.PostAsync("/v3/smtp/email", content, ct);
             if (response.IsSuccessStatusCode)
+            {
+                _logger.LogInformation("Sent the {Kind} email through Brevo.", kind);
                 return;
+            }
 
-            var body = await response.Content.ReadAsStringAsync(ct);
-            _logger.LogWarning("Brevo rejected the {Kind} email ({StatusCode}): {Body}", kind, (int)response.StatusCode, body);
+            // Only Brevo's error code: the message text can echo the recipient address.
+            var errorCode = await ReadErrorCodeAsync(response, ct);
+            _logger.LogWarning("Brevo rejected the {Kind} email ({StatusCode}, {ErrorCode}).", kind, (int)response.StatusCode, errorCode);
         }
         catch (HttpRequestException ex)
         {
             _logger.LogWarning(ex, "Could not reach Brevo to send the {Kind} email.", kind);
+        }
+    }
+
+    private static async Task<string> ReadErrorCodeAsync(HttpResponseMessage response, CancellationToken ct)
+    {
+        try
+        {
+            using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync(ct));
+            return document.RootElement.TryGetProperty("code", out var code) ? code.GetString() ?? "unknown" : "unknown";
+        }
+        catch (JsonException)
+        {
+            return "unknown";
         }
     }
 }
