@@ -4,6 +4,7 @@ using Cortex.Application.Common;
 using Cortex.Application.Interfaces;
 using Cortex.Domain.Entities;
 using Cortex.Domain.Enums;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace Cortex.Application.Tests.Support;
@@ -89,7 +90,8 @@ internal sealed class AuthServiceFixture
             EmailService.Object,
             Invitations.Object,
             Memberships.Object,
-            Clock);
+            Clock,
+            NullLogger<AuthService>.Instance);
     }
 
     public OrganizationInvitation HasInvitation(

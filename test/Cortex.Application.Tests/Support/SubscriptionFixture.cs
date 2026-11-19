@@ -4,6 +4,7 @@ using Cortex.Application.Interfaces;
 using Cortex.Application.Subscriptions;
 using Cortex.Domain.Entities;
 using Cortex.Domain.Enums;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace Cortex.Application.Tests.Support;
@@ -53,11 +54,12 @@ internal sealed class SubscriptionFixture
         Billing.Setup(b => b.CreatePortalSessionAsync(It.IsAny<Guid>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync("https://billing.test/portal");
 
-        var authorizer = new OrganizationAuthorizer(Orgs.Memberships.Object);
+        var authorizer = new OrganizationAuthorizer(Orgs.Memberships.Object, NullLogger<OrganizationAuthorizer>.Instance);
         SubscriptionService = new SubscriptionService(
             Plans.Object, Subscriptions.Object, Orgs.Organizations.Object, Usage, Billing.Object,
-            Orgs.UnitOfWork.Object, authorizer, Clock);
-        EntitlementService = new EntitlementService(Subscriptions.Object, Usage, Clock);
+            Orgs.UnitOfWork.Object, authorizer, Clock, NullLogger<SubscriptionService>.Instance);
+        EntitlementService = new EntitlementService(
+            Subscriptions.Object, Usage, Clock, NullLogger<EntitlementService>.Instance);
     }
 
     public DateTime Now => Clock.UtcNow;

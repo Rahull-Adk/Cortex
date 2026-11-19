@@ -4,6 +4,7 @@ using Cortex.Application.Interfaces;
 using Cortex.Application.Organizations;
 using Cortex.Domain.Entities;
 using Cortex.Domain.Enums;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace Cortex.Application.Tests.Authorization;
@@ -15,7 +16,7 @@ public class OrganizationAuthorizerTests
     private readonly Mock<IOrganizationMembershipRepository> _memberships = new();
     private readonly OrganizationAuthorizer _authorizer;
 
-    public OrganizationAuthorizerTests() => _authorizer = new OrganizationAuthorizer(_memberships.Object);
+    public OrganizationAuthorizerTests() => _authorizer = new OrganizationAuthorizer(_memberships.Object, NullLogger<OrganizationAuthorizer>.Instance);
 
     private OrganizationMembership HasMembership(Guid organizationId, Guid userId, OrganizationRole role)
     {

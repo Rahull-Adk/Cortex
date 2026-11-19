@@ -4,6 +4,7 @@ using Cortex.Application.Interfaces;
 using Cortex.Application.Organizations;
 using Cortex.Domain.Entities;
 using Cortex.Domain.Enums;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace Cortex.Application.Tests.Support;
@@ -113,12 +114,15 @@ internal sealed class OrganizationFixture
                     new SentInvitation(email, organizationName, inviterName, roleName, rawToken, SaveCount)))
             .Returns(Task.CompletedTask);
 
-        var authorizer = new OrganizationAuthorizer(Memberships.Object);
+        var authorizer = new OrganizationAuthorizer(Memberships.Object, NullLogger<OrganizationAuthorizer>.Instance);
         OrganizationService = new OrganizationService(
-            Organizations.Object, Memberships.Object, Users.Object, UnitOfWork.Object, authorizer);
-        MemberService = new MemberService(Memberships.Object, Users.Object, UnitOfWork.Object, authorizer);
+            Organizations.Object, Memberships.Object, Users.Object, UnitOfWork.Object, authorizer,
+            NullLogger<OrganizationService>.Instance);
+        MemberService = new MemberService(
+            Memberships.Object, Users.Object, UnitOfWork.Object, authorizer, NullLogger<MemberService>.Instance);
         InvitationService = new InvitationService(
-            Invitations.Object, Memberships.Object, Users.Object, EmailService.Object, UnitOfWork.Object, authorizer, Clock);
+            Invitations.Object, Memberships.Object, Users.Object, EmailService.Object, UnitOfWork.Object, authorizer, Clock,
+            NullLogger<InvitationService>.Instance);
     }
 
     public User HasUser(User user)
