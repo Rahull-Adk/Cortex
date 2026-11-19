@@ -1,6 +1,7 @@
 using Cortex.Application.Common;
 using Cortex.Application.Interfaces;
 using Cortex.Domain.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Cortex.Application.Subscriptions;
 
@@ -9,12 +10,15 @@ public class EntitlementService
     private readonly IOrganizationSubscriptionRepository _subscriptions;
     private readonly IUsageRepository _usage;
     private readonly TimeProvider _clock;
+    private readonly ILogger<EntitlementService> _logger;
 
     public EntitlementService(
         IOrganizationSubscriptionRepository subscriptions,
         IUsageRepository usage,
-        TimeProvider clock)
+        TimeProvider clock,
+        ILogger<EntitlementService> logger)
     {
+        _logger = logger;
         _subscriptions = subscriptions;
         _usage = usage;
         _clock = clock;
@@ -22,7 +26,7 @@ public class EntitlementService
 
     public async Task<Result> CheckIngestionAsync(Guid organizationId, CancellationToken ct = default)
     {
-        var access = await FindPaidAsync(organizationId, ct);
+        var access = await FindPaidAsync(organizationId, "knowledge ingestion", ct);
         return access.IsFailure ? access.Error : Result.Success();
     }
 
@@ -31,7 +35,7 @@ public class EntitlementService
     {
         ArgumentOutOfRangeException.ThrowIfNegative(bytes);
 
-        var access = await FindPaidAsync(organizationId, ct);
+        var access = await FindPaidAsync(organizationId, "document upload", ct);
         if (access.IsFailure)
             return access.Error;
 
@@ -40,9 +44,14 @@ public class EntitlementService
             return Result.Success();
 
         var used = await _usage.GetStorageAsync(organizationId, ct);
-        return used.DocumentCount >= plan.MaxDocuments
-            ? SubscriptionErrors.DocumentQuotaExceeded
-            : SubscriptionErrors.StorageQuotaExceeded;
+        if (used.DocumentCount >= plan.MaxDocuments)
+        {
+            _logger.QuotaExceeded(organizationId, "document upload", "document");
+            return SubscriptionErrors.DocumentQuotaExceeded;
+        }
+
+        _logger.QuotaExceeded(organizationId, "document upload", "storage");
+        return SubscriptionErrors.StorageQuotaExceeded;
     }
 
     // Deleting knowledge is never gated, so this works without a subscription.
@@ -55,17 +64,21 @@ public class EntitlementService
     // Reserve before generating, then call RefundAiAnswerAsync if no answer was completed.
     public async Task<Result> TryConsumeAiAnswerAsync(Guid organizationId, CancellationToken ct = default)
     {
-        var access = await FindPaidAsync(organizationId, ct);
+        var access = await FindPaidAsync(organizationId, "AI answer", ct);
         if (access.IsFailure)
             return access.Error;
 
         var subscription = access.Value;
         var (periodStart, periodEnd) = UsagePeriod(subscription);
 
-        return await _usage.TryConsumeAiAnswerAsync(
-            organizationId, periodStart, periodEnd, subscription.Plan.AiAnswersPerPeriod, ct)
-            ? Result.Success()
-            : SubscriptionErrors.AiAnswerQuotaExceeded;
+        if (await _usage.TryConsumeAiAnswerAsync(
+            organizationId, periodStart, periodEnd, subscription.Plan.AiAnswersPerPeriod, ct))
+        {
+            return Result.Success();
+        }
+
+        _logger.QuotaExceeded(organizationId, "AI answer", "AI answer");
+        return SubscriptionErrors.AiAnswerQuotaExceeded;
     }
 
     public async Task RefundAiAnswerAsync(Guid organizationId, CancellationToken ct = default)
@@ -83,11 +96,15 @@ public class EntitlementService
         return (start, subscription.CurrentPeriodEnd ?? start.AddMonths(1));
     }
 
-    private async Task<Result<OrganizationSubscription>> FindPaidAsync(Guid organizationId, CancellationToken ct)
+    private async Task<Result<OrganizationSubscription>> FindPaidAsync(
+        Guid organizationId, string feature, CancellationToken ct)
     {
         var subscription = await _subscriptions.FindByOrganizationAsync(organizationId, ct);
         if (subscription is null || !subscription.HasPaidAccess(_clock.GetUtcNow().UtcDateTime))
+        {
+            _logger.SubscriptionRequired(organizationId, feature);
             return SubscriptionErrors.SubscriptionRequired;
+        }
 
         return subscription;
     }

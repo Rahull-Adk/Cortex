@@ -4,6 +4,7 @@ using Cortex.Application.Interfaces;
 using Cortex.Application.Organizations.Dtos;
 using Cortex.Domain.Entities;
 using Cortex.Domain.Enums;
+using Microsoft.Extensions.Logging;
 
 namespace Cortex.Application.Organizations;
 
@@ -19,6 +20,8 @@ public class InvitationService
     private readonly OrganizationAuthorizer _authorizer;
     private readonly TimeProvider _clock;
 
+    private readonly ILogger<InvitationService> _logger;
+
     public InvitationService(
         IOrganizationInvitationRepository invitations,
         IOrganizationMembershipRepository memberships,
@@ -26,8 +29,10 @@ public class InvitationService
         IEmailService emailService,
         IUnitOfWork unitOfWork,
         OrganizationAuthorizer authorizer,
-        TimeProvider clock)
+        TimeProvider clock,
+        ILogger<InvitationService> logger)
     {
+        _logger = logger;
         _invitations = invitations;
         _memberships = memberships;
         _users = users;
@@ -48,7 +53,10 @@ public class InvitationService
             return access.Error;
 
         if (!IsAssignable(request.Role))
+        {
+            _logger.InvitationRejected(organizationId, "the Owner role cannot be invited");
             return OrganizationErrors.OwnerImmutable;
+        }
 
         var inviter = await _users.FindByIdAsync(actorUserId, ct);
         if (inviter is null)
@@ -61,6 +69,7 @@ public class InvitationService
         if (existingUser is not null
             && await _memberships.FindWithUserAsync(organizationId, existingUser.Id, ct) is not null)
         {
+            _logger.InvitationRejected(organizationId, "the email already belongs to a member");
             return OrganizationErrors.AlreadyMember;
         }
 
@@ -68,6 +77,7 @@ public class InvitationService
         var tokenHash = SecureToken.Hash(rawToken);
 
         var invitation = await _invitations.FindByEmailAsync(organizationId, email, ct);
+        var renewed = invitation is not null;
         if (invitation is null)
         {
             invitation = OrganizationInvitation.Create(organizationId, email, request.Role, tokenHash, inviter.Id, Validity);
@@ -85,11 +95,13 @@ public class InvitationService
         catch (UniqueConstraintException)
         {
             _unitOfWork.DiscardChanges();
+            _logger.InvitationRejected(organizationId, "the same email was invited concurrently");
             return OrganizationErrors.InvitationConflict;
         }
 
         await _emailService.SendOrganizationInvitationAsync(
             email, access.Value.Organization.Name, inviter.Name, invitation.Role.ToString(), rawToken, ct);
+        _logger.InvitationSent(organizationId, invitation.Id, inviter.Id, invitation.Role, renewed);
 
         return new InvitationDto(
             invitation.Id, invitation.Email, invitation.Role, inviter.Name, invitation.CreatedAt, invitation.ExpiresAt);
@@ -126,6 +138,7 @@ public class InvitationService
 
         _invitations.Remove(invitation);
         await _unitOfWork.SaveChangesAsync(ct);
+        _logger.InvitationRevoked(organizationId, invitation.Id, actorUserId);
 
         return Result.Success();
     }
@@ -135,7 +148,10 @@ public class InvitationService
     {
         var invitation = await FindUsableAsync(rawToken, ct);
         if (invitation is null)
+        {
+            _logger.InvitationTokenRejected();
             return OrganizationErrors.InvalidInvitation;
+        }
 
         // An account that never verified its email is replaced by the invited signup, so it does not count.
         var user = await _users.FindByEmailAsync(invitation.Email, ct);
@@ -161,11 +177,17 @@ public class InvitationService
 
         var invitation = await FindUsableAsync(request.Token, ct);
         if (invitation is null)
+        {
+            _logger.InvitationTokenRejected();
             return OrganizationErrors.InvalidInvitation;
+        }
 
         // Holding the link is not enough: it only works for the address it was sent to.
         if (!string.Equals(user.Email, invitation.Email, StringComparison.OrdinalIgnoreCase))
+        {
+            _logger.InvitationEmailMismatch(invitation.Id, user.Id);
             return OrganizationErrors.InvitationForAnotherEmail;
+        }
 
         var organization = invitation.Organization;
         var role = invitation.Role;
@@ -185,9 +207,11 @@ public class InvitationService
         catch (Exception ex) when (ex is UniqueConstraintException or ConcurrencyConflictException)
         {
             _unitOfWork.DiscardChanges();
+            _logger.InvitationRejected(organization.Id, "the user joined concurrently");
             return OrganizationErrors.AlreadyMember;
         }
 
+        _logger.InvitationAccepted(organization.Id, invitation.Id, user.Id, role);
         return new OrganizationDto(
             organization.Id, organization.Name, organization.Slug, organization.LogoUrl, role, organization.CreatedAt);
     }

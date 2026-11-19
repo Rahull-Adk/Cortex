@@ -4,6 +4,7 @@ using Cortex.Application.Interfaces;
 using Cortex.Application.Organizations.Dtos;
 using Cortex.Domain.Entities;
 using Cortex.Domain.Enums;
+using Microsoft.Extensions.Logging;
 
 namespace Cortex.Application.Organizations;
 
@@ -14,12 +15,16 @@ public class MemberService
     private readonly IUnitOfWork _unitOfWork;
     private readonly OrganizationAuthorizer _authorizer;
 
+    private readonly ILogger<MemberService> _logger;
+
     public MemberService(
         IOrganizationMembershipRepository memberships,
         IUserRepository users,
         IUnitOfWork unitOfWork,
-        OrganizationAuthorizer authorizer)
+        OrganizationAuthorizer authorizer,
+        ILogger<MemberService> logger)
     {
+        _logger = logger;
         _memberships = memberships;
         _users = users;
         _unitOfWork = unitOfWork;
@@ -55,10 +60,15 @@ public class MemberService
             return OrganizationErrors.MemberNotFound;
 
         if (target.Role == OrganizationRole.Owner || !IsAssignable(request.Role))
+        {
+            _logger.OwnerChangeBlocked(organizationId, actorUserId);
             return OrganizationErrors.OwnerImmutable;
+        }
 
+        var oldRole = target.Role;
         target.ChangeRole(request.Role);
         await _unitOfWork.SaveChangesAsync(ct);
+        _logger.MemberRoleChanged(organizationId, actorUserId, targetUserId, oldRole, target.Role);
 
         return MapToDto(target, target.User);
     }
@@ -81,10 +91,18 @@ public class MemberService
             return OrganizationErrors.MemberNotFound;
 
         if (target.Role == OrganizationRole.Owner)
+        {
+            _logger.OwnerChangeBlocked(organizationId, actorUserId);
             return OrganizationErrors.OwnerImmutable;
+        }
 
         _memberships.Remove(target);
         await _unitOfWork.SaveChangesAsync(ct);
+
+        if (actorUserId == targetUserId)
+            _logger.MemberLeft(organizationId, actorUserId);
+        else
+            _logger.MemberRemoved(organizationId, actorUserId, targetUserId);
 
         return Result.Success();
     }

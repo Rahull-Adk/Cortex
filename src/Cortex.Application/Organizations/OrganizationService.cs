@@ -6,6 +6,7 @@ using Cortex.Application.Interfaces;
 using Cortex.Application.Organizations.Dtos;
 using Cortex.Domain.Entities;
 using Cortex.Domain.Enums;
+using Microsoft.Extensions.Logging;
 
 namespace Cortex.Application.Organizations;
 
@@ -19,13 +20,17 @@ public partial class OrganizationService
     private readonly IUnitOfWork _unitOfWork;
     private readonly OrganizationAuthorizer _authorizer;
 
+    private readonly ILogger<OrganizationService> _logger;
+
     public OrganizationService(
         IOrganizationRepository organizations,
         IOrganizationMembershipRepository memberships,
         IUserRepository users,
         IUnitOfWork unitOfWork,
-        OrganizationAuthorizer authorizer)
+        OrganizationAuthorizer authorizer,
+        ILogger<OrganizationService> logger)
     {
+        _logger = logger;
         _organizations = organizations;
         _memberships = memberships;
         _users = users;
@@ -47,7 +52,10 @@ public partial class OrganizationService
         {
             slug = request.Slug.Trim().ToLowerInvariant();
             if (await _organizations.ExistsBySlugAsync(slug, ct))
+            {
+                _logger.SlugTaken(user.Id);
                 return OrganizationErrors.SlugTaken;
+            }
         }
         else
         {
@@ -66,9 +74,11 @@ public partial class OrganizationService
         catch (UniqueConstraintException)
         {
             _unitOfWork.DiscardChanges();
+            _logger.SlugTaken(user.Id);
             return OrganizationErrors.SlugTaken;
         }
 
+        _logger.OrganizationCreated(organization.Id, user.Id);
         return MapToDto(organization, OrganizationRole.Owner);
     }
 
@@ -101,6 +111,7 @@ public partial class OrganizationService
         organization.UpdateDetails(request.Name, request.LogoUrl);
 
         await _unitOfWork.SaveChangesAsync(ct);
+        _logger.OrganizationUpdated(organization.Id, userId);
 
         return MapToDto(organization, access.Value.Role);
     }

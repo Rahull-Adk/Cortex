@@ -87,6 +87,8 @@ public class StripeBillingProvider : IBillingProvider
             return SubscriptionErrors.InvalidWebhook;
         }
 
+        _logger.LogInformation("Received Stripe event {EventType} ({EventId}).", stripeEvent.Type, stripeEvent.Id);
+
         // Only the object id is taken from the event. State is fetched again so that
         // replayed or reordered deliveries always apply what Stripe holds right now.
         var objectId = (stripeEvent.Data.Object as IHasId)?.Id;
