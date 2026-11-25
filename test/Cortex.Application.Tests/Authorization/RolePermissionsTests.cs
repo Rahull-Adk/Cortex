@@ -19,6 +19,8 @@ public class RolePermissionsTests
         { Permission.OwnershipTransfer, true, false, false },
         { Permission.BillingView, true, true, false },
         { Permission.BillingManage, true, false, false },
+        { Permission.DocumentsView, true, true, true },
+        { Permission.DocumentsManage, true, true, false },
     };
 
     [Theory]
@@ -95,7 +97,7 @@ public class RolePermissionsTests
     [Fact]
     public void Has_Member_CannotChangeAnything()
     {
-        Permission[] readOnly = [Permission.OrganizationView, Permission.MembersView];
+        Permission[] readOnly = [Permission.OrganizationView, Permission.MembersView, Permission.DocumentsView];
 
         var granted = Enum.GetValues<Permission>()
             .Where(permission => RolePermissions.Has(OrganizationRole.Member, permission));

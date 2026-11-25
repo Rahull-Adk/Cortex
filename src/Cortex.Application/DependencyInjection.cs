@@ -1,5 +1,6 @@
 using Cortex.Application.Auth;
 using Cortex.Application.Authorization;
+using Cortex.Application.Documents;
 using Cortex.Application.Organizations;
 using Cortex.Application.Subscriptions;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,7 @@ public static class DependencyInjection
         services.AddScoped<InvitationService>();
         services.AddScoped<SubscriptionService>();
         services.AddScoped<EntitlementService>();
+        services.AddScoped<DocumentService>();
         services.AddValidatorsFromAssemblyContaining<AuthService>();
         return services;
     }

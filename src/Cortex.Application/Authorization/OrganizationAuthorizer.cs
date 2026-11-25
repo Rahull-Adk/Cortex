@@ -25,7 +25,6 @@ public class OrganizationAuthorizer
     {
         var membership = await _memberships.FindActiveAsync(organizationId, userId, ct);
 
-        // Non-members get the same answer as for a business that does not exist.
         if (membership is null)
         {
             _logger.AccessDeniedNotMember(userId, organizationId, permission);

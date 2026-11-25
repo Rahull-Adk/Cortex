@@ -5,6 +5,8 @@ using Cortex.Infrastructure.Billing;
 using Cortex.Infrastructure.Billing.Settings;
 using Cortex.Infrastructure.Persistence;
 using Cortex.Infrastructure.Repositories;
+using Cortex.Infrastructure.Storage;
+using Cortex.Infrastructure.Storage.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +26,7 @@ public static class DependencyInjection
         services.Configure<BrevoSettings>(configuration.GetSection("Brevo"));
         services.Configure<FrontendSettings>(configuration.GetSection("Frontend"));
         services.Configure<StripeSettings>(configuration.GetSection("Stripe"));
+        services.Configure<S3Settings>(configuration.GetSection("S3"));
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserAccountRepository, UserAccountRepository>();
@@ -35,12 +38,14 @@ public static class DependencyInjection
         services.AddScoped<IPlanRepository, PlanRepository>();
         services.AddScoped<IOrganizationSubscriptionRepository, OrganizationSubscriptionRepository>();
         services.AddScoped<IUsageRepository, UsageRepository>();
+        services.AddScoped<IDocumentRepository, DocumentRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ITokenService, JwtTokenService>();
         services.AddScoped<IExternalIdentityTokenValidator, GoogleIdentityTokenValidator>();
         services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
         services.AddScoped<IEmailService, BrevoEmailService>();
         services.AddSingleton<IBillingProvider, StripeBillingProvider>();
+        services.AddSingleton<IFileStorage, S3FileStorage>();
 
         services.AddHttpClient("Brevo", (sp, client) =>
         {

@@ -21,7 +21,6 @@ public class OrganizationSubscription
 
     public Plan Plan { get; private set; } = default!;
 
-    // Still billed by the provider, so a second checkout would double-charge.
     public bool IsLive => Status is SubscriptionStatus.Active or SubscriptionStatus.PastDue;
 
     public static OrganizationSubscription Create(Guid organizationId, Plan plan)

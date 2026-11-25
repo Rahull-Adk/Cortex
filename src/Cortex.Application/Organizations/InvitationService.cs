@@ -64,7 +64,6 @@ public class InvitationService
 
         var email = request.Email.Trim().ToLowerInvariant();
 
-        // The invited person does not need an account yet. They create one before accepting.
         var existingUser = await _users.FindByEmailAsync(email, ct);
         if (existingUser is not null
             && await _memberships.FindWithUserAsync(organizationId, existingUser.Id, ct) is not null)

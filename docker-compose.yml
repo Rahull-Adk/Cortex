@@ -21,12 +21,19 @@ services:
       Stripe__WebhookSecret: ${Stripe__WebhookSecret:-}
       Stripe__Prices__starter: ${Stripe__Prices__starter:-}
       Stripe__Prices__growth: ${Stripe__Prices__growth:-}
+      S3__BucketName: ${S3__BucketName:-cortex-documents}
+      S3__Region: ${S3__Region:-us-east-1}
+      S3__ServiceUrl: ${S3__ServiceUrl-http://minio:9000}
+      S3__PublicServiceUrl: ${S3__PublicServiceUrl-http://localhost:9000}
+      S3__AccessKeyId: ${S3__AccessKeyId:?Set S3__AccessKeyId in .env}
+      S3__SecretAccessKey: ${S3__SecretAccessKey:?Set S3__SecretAccessKey in .env}
       OTEL_SERVICE_NAME: cortex-api
       OTEL_EXPORTER_OTLP_ENDPOINT: ${OTEL_EXPORTER_OTLP_ENDPOINT:-http://aspire-dashboard:18889}
     ports:
       - "5203:8080"
     depends_on:
       - aspire-dashboard
+      - minio
 
   aspire-dashboard:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:13.6
@@ -35,3 +42,30 @@ services:
     ports:
       - "18888:18888"
       - "4317:18889"
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${S3__AccessKeyId:?Set S3__AccessKeyId in .env}
+      MINIO_ROOT_PASSWORD: ${S3__SecretAccessKey:?Set S3__SecretAccessKey in .env}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    environment:
+      MINIO_ROOT_USER: ${S3__AccessKeyId:?Set S3__AccessKeyId in .env}
+      MINIO_ROOT_PASSWORD: ${S3__SecretAccessKey:?Set S3__SecretAccessKey in .env}
+      BUCKET: ${S3__BucketName:-cortex-documents}
+    entrypoint: >
+      /bin/sh -c "until mc alias set local http://minio:9000 \"$$MINIO_ROOT_USER\" \"$$MINIO_ROOT_PASSWORD\" > /dev/null; do sleep 1; done;
+      mc mb --ignore-existing \"local/$$BUCKET\""
+
+volumes:
+  minio-data:

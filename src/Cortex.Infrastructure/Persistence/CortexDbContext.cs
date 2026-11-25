@@ -18,6 +18,7 @@ public class CortexDbContext : DbContext
     public DbSet<OrganizationSubscription> OrganizationSubscriptions => Set<OrganizationSubscription>();
     public DbSet<AiUsagePeriod> AiUsagePeriods => Set<AiUsagePeriod>();
     public DbSet<OrganizationStorageUsage> OrganizationStorageUsage => Set<OrganizationStorageUsage>();
+    public DbSet<Document> Documents => Set<Document>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -10,4 +10,6 @@ public enum Permission
     OwnershipTransfer,
     BillingView,
     BillingManage,
+    DocumentsView,
+    DocumentsManage,
 }
