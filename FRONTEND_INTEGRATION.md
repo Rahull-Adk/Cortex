@@ -139,6 +139,36 @@ Paid features answer `402` when they are locked, with a `code` in the problem de
 - `subscription_required`: no paid access. Show the upgrade prompt.
 - `quota_exceeded`: the plan's AI answer allowance, document limit or storage limit is used up. Only that operation is paused; the workspace and existing knowledge stay available. AI answers reset at the next billing period.
 
+## Uploading documents
+
+Files go straight from the browser to storage (S3, or MinIO locally). The API never receives the bytes. An upload takes three calls:
+
+1. `POST /api/organizations/{organizationId}/documents` with `{"fileName":"menu.pdf","contentType":"application/pdf","sizeBytes":123456}` taken from the `File` object. It returns `201` with `document`, `uploadUrl`, `method` (`PUT`), `headers` and `expiresAt` (15 minutes).
+2. `PUT` the file to `uploadUrl` with exactly the returned `headers`, and no `Authorization` header:
+   ```js
+   await fetch(session.uploadUrl, { method: session.method, headers: session.headers, body: file });
+   ```
+   Storage answers `403` if the `Content-Type` or the size differs from what was declared in step 1.
+3. `POST /api/organizations/{organizationId}/documents/{documentId}/complete`. It returns the document with status `Pending`. A `409` means the file has not arrived yet: retry after the PUT finishes. A `400` means the stored file did not match, and the document was removed.
+
+Allowed types: `application/pdf`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document` (DOCX), `text/plain`, `text/markdown`, `text/csv`, up to 50 MB each. Browsers often leave `file.type` empty for `.md` files, so map the extension yourself. Starting an upload counts against the plan's document and storage limits right away, so it can answer `402` (see above). Delete an upload you abandon to free its share.
+
+Other endpoints:
+
+- `GET /api/organizations/{organizationId}/documents`: all documents, newest first.
+- `GET /api/organizations/{organizationId}/documents/{documentId}`: one document. Poll it to follow `status`.
+- `GET /api/organizations/{organizationId}/documents/{documentId}/download`: returns `{"url":"...","expiresAt":"..."}`, a link to the original file that works for 5 minutes.
+- `DELETE /api/organizations/{organizationId}/documents/{documentId}`: deletes the document and its file, including an upload in progress.
+
+`status` is one of `AwaitingUpload`, `Pending`, `Processing`, `Ready`, `Failed`. When it is `Failed`, `error` says why.
+
+| | Owner | Admin | Member |
+|---|---|---|---|
+| List, view, download | yes | yes | yes |
+| Upload, delete | yes | yes | no |
+
+Locally, Docker Compose runs MinIO with uploads at `http://localhost:9000` and its console at `http://localhost:9001`. MinIO accepts browser uploads from any origin. An AWS bucket needs a CORS rule that allows `PUT` and `GET` from the frontend origin, with the `Content-Type` header.
+
 ### Local Stripe setup
 
 Set `Stripe__SecretKey`, `Stripe__WebhookSecret`, `Stripe__Prices__starter` and `Stripe__Prices__growth` (see `.env.example`). Create two monthly THB prices in Stripe test mode and enable plan switching in the customer portal settings. Forward webhooks with `stripe listen --forward-to localhost:5203/api/webhooks/stripe` and use the signing secret it prints. The endpoint needs `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.paid` and `invoice.payment_failed`.

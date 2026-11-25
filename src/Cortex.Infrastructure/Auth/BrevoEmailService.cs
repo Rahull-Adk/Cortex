@@ -83,7 +83,6 @@ public class BrevoEmailService : IEmailService
                 return;
             }
 
-            // Only Brevo's error code: the message text can echo the recipient address.
             var errorCode = await ReadErrorCodeAsync(response, ct);
             _logger.LogWarning("Brevo rejected the {Kind} email ({StatusCode}, {ErrorCode}).", kind, (int)response.StatusCode, errorCode);
         }

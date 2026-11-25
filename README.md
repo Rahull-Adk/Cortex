@@ -134,7 +134,13 @@ dotnet user-secrets set "Brevo:ApiKey" "your-brevo-api-key" --project src/Cortex
 dotnet user-secrets set "Brevo:SenderEmail" "verified-sender@example.com" --project src/Cortex.Api
 dotnet user-secrets set "Brevo:SenderName" "Cortex" --project src/Cortex.Api
 dotnet user-secrets set "Frontend:BaseUrl" "http://localhost:3000" --project src/Cortex.Api
+dotnet user-secrets set "S3:BucketName" "cortex-documents" --project src/Cortex.Api
+dotnet user-secrets set "S3:Region" "us-east-1" --project src/Cortex.Api
+dotnet user-secrets set "S3:AccessKeyId" "your-access-key" --project src/Cortex.Api
+dotnet user-secrets set "S3:SecretAccessKey" "your-secret-key" --project src/Cortex.Api
 ```
+
+For local storage, start MinIO with `docker compose up minio minio-init` and also set `S3:ServiceUrl` to `http://localhost:9000`, using the MinIO keys from `.env`. For AWS, leave `S3:ServiceUrl` unset. You can also leave the keys unset and use the default AWS credentials instead.
 
 </details>
 
@@ -167,7 +173,7 @@ Export is off when `OTEL_EXPORTER_OTLP_ENDPOINT` is not set. To send telemetry s
 | Run the tests | `dotnet test Cortex.slnx` |
 | Run with Docker | `docker compose up --build` |
 
-For Docker, copy `.env.example` to `.env` and fill in the values first. Docker Compose only starts the API, so you still need PostgreSQL running on your machine.
+For Docker, copy `.env.example` to `.env` and fill in the values first. Docker Compose starts the API and MinIO for document storage. You still need PostgreSQL running on your machine.
 
 ---
 

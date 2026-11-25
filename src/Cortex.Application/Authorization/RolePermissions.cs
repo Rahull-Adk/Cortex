@@ -9,6 +9,7 @@ public static class RolePermissions
     [
         Permission.OrganizationView,
         Permission.MembersView,
+        Permission.DocumentsView,
     ];
 
     private static readonly FrozenSet<Permission> Admin =
@@ -17,6 +18,7 @@ public static class RolePermissions
         Permission.OrganizationUpdate,
         Permission.MembersManage,
         Permission.BillingView,
+        Permission.DocumentsManage,
     ];
 
     private static readonly FrozenSet<Permission> Owner =
